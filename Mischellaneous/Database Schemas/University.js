@@ -1,4 +1,5 @@
 university = {
+    university_id:String,
     name: String,
     address: {
         street: String,
