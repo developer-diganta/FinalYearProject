@@ -1,6 +1,8 @@
 Question = {
     title: String,
     question: String,
+    question_id : String,
+    course_id : String,
     answer_key_file: String,
     answer_key_file_name: String,
     difficulty: String,
@@ -8,7 +10,6 @@ Question = {
     tags: [String],
     date_created: Date,
     date_updated: Date,
-    date_deleted: Date,
     date_published: Date,
     students_attempted: [{
         student_id: String,
