@@ -2,6 +2,8 @@ student = {
     name: String,
     age: Number,
     student_id: String,
+    university_id: String,
+    password:String,
     courses: [{
         course_id: String,
         course_name: String,
