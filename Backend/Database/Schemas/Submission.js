@@ -1,3 +1,5 @@
 submission = {
-    token: '',
+    token: String
 }
+
+module.exports = submission;
