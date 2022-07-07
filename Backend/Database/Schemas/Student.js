@@ -34,7 +34,8 @@ student = {
         completed: Boolean,
         completed_date: Date,
         start_date: Date,
-    }
+    },
+    submissions:Array
 }
 
 module.exports = student;
