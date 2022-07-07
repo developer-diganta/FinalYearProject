@@ -7,4 +7,6 @@ course = {
     course_compilers: Array,
     course_faculty: Array,
     course_id: String,
+    faculty_id: String,
+    students:Array
 }
