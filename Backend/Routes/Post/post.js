@@ -4,7 +4,7 @@ const controls = require("../../controller/control");
 
 const router = express.Router();
 
-router.get('/', controls.home);
-router.get('/languages', controls.languages);
+// router.post('/', controls.home);
+router.post('/submit', controls.submit);
  
-module.exports = router;
+module.exports = router; 
