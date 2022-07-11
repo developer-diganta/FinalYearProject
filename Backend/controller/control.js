@@ -10,7 +10,6 @@ const home = (req, res) => {
 }
 
 const languages = (req, res) => {
-
     const options = {
     method: 'GET',
     url: 'https://judge0-ce.p.rapidapi.com/languages',
@@ -50,7 +49,22 @@ const submit = async (req, res) => {
             if (err)
                 console.log(err)
             else
-                res.status(200).send(response.data);
+            {
+                const options = {
+                    method: 'GET',
+                    url: 'https://judge0-ce.p.rapidapi.com/submissions/' + response.data.token,
+                    params: {base64_encoded: 'true', fields: '*'},
+                    headers: {
+                        'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                        'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+                    }
+                };
+                axios.request(options).then(function (response) {
+                       res.status(200).json((response.data));
+                }).catch(function (error) {
+                    console.error(error);
+                });
+            }
         });
     }).catch(function (error) {
         console.error(error);
