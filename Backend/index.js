@@ -6,6 +6,13 @@ const { url } = require("./Database/Connection");
 const getRoutes = require("./Routes/Get/get");
 const testConnection = require("./Database/connectionTest");
 const postRoutes = require("./Routes/Post/post");
+const { addUptimeLog } = require("./utils/logger");
+
+addUptimeLog("Server Status: Start/Restart and UP");
+
+setInterval(() => {
+    addUptimeLog("Server Status: UP");
+}, 21600000);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 

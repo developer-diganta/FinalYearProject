@@ -7,6 +7,7 @@ const student = require("./Schemas/Student");
 const university = require("./Schemas/University");
 const question = require("./Schemas/Question");
 const submission = require("./Schemas/Submission");
+const uptimeLogs = require("./Schemas/UptimeLogs");
 
 const adminSchema = new mongoose.Schema(admin);
 const courseSchema = new mongoose.Schema(course);
@@ -22,5 +23,6 @@ const Student = mongoose.model("Student", studentSchema);
 const University = mongoose.model("University", universitySchema);
 const Question = mongoose.model("Question", questionSchema);
 const Submission = mongoose.model("Submission", submissionSchema);
+const UptimeLogs = mongoose.model("UptimeLogs", uptimeLogs);
 
-module.exports = {Admin, Course, Teacher, Student, University, Question, Submission};
+module.exports = {Admin, Course, Teacher, Student, University, Question, Submission, UptimeLogs};
