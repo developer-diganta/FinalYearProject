@@ -1,0 +1,25 @@
+.cm-lineNumbers {
+  background-color: #1F1F28;
+}
+
+.editorHead{
+    background-color: #f2f2f2;
+}
+
+.themeSelector:focus{
+    outline: none;
+}
+
+.run, .submit{
+  background-color: #EFEFEF;
+}
+
+.run:hover{
+  background-color: #26CD3C;
+  color: #FFF;
+}
+
+.submit:hover{
+  background-color: #26C2CD;
+  color: #FFF;
+}
