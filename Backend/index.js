@@ -14,6 +14,8 @@ setInterval(() => {
     addUptimeLog("Server Status: UP");
 }, 21600000);
 
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cors());
