@@ -8,19 +8,48 @@ import { dracula } from '@uiw/codemirror-theme-dracula';
 import { githubDark } from '@uiw/codemirror-theme-github';
 import { sublime } from '@uiw/codemirror-theme-sublime';
 import { xcodeDark } from '@uiw/codemirror-theme-xcode';
+import axios from 'axios';
+import Questions from './Options/Questions';
+import Solutions from './Options/Solutions';
+import Submission from './Options/Submission';
+var base64 = require('base-64');
 
 function Codeeditor() {
     const[theme, setTheme] = useState(dracula);
     const[language, setLanguage] = useState(javascript);
+    const[code, setCode] = useState();
+    const[options, setOptions] = useState("questions");
+    const[output, setOutput] = useState();
+    const[opScreen, setOpScreen] = useState(false);
     const arr = [dracula, githubDark, sublime, xcodeDark];
     const themeName = ['Dracula', 'GithubDark', 'Sublime', 'XcodeDark'];
     const lang = ['C++', 'JavaScript', 'C', 'Java', 'HTML'];
 
+    function chooseOptions(event, options) {
+        event.preventDefault();
+        setOptions(options);
+    }
+
+    const submit = async () => {
+        setOpScreen(true);
+        setOutput('');
+        console.log(code);
+        const sub_res = await axios.post('http://localhost:5000/submit', {sourceCode: code});
+        console.log(sub_res.data.stdout);
+        setOutput(base64.decode(sub_res.data.stdout));
+    }
+
+    function hideScreen(){
+      setOpScreen(false);
+    }
+
+
     return (
-        <div className="ce w-1/2 text-lg pb-2 mx-2 shadow-2xl">
-          <div className='editorHead py-2 flex justify-between'>
+      <div className='w-full flex'>
+        <div className="ce w-1/2 text-lg">
+          <div className='editorHead py-2 flex justify-between px-8'>
             <div className='languageDropdown'>
-              <select className='themeSelector w-full px-4 py-2 rounded-lg bg-white border-2 border-gray-300' onChange={(e) => setLanguage(e.target.value)}>
+              <select className='themeSelector w-full px-4 py-2 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => setLanguage(e.target.value)}>
                 {lang.map((item, index) => {
                   return <option key={index} value={index}>{item}</option>
                 }
@@ -29,7 +58,7 @@ function Codeeditor() {
             </div>
 
             <div className='themeDropdown'>
-              <select className='themeSelector w-full px-4 py-2 rounded-lg bg-white border-2 border-gray-300' onChange={(e) => {
+              <select className='themeSelector w-full px-4 py-2 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => {
                 setTheme(arr[e.target.value])
                 }}>
                 {
@@ -46,19 +75,61 @@ function Codeeditor() {
             spellCheck={true}
             autoCorrect={true}
             placeholder="Type here..."
-            height='90vh'
+            height='80vh'
             theme={theme}
             extensions={[javascript(), cpp(), html()]}
             onChange={(editor, data, value) => {
-              console.log(value);
+              setCode(editor);
             }
             }
           />
           <div className="footer flex justify-center gap-10">
-              <div className="run px-8 rounded-xl py-1 flex justify-center items-center my-2 cursor-pointer font-semibold" style={{border: "1px solid #90a4ae"}}>Run</div>
-              <div className="submit px-4 py-1 flex justify-center items-center my-2 rounded-xl cursor-pointer font-semibold" style={{border: "1px solid #90a4ae"}}>Submit</div>
+              <div className="run px-8 rounded-xl py-1 flex justify-center items-center my-2 cursor-pointer font-semibold">Run</div>
+              <div className="submit px-4 py-1 flex justify-center items-center my-2 rounded-xl cursor-pointer font-semibold" onClick={submit}>Submit</div>
+          </div>
+          <div className={opScreen === false ? 'hide-op' : 'output'}>
+            <div className="dw bg-slate-300 flex justify-between items-center gap-2 pr-8 cursor-pointer" onClick={hideScreen}>
+              <div className='pt-1 pb-1'>OUTPUT</div>
+              <div className='flex items-center'>
+                Hide
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+
+            </div>
+            <span className='p-2 font-semibold'>{output}</span>
           </div>
         </div>
+          <div className="divder"></div>
+        <div className="res w-1/2 pl-4 pr-4 pt-1">
+          <div className="res-header flex justify-between items-center py-2">
+              {/* create three divs named question, submit, solution */}
+               <div className="br question" onClick={(event) => chooseOptions(event, 'questions')}>
+                  <h1>Question</h1>
+               </div>
+               <div className="br sol" onClick={(event) => chooseOptions(event, 'solutions')}>
+                  <h1>Solution</h1>
+               </div>
+               <div className="br subm" onClick={(event) => chooseOptions(event, 'submission')}>
+                  <h1>Submission</h1>
+               </div>
+               <div className="size flex gap-3">
+                  <div className="box">
+                    <div className="box_fill_1"></div>
+                  </div>
+                  <div className="box">
+                    <div className="box_fill_2"></div>
+                  </div>
+               </div>
+          </div>
+          <div className="options">
+              {
+                options === "questions" ? <Questions /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
+              }
+          </div>
+        </div>
+      </div>
     );
 }
 
