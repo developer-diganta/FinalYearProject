@@ -3,30 +3,34 @@ const router = express.Router();
 const axios = require("axios");
 const { base64encode, base64decode } = require('nodejs-base64');
 const models = require("../Database/models");
+const programmingLanguageIds = require("../assets/programmingLanguageIds");
+const { addSubmissionLog } = require("../utils/logger");
+
+let languageIds = null;
+const getProgrammingLanguageIds = async () => { 
+    ids = await programmingLanguageIds();
+}
+getProgrammingLanguageIds();
+
 require('dotenv').config();
 
 const home = (req, res) => {
     res.status(200).send("Hello World!");
 }
 
-const languages = (req, res) => {
-    const options = {
-    method: 'GET',
-    url: 'https://judge0-ce.p.rapidapi.com/languages',
-    headers: {
-        'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
-        'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+const languages = async (req, res) => {
+    if (!ids)
+        ids = await programmingLanguageIds();
+    try {
+        res.status(200).json(ids);
+    } catch (error) {
+        res.status(500).json(error);
     }
-    };
-
-    axios.request(options).then(function (response) {
-        res.status(200).json(response.data);
-    }).catch(function (error) {
-        console.error(error);
-    });
 }
 
+// for running a code from the client
 const submit = async (req, res) => {
+    console.log(req.body.sourceCode)
     let encoded = base64encode(req.body.sourceCode);
     const options = {
         method: 'POST',
@@ -60,7 +64,8 @@ const submit = async (req, res) => {
                     }
                 };
                 axios.request(options).then(function (response) {
-                       res.status(200).json((response.data));
+                    addSubmissionLog(response.data.token);
+                    res.status(200).json((response.data));
                 }).catch(function (error) {
                     console.error(error);
                 });
@@ -70,6 +75,9 @@ const submit = async (req, res) => {
         console.error(error);
     });
 }
+
+
+//for submitting a code to the system from the client
 
 
 module.exports = {home, languages, submit};
