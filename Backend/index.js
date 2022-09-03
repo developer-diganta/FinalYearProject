@@ -7,7 +7,7 @@ const getRoutes = require("./Routes/Get/get");
 const testConnection = require("./Database/connectionTest");
 const postRoutes = require("./Routes/Post/post");
 const { addUptimeLog } = require("./utils/logger");
-
+const limiter = require("./configs/rate-limit-config");
 addUptimeLog("Server Status: Start/Restart and UP");
 
 setInterval(() => {
@@ -21,6 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 mongoose.connect(url, { useNewUrlParser: true });
 testConnection(url);
+
+app.use(limiter(1, 1));
 
 // console.log(getRoutes)
 app.use("/", getRoutes);
