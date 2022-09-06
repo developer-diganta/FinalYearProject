@@ -18,6 +18,7 @@
     "express-rate-limit": "^6.6.0",
     "joi": "^17.6.0",
     "md5": "^2.3.0",
+    "helmet": "^6.0.0",
     "mongoose": "^6.4.3",
     "nodejs-base64": "^2.0.0",
     "uuid": "^8.3.2"
