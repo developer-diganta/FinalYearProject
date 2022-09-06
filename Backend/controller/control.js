@@ -5,6 +5,9 @@ const { base64encode, base64decode } = require('nodejs-base64');
 const models = require("../Database/models");
 const programmingLanguageIds = require("../assets/programmingLanguageIds");
 const { addSubmissionLog } = require("../utils/logger");
+const saltRounds = require("../configs/saltRounds");
+const bcrypt = require("bcrypt");
+const {signUpSchema} = require("../configs/joi-configs.js");
 
 let languageIds = null;
 const getProgrammingLanguageIds = async () => { 
@@ -76,8 +79,33 @@ const submit = async (req, res) => {
     });
 }
 
+const signupTeacher = async (req, res) => {
+    const { name, username, email, password } = req.body;
+    try {
+        const validate = await signUpSchema.validateAsync({ username, password, email });
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+             if (err) {
+                 res.status(500).json(err);
+             } else {
+                 const newTeacher = new models.Teacher({
+                     name: name,
+                     user_name: username,
+                     email: email,
+                     password: hash,
+     
+                 });
+                await newTeacher.save((err) => {
+                     if (err)
+                         res.status(500).json(err);
+                     else
+                         res.status(200).json("Teacher created");
+                 });
+             }
+         });
+    } catch(error) {
+        res.status(422).json(error);
+    }
+}
 
-//for submitting a code to the system from the client
 
-
-module.exports = {home, languages, submit};
+module.exports = {home, languages, submit, signupTeacher};
