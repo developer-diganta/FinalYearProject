@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const passport = require("passport");
 
+const passportLocalMongoose = require("passport-local-mongoose");
 const admin = require("./Schemas/Admin");
 const course = require("./Schemas/Course");
 const teacher = require("./Schemas/Teacher");
@@ -17,6 +19,10 @@ const studentSchema = new mongoose.Schema(student);
 const universitySchema = new mongoose.Schema(university);
 const questionSchema = new mongoose.Schema(question);
 const submissionSchema = new mongoose.Schema(submission);
+
+// teacherSchema.plugin(passportLocalMongoose);
+
+
 const Admin = mongoose.model("Admin", adminSchema);
 const Course = mongoose.model("Course", courseSchema);
 const Teacher = mongoose.model("Teacher", teacherSchema);
@@ -26,5 +32,7 @@ const Question = mongoose.model("Question", questionSchema);
 const Submission = mongoose.model("Submission", submissionSchema);
 const UptimeLogs = mongoose.model("UptimeLogs", uptimeLogs);
 const SubmissionLogs = mongoose.model("SubmissionLogs", submissionLogs);
-
+// passport.use(Teacher.createStrategy());
+// passport.serializeUser(Teacher.serializeUser());
+// passport.deserializeUser(Teacher.deserializeUser());
 module.exports = {Admin, Course, Teacher, Student, University, Question, Submission, UptimeLogs, SubmissionLogs};
