@@ -7,8 +7,11 @@ const programmingLanguageIds = require("../assets/programmingLanguageIds");
 const { addSubmissionLog } = require("../utils/logger");
 const saltRounds = require("../configs/saltRounds");
 const bcrypt = require("bcrypt");
-const {signUpSchema} = require("../configs/joi-configs.js");
+const { signUpSchema } = require("../configs/joi-configs.js");
+const jwt = require("jsonwebtoken");
+const generateToken = require("../utils/Auth/jwtGeneration"); 
 
+// const passport = require("passport");
 let languageIds = null;
 const getProgrammingLanguageIds = async () => { 
     ids = await programmingLanguageIds();
@@ -79,14 +82,16 @@ const submit = async (req, res) => {
     });
 }
 
+
+
 const signupTeacher = async (req, res) => {
     const { name, username, email, password } = req.body;
     try {
         const validate = await signUpSchema.validateAsync({ username, password, email });
         bcrypt.hash(password, saltRounds, async (err, hash) => {
-             if (err) {
+            if (err) {
                  res.status(500).json(err);
-             } else {
+            } else {
                  const newTeacher = new models.Teacher({
                      name: name,
                      user_name: username,
@@ -95,13 +100,15 @@ const signupTeacher = async (req, res) => {
      
                  });
                 await newTeacher.save((err) => {
-                     if (err)
-                         res.status(500).json(err);
-                     else
-                         res.status(200).json("Teacher created");
-                 });
-             }
-         });
+                    if (err)
+                        res.status(500).json(err);
+                    else {
+                        const token = generateToken(username, email);
+                        res.status(200).json({ auth: true, token: token });
+                    }
+                });
+            }
+        });
     } catch(error) {
         res.status(422).json(error);
     }
@@ -109,3 +116,22 @@ const signupTeacher = async (req, res) => {
 
 
 module.exports = {home, languages, submit, signupTeacher};
+
+
+// const signupTeacher = async (req, res) => {
+//     models.Teacher.register({
+//         username: req.body.username,
+//         email: req.body.email,
+//         name: req.body.name,
+//     }, req.body.password, (err, user) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).json(err);
+//         }
+//         else {
+//             passport.authenticate("local")(req, res, () => {
+//                 res.status(200).json(user);
+//             });
+//         }
+//     });
+// }
