@@ -1,6 +1,6 @@
 teacher = {
     name : String,
-    user_name : String,
+    username : String,
     teacher_id : String,
     email : String,
     password : String,

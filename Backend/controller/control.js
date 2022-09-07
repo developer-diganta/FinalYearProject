@@ -86,34 +86,44 @@ const submit = async (req, res) => {
 
 const signupTeacher = async (req, res) => {
     const { name, username, email, password } = req.body;
+    console.log(username);
     try {
         const validate = await signUpSchema.validateAsync({ username, password, email });
         bcrypt.hash(password, saltRounds, async (err, hash) => {
             if (err) {
                  res.status(500).json(err);
             } else {
-                 const newTeacher = new models.Teacher({
-                     name: name,
-                     user_name: username,
-                     email: email,
-                     password: hash,
-     
-                 });
-                await newTeacher.save((err) => {
-                    if (err)
+            models.Teacher.find({ $or: [{ username: username }, {email:email} ]}, async (err, teacher) => {
+                    if (err) {
                         res.status(500).json(err);
-                    else {
-                        const token = generateToken(username, email);
-                        res.status(200).json({ auth: true, token: token });
+                    } else if (teacher.length) {
+                        console.log(teacher);
+                        res.status(400).json({ message: "Teacher already exists" });
+                    } else {
+                        const newTeacher = new models.Teacher({
+                            name: name,
+                            username: username,
+                            email: email,
+                            password: hash,
+            
+                        });
+                        console.log(newTeacher);
+                        await newTeacher.save((err) => {
+                            if (err)
+                                res.status(500).json(err);
+                            else {
+                                const token = generateToken(username, email);
+                                res.status(200).json({ auth: true, token: token });
+                            }
+                        });
                     }
-                });
+                });     
             }
         });
     } catch(error) {
         res.status(422).json(error);
     }
 }
-
 
 module.exports = {home, languages, submit, signupTeacher};
 
