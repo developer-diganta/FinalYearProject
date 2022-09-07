@@ -27,6 +27,7 @@ const languages = (req, res) => {
 }
 
 const submit = async (req, res) => {
+    console.log(req.body.sourceCode);
     let encoded = base64encode(req.body.sourceCode);
     const options = {
         method: 'POST',
@@ -69,6 +70,7 @@ const submit = async (req, res) => {
     }).catch(function (error) {
         console.error(error);
     });
+    // res.send('Hello World!');
 }
 
 

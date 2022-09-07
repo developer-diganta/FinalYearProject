@@ -7,4 +7,4 @@ const router = express.Router();
 // router.post('/', controls.home);
 router.post('/submit', controls.submit);
  
-module.exports = router; 
+module.exports = router;
