@@ -14,7 +14,7 @@ const generateToken = require("../utils/Auth/jwtGeneration");
 // const passport = require("passport");
 let languageIds = null;
 const getProgrammingLanguageIds = async () => { 
-    ids = await programmingLanguageIds();
+    languageIds = await programmingLanguageIds();
 }
 getProgrammingLanguageIds();
 
@@ -25,10 +25,10 @@ const home = (req, res) => {
 }
 
 const languages = async (req, res) => {
-    if (!ids)
-        ids = await programmingLanguageIds();
+    if (!languageIds)
+        languageIds = await programmingLanguageIds();
     try {
-        res.status(200).json(ids);
+        res.status(200).json(languageIds);
     } catch (error) {
         res.status(500).json(error);
     }
