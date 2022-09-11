@@ -16,7 +16,7 @@
 
 .run{
   background-color: #d1e3e2;
-  border: 1px solid  #829d9c;
+  border: 1px dashed  #829d9c;
 }
 
 .submit{
@@ -35,6 +35,7 @@
   min-width: 20px;
   min-height: 20px;
   border: 2px solid #d1d5db;
+  cursor: pointer;
 }
 
 .box_fill_1{
@@ -71,23 +72,28 @@
 .divder{
   max-width: 10px;
   min-width: 10px;
-  min-height: 107vh;
-  max-height: 110vh;
+  min-height: 100vh;
+  max-height: 102vh;
   background-color: #d1d5db;
 }
 
-.ce{
-  position: relative;
-}
 
 .output{
   /* position: relative;   */
   position: absolute;
   background-color: #FFF;
-  height: 200px;
+  height: 190px;
   width: 100%;
   bottom: 0px;
   animation: slide-up 1s;
+}
+
+.output_box{
+  position: relative;
+  background-color: #FFF;
+  height: 82%;
+  width: 100%;
+  overflow-y: scroll;
 }
 
 .hide-op{
@@ -111,4 +117,25 @@
   100%{
     bottom: 0px;
   }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

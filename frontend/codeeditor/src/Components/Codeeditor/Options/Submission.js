@@ -2,7 +2,7 @@ import React from 'react'
 
 function Submission() {
   return (
-    <div>Submission</div>
+    <div className='font-semibold'>Submission</div>
   )
 }
 
