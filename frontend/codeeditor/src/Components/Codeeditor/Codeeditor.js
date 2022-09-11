@@ -12,6 +12,7 @@ import axios from 'axios';
 import Questions from './Options/Questions';
 import Solutions from './Options/Solutions';
 import Submission from './Options/Submission';
+import { ResizableBox } from 'react-resizable';
 var base64 = require('base-64');
 
 function Codeeditor() {
@@ -19,8 +20,10 @@ function Codeeditor() {
     const[language, setLanguage] = useState(javascript);
     const[code, setCode] = useState();
     const[options, setOptions] = useState("questions");
-    const[output, setOutput] = useState();
+    const[output, setOutput] = useState("ABCD");
     const[opScreen, setOpScreen] = useState(false);
+    const[thin, setThin] = useState(false);
+    // const[loading, setLoading] = useState(false);
     const arr = [dracula, githubDark, sublime, xcodeDark];
     const themeName = ['Dracula', 'GithubDark', 'Sublime', 'XcodeDark'];
     const lang = ['C++', 'JavaScript', 'C', 'Java', 'HTML'];
@@ -45,11 +48,11 @@ function Codeeditor() {
 
 
     return (
-      <div className='w-full flex'>
-        <div className="ce w-1/2 text-lg">
-          <div className='editorHead py-2 flex justify-between px-8'>
+      <div className='parent w-full flex'>
+        <div className={`ce text-lg ${thin === true ? 'w-1/3' : 'w-1/2'}`}>
+          <div className='editorHead py-3 flex justify-between px-8'>
             <div className='languageDropdown'>
-              <select className='themeSelector w-full px-4 py-2 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => setLanguage(e.target.value)}>
+              <select className='themeSelector w-full px-1 py-1 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => setLanguage(e.target.value)}>
                 {lang.map((item, index) => {
                   return <option key={index} value={index}>{item}</option>
                 }
@@ -58,7 +61,7 @@ function Codeeditor() {
             </div>
 
             <div className='themeDropdown'>
-              <select className='themeSelector w-full px-4 py-2 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => {
+              <select className='themeSelector w-full px-1 py-1 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => {
                 setTheme(arr[e.target.value])
                 }}>
                 {
@@ -75,7 +78,7 @@ function Codeeditor() {
             spellCheck={true}
             autoCorrect={true}
             placeholder="Type here..."
-            height='80vh'
+            height='82vh'
             theme={theme}
             extensions={[javascript(), cpp(), html()]}
             onChange={(editor, data, value) => {
@@ -98,11 +101,13 @@ function Codeeditor() {
               </div>
 
             </div>
-            <span className='p-2 font-semibold'>{output}</span>
+            <div className='output_box'>
+              <div className='p-2 font-semibold scroll'>{output !== '' ? output : <div className='flex justify-center'><img style={{height: "100px"}} src="loading.gif" alt="" /></div>}</div>
+            </div>
           </div>
         </div>
-          <div className="divder"></div>
-        <div className="res w-1/2 pl-4 pr-4 pt-1">
+        <div className="divder"></div>
+        <div className={`res pl-4 pr-4 pt-1 ${thin === true ? 'w-2/3' : 'w-1/2'}`}>
           <div className="res-header flex justify-between items-center py-2">
               {/* create three divs named question, submit, solution */}
                <div className="br question" onClick={(event) => chooseOptions(event, 'questions')}>
@@ -115,10 +120,14 @@ function Codeeditor() {
                   <h1>Submission</h1>
                </div>
                <div className="size flex gap-3">
-                  <div className="box">
+                  <div className="box" onClick={() => {setThin(false)
+                    console.log(thin)
+                  }}>
                     <div className="box_fill_1"></div>
                   </div>
-                  <div className="box">
+                  <div className="box" onClick={() => {setThin(true)
+                      console.log(thin)
+                    }}>
                     <div className="box_fill_2"></div>
                   </div>
                </div>
