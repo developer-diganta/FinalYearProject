@@ -1,4 +1,5 @@
 import React from 'react';
+import Sidebar from '../../../Sidebar/Sidebar';
 import './Path.css';
 
 const val = {
@@ -36,12 +37,42 @@ const questions = [
         difficulty: "Easy",
         status: "Not Solved"
     },
+    {
+        question: "1",
+        description: "What is the output of the following code snippet?",
+        difficulty: "Easy",
+        status: "Solved"
+    },
+    {
+        question: "2",
+        description: "What is the output of the following code snippet?",
+        difficulty: "Easy",
+        status: "Solved"
+    },
+    {
+        question: "3",
+        description: "Find the shortest path between two nodes in a graph.",
+        difficulty: "Medium",
+        status: "Not Solved"
+    },
+    {
+        question: "4",
+        description: "Find the continuous subarray with the largest sum.",
+        difficulty: "Hard",
+        status: "Solved"
+    },
+    {
+        question: "5",
+        description: "Find the continuous subarray with the largest sum.",
+        difficulty: "Easy",
+        status: "Not Solved"
+    }
 ]
 
 function Path() {
   return (
     <div className="path flex w-full">
-        <div className='left 2xl:w-1/5'>
+        {/* <div className='left 2xl:w-1/5'>
             <div className="left_inner 2xl:w-1/5 pt-2">
                 <div className="logo_parent">
                 <div className="logo flex justify-center items-center bg-white">
@@ -72,7 +103,8 @@ function Path() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> */}
+        <Sidebar />
         <div className='right 2xl:w-4/5'>
             <div className="right_header flex justify-between px-4 py-2">
                 <div className="name font-semibold text-2xl">Path</div>
@@ -89,6 +121,7 @@ function Path() {
             <div className="sort_selection_area flex justify-end mr-10 text-sm">
                 <select id="countries" placeholder='Sory by difficulty' class="bg-white border text-lg border-gray-300 rounded-lg block w-48 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 {/* <option selected="">Sory by difficulty</option> */}
+                <option value="All">All</option>
                 <option value="US">Easy</option>
                 <option value="CA">Medium</option>
                 <option value="FR">Hard</option>
