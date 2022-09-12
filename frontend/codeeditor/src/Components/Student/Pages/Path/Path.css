@@ -65,6 +65,12 @@
 
 .right_header{
     background-color: #FFF80a;
+    /* create a bottom shadow */
+    box-shadow: 10px 0 10px 0 rgba(0,0,0,0.2);
+    z-index: 777;
+    /* make this header sticky on scroll */
+    position: sticky;
+    top: 0;
 }
 
 .icon{

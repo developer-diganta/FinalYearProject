@@ -27,6 +27,10 @@ module.exports = {
 
       'xxs': {'max': '359px'},
       // => @media (max-width: 359px) { ... }
+    },
+    colors: {
+      text: '#4D5559',
+      divide: "#E0E0E0",
     }
   },
   plugins: [],

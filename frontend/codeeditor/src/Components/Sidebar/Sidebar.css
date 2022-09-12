@@ -1,0 +1,29 @@
+.sideb{
+    /* create a box shadow */
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+    z-index: 888;
+    /* make this max height same as screen */
+    /* max-height: 100vh; */
+    /* make this sidebar sticky on scroll */
+    position: sticky;
+    left: 0;
+}
+
+.active{
+    background: rgba(41, 52, 98, 0.18);
+    border-left: 4px solid #293462;
+    color: #293462;
+}
+
+.elements:hover{
+    background: rgba(41, 52, 98, 0.18);
+    border-left: 4px solid #293462;
+    color: #293462;
+    cursor: pointer;
+}
+
+.not_active{
+    background: #fff;
+    border-left: 4px solid #fff;
+    color: #293462;
+}
