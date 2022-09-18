@@ -7,6 +7,8 @@
     /* make this sidebar sticky on scroll */
     position: sticky;
     left: 0;
+    position: fixed;
+    min-height: 100vh;
 }
 
 .active{
@@ -26,4 +28,12 @@
     background: #fff;
     border-left: 4px solid #fff;
     color: #293462;
+}
+
+/* Sidebar for mobile screen */
+.sidebar_mobile{
+    position: fixed;
+    background-color: #FFF;
+    z-index: 900;
+    min-height: 100vh;
 }

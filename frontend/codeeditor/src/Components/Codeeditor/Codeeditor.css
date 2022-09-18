@@ -92,7 +92,7 @@
   position: relative;
   background-color: #FFF;
   height: 82%;
-  width: 100%;
+  /* width: 100%; */
   overflow-y: scroll;
 }
 
@@ -138,4 +138,9 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.dw{
+  background-color: #293462;
+  color: #FFF;
 }
