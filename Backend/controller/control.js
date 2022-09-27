@@ -13,6 +13,7 @@ const generateToken = require("../utils/Auth/jwtGeneration");
 
 // const passport = require("passport");
 let languageIds = null;
+const adminLogin = {}
 const getProgrammingLanguageIds = async () => { 
     languageIds = await programmingLanguageIds();
 }
@@ -125,7 +126,26 @@ const signupTeacher = async (req, res) => {
     }
 }
 
-module.exports = {home, languages, submit, signupTeacher};
+const adminSignIn = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const validate = await signUpSchema.validateAsync({ username, password });
+        if (username ===  process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+            const time = new Date.getTime() / 1000();
+            const token = generateToken(username, time);
+            adminLogin = {
+                token: token,
+                ip: req.ip
+            }
+            res.status(200).json({ auth: true, token: token });
+        }
+    }
+    catch(error) {
+        res.status(422).json(error);
+    }
+}
+
+module.exports = {home, languages, submit, signupTeacher, adminSignIn};
 
 
 // const signupTeacher = async (req, res) => {
