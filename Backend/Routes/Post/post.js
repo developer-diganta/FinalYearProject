@@ -8,5 +8,7 @@ const router = express.Router();
 router.post('/submit', controls.submit);
 
 router.post('/signup/teacher', controls.signupTeacher);
+
+router.post("/admin/signin", controls.adminSignIn);
  
 module.exports = router; 
