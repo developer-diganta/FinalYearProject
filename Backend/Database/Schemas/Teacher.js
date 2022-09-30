@@ -1,3 +1,5 @@
+const { boolean } = require("joi");
+
 teacher = {
     name : String,
     username : String,
@@ -15,7 +17,8 @@ teacher = {
     ],
     courses : [{
         course_id : String
-    }]
+    }],
+    verified: Boolean,
 }
 
 module.exports = teacher;

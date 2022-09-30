@@ -11,6 +11,7 @@ const question = require("./Schemas/Question");
 const submission = require("./Schemas/Submission");
 const uptimeLogs = require("./Schemas/UptimeLogs");
 const submissionLogs = require("./Schemas/SubmissionLogs");
+const userVerification = require("./Schemas/Verify");
 
 const adminSchema = new mongoose.Schema(admin);
 const courseSchema = new mongoose.Schema(course);
@@ -19,6 +20,7 @@ const studentSchema = new mongoose.Schema(student);
 const universitySchema = new mongoose.Schema(university);
 const questionSchema = new mongoose.Schema(question);
 const submissionSchema = new mongoose.Schema(submission);
+const userVerificationSchema = new mongoose.Schema(userVerification);
 
 // teacherSchema.plugin(passportLocalMongoose);
 
@@ -35,4 +37,5 @@ const SubmissionLogs = mongoose.model("SubmissionLogs", submissionLogs);
 // passport.use(Teacher.createStrategy());
 // passport.serializeUser(Teacher.serializeUser());
 // passport.deserializeUser(Teacher.deserializeUser());
-module.exports = {Admin, Course, Teacher, Student, University, Question, Submission, UptimeLogs, SubmissionLogs};
+const UserVerification = mongoose.model("UserVerification", userVerificationSchema);
+module.exports = {Admin, Course, Teacher, Student, University, Question, Submission, UptimeLogs, SubmissionLogs, UserVerification};
