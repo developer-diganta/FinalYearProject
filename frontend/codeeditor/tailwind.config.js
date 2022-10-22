@@ -30,7 +30,13 @@ module.exports = {
     },
     colors: {
       text: '#4D5559',
-      divide: "#E0E0E0",
+      divide: "#7F8C9D",
+      primary: "#0E2A47",
+      white: "#FFF",
+      success: "#50D146",
+      error: "#FA432E",
+      lightGreen: "#A6F0A0",
+      lightRed: "#F0ADA0"
     }
   },
   plugins: [],
