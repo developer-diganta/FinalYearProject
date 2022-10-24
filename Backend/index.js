@@ -6,6 +6,7 @@ const { url } = require("./Database/Connection");
 const getRoutes = require("./Routes/Get/get");
 const testConnection = require("./Database/connectionTest");
 const postRoutes = require("./Routes/Post/post");
+const patchRoutes = require("./Routes/Patch/patch");
 const { addUptimeLog } = require("./utils/logger");
 const limiter = require("./configs/rate-limit-config");
 const helmet = require("helmet");
@@ -37,6 +38,7 @@ app.use(limiter(1, 1));
 // console.log(getRoutes)
 app.use("/", getRoutes);
 app.use("/", postRoutes);
+app.use("/", patchRoutes);
 // app.use("/getLanguages", getLanguages);
 
 module.exports = app;
