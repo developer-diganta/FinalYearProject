@@ -9,10 +9,10 @@ import { githubDark } from '@uiw/codemirror-theme-github';
 import { sublime } from '@uiw/codemirror-theme-sublime';
 import { xcodeDark } from '@uiw/codemirror-theme-xcode';
 import axios from 'axios';
-import Questions from './Options/Questions';
+import QDescription from './Options/QDescription';
 import Solutions from './Options/Solutions';
 import Submission from './Options/Submission';
-import { ResizableBox } from 'react-resizable';
+// import { ResizableBox } from 'react-resizable';
 var base64 = require('base-64');
 
 function Codeeditor() {
@@ -49,7 +49,7 @@ function Codeeditor() {
 
     return (
       <div className='parent w-full flex'>
-        <div className={`ce text-lg ${thin === true ? 'w-1/3' : 'w-1/2'}`}>
+        <div className={`ce relative text-lg ${thin === true ? 'w-1/3' : 'w-1/2'}`}>
           <div className='editorHead py-3 flex justify-between px-8'>
             <div className='languageDropdown'>
               <select className='themeSelector w-full px-1 py-1 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => setLanguage(e.target.value)}>
@@ -99,7 +99,6 @@ function Codeeditor() {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </div>
-
             </div>
             <div className='output_box'>
               <div className='p-2 font-semibold scroll'>{output !== '' ? output : <div className='flex justify-center'><img style={{height: "100px"}} src="loading.gif" alt="" /></div>}</div>
@@ -133,9 +132,11 @@ function Codeeditor() {
                </div>
           </div>
           <div className="options">
-              {
-                options === "questions" ? <Questions /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
-              }
+            <div className='inner_op'>
+                {
+                  options === "questions" ? <QDescription /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
+                }
+            </div>
           </div>
         </div>
       </div>
