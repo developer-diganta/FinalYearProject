@@ -4,7 +4,7 @@ teacher = {
     teacher_id : String,
     email : String,
     password : String,
-    unv_name : String,
+    university : String,
     phone : String,
     stream : String,
     dept : [

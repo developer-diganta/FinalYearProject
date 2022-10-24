@@ -2,8 +2,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const author = (req, res, next) => {
     const token = req.header("x-auth-token");
-    // const authHeader = req.headers['authorization']
-    // const token = authHeader && authHeader.split(' ')[1];
+    console.log(req.body)
     if(!token){
         console.log("NO TOKEN DETECTED")
         res.status(401).json({message:"No token detected"});
@@ -15,7 +14,8 @@ const author = (req, res, next) => {
                 res.status(401).json({message:"Verification Failed"});
             }
             else {
-                if (req.username === decoded.userName && req.email === decoded.email)
+                console.log(decoded.userName,req.email)
+                if (req.body.email === decoded.userName && req.body.phone === decoded.email)
                     next();
                 else
                     res.status(401).json({message:"Verification Failed"});

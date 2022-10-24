@@ -145,23 +145,235 @@ const adminSignIn = async (req, res) => {
     }
 }
 
-module.exports = {home, languages, submit, signupTeacher, adminSignIn};
+const adminUniversityData = async (req, res) => {
+    await models.University.find({}, (err, universities) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.status(200).json(universities);
+    });
+}
 
 
-// const signupTeacher = async (req, res) => {
-//     models.Teacher.register({
-//         username: req.body.username,
-//         email: req.body.email,
-//         name: req.body.name,
-//     }, req.body.password, (err, user) => {
-//         if (err) {
-//             console.log(err);
-//             res.status(500).json(err);
-//         }
-//         else {
-//             passport.authenticate("local")(req, res, () => {
-//                 res.status(200).json(user);
-//             });
-//         }
-//     });
-// }
+
+const universitySignUp = async (req, res) => {
+    console.log(req.body);
+    const { name, email, password, phone } = req.body;
+    try {
+        // const validate = await signUpSchema.validateAsync({ username, password, email });
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                models.University.find({ $or: [{ email: email }, { phone: phone }] }, async (err, university) => {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else if (university.length) {
+                        console.log(university);
+                        res.status(400).json({ message: "University already exists" });
+                    } else {
+                        const newUniversity = new models.University({
+                            name: name,
+                            email: email,
+                            password: hash,
+                            phone: phone,
+                            contract: [
+                                { status: "pending" }
+                            ]
+                        });
+                        console.log(newUniversity);
+                        await newUniversity.save((err) => {
+                            if (err)
+                                res.status(500).json(err);
+                            else {
+                                const token = generateToken(email, phone);
+                                res.status(200).json({ auth: true, token: token });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const universityLogin = async (req, res) => {
+    console.log("here")
+    const { email, password } = req.body;
+    try {
+        // const validate = await signUpSchema.validateAsync({ username, password });
+        models.University.find({ email: email }, async (err, university) => {
+            if (err) {
+                res.status(500).json(err);
+            } else if (university.length) {
+                bcrypt.compare(password, university[0].password, (err, result) => {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else if (result) {
+                        console.log("RRR",university)
+                        const token = generateToken(email, university[0].phone);
+                        res.status(200).json({ auth: true, token: token });
+                    } else {
+                        res.status(400).json({ message: "Invalid password" });
+                    }
+                });
+            } else {
+                res.status(400).json({ message: "Invalid email" });
+            }
+        });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const universityTeacherData = async (req, res) => {
+    models.University.find({ email: req.body.email }, (err, university) => {
+        if (err)
+        res.status(500).json(err);
+        else {
+            models.Teacher.find({ university: university[0]._id }, (err, teachers) => {
+                if (err)
+                res.status(500).json(err);
+                else
+                res.status(200).json(teachers);
+            });
+        }
+    }) 
+}
+
+const universityTeacherCount = async (req, res) => {
+    models.University.find({ email: req.body.email }, (err, university) => {
+        if (err)
+            res.status(500).json(err);
+        else {
+            models.Teacher.find({ university: university[0]._id }, (err, teachers) => {
+                if (err)
+                    res.status(500).json(err);
+                else
+                    res.status(200).json({ count: teachers.length });
+            });
+        }
+    })
+}
+
+const universityEdit = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        const university = await models.University.findById(universityId);
+        if (req.body.phone) {
+            university.phone = req.body.phone;
+        }
+        if (req.body.email) {
+            university.email = req.body.email;
+        }
+        if (req.body.password) {
+            university.password = req.body.password;
+        }
+        if (req.body.point_of_contact) {
+            university.point_of_contact = req.body.point_of_contact;
+        }
+        if (req.body.address) {
+            university.address = req.body.address;
+        }
+        if (req.body.website) {
+            university.website = req.body.website;
+        }
+        await university.save((err) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json({ message: "University updated" });
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const getUniversityContract = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        const university = await models.University.findById(universityId, (err, university) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(university.contract);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const contractExpiryDetails = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        const university = await models.University.findById(universityId, (err, university) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                const contractExpiry = {
+                    contractExpiry: university.contract[0].contractExpiry,
+                    contractExpiryDate: university.contract[0].contractExpiryDate,
+                    contractExpiryTimeRemaining: new Date(university.contract[0].contractExpiryDate).getTime() - new Date().getTime()
+                }
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+
+const getUniversityStudentData = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ university: universityId }, (err, students) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(students);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const getUniversityStudentCount = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ university: universityId }, (err, students) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json({ count: students.length });
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+
+
+module.exports = {
+    home,
+    languages,
+    submit,
+    signupTeacher,
+    adminSignIn,
+    universityLogin,
+    universitySignUp,
+    universityTeacherData,
+    universityTeacherCount,
+    universityEdit,
+    getUniversityContract,
+    contractExpiryDetails,
+    getUniversityStudentData,
+    getUniversityStudentCount
+};
+
