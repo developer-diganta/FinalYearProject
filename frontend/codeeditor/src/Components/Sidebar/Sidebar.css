@@ -1,29 +1,47 @@
 .sideb{
     /* create a box shadow */
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+    /* box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
     z-index: 888;
-    /* make this max height same as screen */
-    /* max-height: 100vh; */
-    /* make this sidebar sticky on scroll */
-    position: sticky;
     left: 0;
+    position: fixed;
+    min-height: 100vh; */
+    background-color: #313a46;
+    position: fixed;
+    right: auto;
+    bottom: auto;
+    z-index: 1000;
+    height: 100%;
 }
 
-.active{
-    background: rgba(41, 52, 98, 0.18);
-    border-left: 4px solid #293462;
-    color: #293462;
+/* reduce scrollbar width */
+::-webkit-scrollbar {
+    width: 0.3rem;
 }
+
+.test{
+    padding: 2px;
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+}
+
 
 .elements:hover{
-    background: rgba(41, 52, 98, 0.18);
-    border-left: 4px solid #293462;
-    color: #293462;
+    color: #ffffff;
     cursor: pointer;
 }
 
+.elements.active{
+    color: #ffffff;
+}
 .not_active{
-    background: #fff;
-    border-left: 4px solid #fff;
-    color: #293462;
+    color: #7F8C9D;
+}
+
+/* Sidebar for mobile screen */
+.sidebar_mobile{
+    position: fixed;
+    background-color: #FFF;
+    z-index: 900;
+    min-height: 100vh;
 }

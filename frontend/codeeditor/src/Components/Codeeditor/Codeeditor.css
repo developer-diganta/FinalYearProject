@@ -92,13 +92,29 @@
   position: relative;
   background-color: #FFF;
   height: 82%;
-  width: 100%;
+  /* width: 100%; */
   overflow-y: scroll;
 }
 
 .hide-op{
   animation: slide-down 1s;
   display: none;
+}
+
+.options{
+  width: 100%;
+  position: fixed;
+  right: auto;
+  bottom: auto;
+  z-index: 1000;
+  height: 100%;
+}
+
+.inner_op{
+  padding: 2px;
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
 }
 
 @keyframes slide-down {
@@ -138,4 +154,9 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+.dw{
+  background-color: #293462;
+  color: #FFF;
 }
