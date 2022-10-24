@@ -1,6 +1,6 @@
 university = {
-    university_id:String,
     name: String,
+    password: String,
     address: {
         street: String,
         city: String,
@@ -10,6 +10,7 @@ university = {
     },
     phone: String,
     email: String,
+    website: String,
     point_of_contact: {
         name: String,
         phone: String,
@@ -23,6 +24,7 @@ university = {
         },
     },
     contract: {
+        status: String,
         contract_id: String,
         contract_name: String,
         contract_type: String,
