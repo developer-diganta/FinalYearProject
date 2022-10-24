@@ -101,6 +101,22 @@
   display: none;
 }
 
+.options{
+  width: 100%;
+  position: fixed;
+  right: auto;
+  bottom: auto;
+  z-index: 1000;
+  height: 100%;
+}
+
+.inner_op{
+  padding: 2px;
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+}
+
 @keyframes slide-down {
   0% {
     bottom: 0px;

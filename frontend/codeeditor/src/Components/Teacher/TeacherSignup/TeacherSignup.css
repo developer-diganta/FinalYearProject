@@ -1,0 +1,51 @@
+.signup_left{
+    /* background: ; */
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../../../public/Sound\ Wave.svg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    /* width: 50%; */
+    /* position: absolute; */
+    left: 0;
+    top: 0;
+    color: #FFF;
+    font-weight: 600;
+    /* background: ; */
+    /* put an overlay */
+}
+
+.signup_right{
+    background-color: #f9fafd;
+}
+
+.input_box{
+    background: #FFFFFF;
+    border: 1px solid #0E2A47;
+    border-radius: 6px;
+}
+
+.sign_up_btn{
+    background: #E2E2E2;
+    border: 1px solid #787878;
+    border-radius: 6px;
+}
+
+.line{
+    min-height: 1px;
+    min-width: 200px;
+    max-height: 1px;
+    max-width: 200px;
+    background-color: #B0B0B0;
+}
+
+.heading{
+    position: relative;
+    top: 0px;
+}
+
+/* make input_box border color sky blue on click */
+.input_box input:focus{
+    outline: none;
+    /* put a box shadow */
+}

@@ -9,7 +9,7 @@ import { githubDark } from '@uiw/codemirror-theme-github';
 import { sublime } from '@uiw/codemirror-theme-sublime';
 import { xcodeDark } from '@uiw/codemirror-theme-xcode';
 import axios from 'axios';
-import Questions from './Options/Questions';
+import QDescription from './Options/QDescription';
 import Solutions from './Options/Solutions';
 import Submission from './Options/Submission';
 // import { ResizableBox } from 'react-resizable';
@@ -132,9 +132,11 @@ function Codeeditor() {
                </div>
           </div>
           <div className="options">
-              {
-                options === "questions" ? <Questions /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
-              }
+            <div className='inner_op'>
+                {
+                  options === "questions" ? <QDescription /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
+                }
+            </div>
           </div>
         </div>
       </div>
