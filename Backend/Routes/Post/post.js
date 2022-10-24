@@ -21,8 +21,6 @@ router.post("/university/teacher", authoriseUniversity, controls.universityTeach
 
 router.post("/university/teacher/count", authoriseUniversity, controls.universityTeacherCount);
 
-router.post("/university/edit", authoriseUniversity, controls.universityEdit);
-
 router.post("/university/contract", authoriseUniversity, controls.getUniversityContract);
 
 router.post("/university/contract/expiry", authoriseUniversity, controls.contractExpiryDetails);
