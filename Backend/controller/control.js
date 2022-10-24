@@ -20,8 +20,9 @@ const path = require('path');
 
 // const passport = require("passport");
 let languageIds = null;
+const adminLogin = {}
 const getProgrammingLanguageIds = async () => { 
-    ids = await programmingLanguageIds();
+    languageIds = await programmingLanguageIds();
 }
 getProgrammingLanguageIds();
 
@@ -51,10 +52,10 @@ const home = (req, res) => {
 }
 
 const languages = async (req, res) => {
-    if (!ids)
-        ids = await programmingLanguageIds();
+    if (!languageIds)
+        languageIds = await programmingLanguageIds();
     try {
-        res.status(200).json(ids);
+        res.status(200).json(languageIds);
     } catch (error) {
         res.status(500).json(error);
     }
@@ -336,8 +337,26 @@ const userVerify = async (req, res) => {
 const verified = (req, res) => {
     res.sendFile(path.join(__dirname, "../ViewPage/notVerified.html"));
 }
+const adminSignIn = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const validate = await signUpSchema.validateAsync({ username, password });
+        if (username ===  process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+            const time = new Date.getTime() / 1000();
+            const token = generateToken(username, time);
+            adminLogin = {
+                token: token,
+                ip: req.ip
+            }
+            res.status(200).json({ auth: true, token: token });
+        }
+    }
+    catch(error) {
+        res.status(422).json(error);
+    }
+}
 
-module.exports = {home, languages, submit, signupTeacher, verified, userVerify};
+module.exports = {home, languages, submit, signupTeacher, verified, userVerify, adminSignIn};
 
 // const signupTeacher = async (req, res) => {
 //     models.Teacher.register({
