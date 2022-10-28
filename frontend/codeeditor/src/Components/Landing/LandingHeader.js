@@ -15,7 +15,7 @@ function LandingHeader() {
                 <div className="landing_header_right md:hidden flex gap-10 items-center pr-8">
                     <div className='nav_link home' style={{color: "#9900ff"}} onClick={() => navigate('/')}>Home</div>
                     <div className='nav_link about'>About</div>
-                    <div className='nav_link contactus' onClick={() => navigate('/purchase/university')}>For University</div>
+                    <div className='nav_link contactus' onClick={() => navigate('/university')}>For University</div>
                     
                 </div>
                 <div className="md_page hidden md:block pr-8 py-2">

@@ -1,7 +1,9 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { universitySignup } from '../../Redux/Counter';
 import Header from '../AppHeader/Header';
 
 function UniversitySignup() {
@@ -10,6 +12,7 @@ function UniversitySignup() {
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
   const[register, setRegister] = useState(false);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -55,7 +58,10 @@ function UniversitySignup() {
               </svg>
               <input type="password" placeholder="Enter password" onChange={(ele) => setPassword(ele.target.value)} />
             </div>
-              <button className='sign_up_btn px-4 py-2 my-4' onClick={() => setRegister(true) }>continue</button>
+              <button className='sign_up_btn px-4 py-2 my-4' onClick={() => {
+                dispatch(universitySignup(true))
+                navigate('/university/dashboard')
+                }}>continue</button>
               <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}}>login</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
