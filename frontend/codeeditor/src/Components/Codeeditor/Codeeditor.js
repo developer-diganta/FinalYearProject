@@ -23,6 +23,7 @@ function Codeeditor() {
     const[output, setOutput] = useState("ABCD");
     const[opScreen, setOpScreen] = useState(false);
     const[thin, setThin] = useState(false);
+    const[slide, setSlide] = useState(false);
     // const[loading, setLoading] = useState(false);
     const arr = [dracula, githubDark, sublime, xcodeDark];
     const themeName = ['Dracula', 'GithubDark', 'Sublime', 'XcodeDark'];
@@ -46,10 +47,31 @@ function Codeeditor() {
       setOpScreen(false);
     }
 
+    const left = document.getElementById("left");
+    const right = document.getElementById("right");
+
+    const handleWidth = (e) => {
+      if(slide){
+        const p = e.clientX/window.innerWidth*100;
+        left.style.width = `${p}%`;
+        right.style.width = `${100-p}%`;
+      }
+    }
+    
+    const checkSlider = () => {
+      // event.preventDefault();
+      console.log(slide);
+      if(slide){
+        setSlide(false);
+      }
+    }
+
+    document.onmousemove = e => handleWidth(e);
+    document.ontouchmove = e => handleWidth(e.touches[0]);
 
     return (
       <div className='parent w-full flex'>
-        <div className={`ce relative text-lg ${thin === true ? 'w-1/3' : 'w-1/2'}`}>
+        <div className={`ce relative text-lg w-1/2`} id="left" onClick={() => checkSlider()} style={{minWidth: "40vw"}}>
           <div className='editorHead py-3 flex justify-between px-8'>
             <div className='languageDropdown'>
               <select className='themeSelector w-full px-1 py-1 rounded-sm bg-white border-2 border-gray-300' onChange={(e) => setLanguage(e.target.value)}>
@@ -105,8 +127,10 @@ function Codeeditor() {
             </div>
           </div>
         </div>
-        <div className="divder"></div>
-        <div className={`res pl-4 pr-4 pt-1 ${thin === true ? 'w-2/3' : 'w-1/2'}`}>
+        <div className="divder tooltip_1 hover:bg-[#B8B8B8]" onClick={() => setSlide(!slide)}>
+            <div className='tooltiptext_1 text-xs font-semibold'>Click to adjust size</div>
+        </div>
+        <div className={`res pl-4 pr-4 pt-1 w-1/2`} id="right" onClick={() => checkSlider()} style={{minWidth: "40vw"}}>
           <div className="res-header flex justify-between items-center py-2">
               {/* create three divs named question, submit, solution */}
                <div className="br question" onClick={(event) => chooseOptions(event, 'questions')}>
@@ -118,7 +142,7 @@ function Codeeditor() {
                <div className="br subm" onClick={(event) => chooseOptions(event, 'submission')}>
                   <h1>Submission</h1>
                </div>
-               <div className="size flex gap-3">
+               {/* <div className="size flex gap-3">
                   <div className="box" onClick={() => {setThin(false)
                     console.log(thin)
                   }}>
@@ -129,7 +153,7 @@ function Codeeditor() {
                     }}>
                     <div className="box_fill_2"></div>
                   </div>
-               </div>
+               </div> */}
           </div>
           <div className="options">
             <div className='inner_op'>
@@ -144,3 +168,8 @@ function Codeeditor() {
 }
 
 export default Codeeditor
+
+
+
+        // ${thin === true ? 'w-1/3' : 'w-1/2'}
+        // ${thin === true ? 'w-2/3' : 'w-1/2'}

@@ -160,3 +160,30 @@
   background-color: #293462;
   color: #FFF;
 }
+
+.tooltip_1 {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip_1 .tooltiptext_1 {
+  visibility: hidden;
+  width: 160px;
+  background-color: #FFF;
+  color: #000000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  border: 1px solid #000000;
+
+  /* Position the tooltip */
+  position: absolute;
+  top: 50%;
+  left: -4rem;
+  z-index: 1;
+}
+
+.tooltip_1:hover .tooltiptext_1 {
+  visibility: visible;
+}
