@@ -2,7 +2,17 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 //import useDispatch()
 import { useDispatch, useSelector } from 'react-redux';
-import { incrementAsync } from '../../Redux/Counter';
+import { incrementAsync, setOpenClose } from '../../Redux/Counter';
+import { Link } from 'react-router-dom';
+
+import { HiMenuAlt3 } from "react-icons/hi";
+import { RiSettings4Line } from "react-icons/ri";
+
+import { TfiBlackboard } from "react-icons/tfi";
+import { FiUsers } from "react-icons/fi";
+import { VscBook } from "react-icons/vsc";
+import { BiEditAlt } from "react-icons/bi";
+import { BsGraphUp } from "react-icons/bs";
 
 function Sidebarstudent({openSidebarVal, theme}) {
     // console.log(openSidebarVal);
@@ -167,4 +177,69 @@ function Sidebarstudent({openSidebarVal, theme}) {
   )
 }
 
-export {Sidebarstudent}
+
+const Sidebaruniversity = () => {
+        const menus = [
+          { name: "teachers", link: "/", icon: TfiBlackboard },
+          { name: "students", link: "/", icon: FiUsers },
+          { name: "courses", link: "/", icon: VscBook },
+          { name: "edit", link: "/", icon: BiEditAlt, margin: true },
+          { name: "Analyse", link: "/", icon: BsGraphUp },
+          { name: "Setting", link: "/", icon: RiSettings4Line },
+        ];
+        const [open, setOpen] = useState(true);
+        const dispatch = useDispatch();
+        const { openClose } = useSelector((state) => state.counter);
+        return (
+          <section className="flex gap-6">
+            <div
+              className={`bg-[#9900ff] min-h-screen text-white ${
+                open ? "w-full" : "w-16"
+              } duration-500 text-gray-100 px-4`}
+            >
+              <div className="py-3 flex justify-between">
+                <div className='text-4xl' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}}>Slate</div>
+                <HiMenuAlt3
+                  size={26}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setOpen(!open)
+                    dispatch(setOpenClose(!openClose))
+                  }}
+                />
+              </div>
+              <div className="mt-4 flex flex-col gap-4 relative">
+                {menus?.map((menu, i) => (
+                  <Link
+                    to={menu?.link}
+                    key={i}
+                    className={` ${
+                      menu?.margin && "mt-5"
+                    } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+                  >
+                    <div>{React.createElement(menu?.icon, { size: "20" })}</div>
+                    <h2
+                      style={{
+                        transitionDelay: `${i + 3}00ms`,
+                      }}
+                      className={`whitespace-pre duration-500 text-lg ${
+                        !open && "opacity-0 translate-x-28 overflow-hidden"
+                      }`}
+                    >
+                      {menu?.name}
+                    </h2>
+                    <h2
+                      className={`${
+                        open && "hidden"
+                      } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit text-[#000000]  `}
+                    >
+                      {menu?.name}
+                    </h2>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      };
+export {Sidebarstudent, Sidebaruniversity}

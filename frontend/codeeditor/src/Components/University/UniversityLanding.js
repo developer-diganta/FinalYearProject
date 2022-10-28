@@ -13,12 +13,17 @@ function UniversityLanding() {
             <div className='w-8/12 flex flex-col justify-center pl-16' style={{color: "#212529"}}>
                 <h1 className='text-4xl font-semibold font-sans w-3/5'>Prepare students with better skills in a convenient way.</h1>
                 <p className='text-lg w-4/6  pt-4 tracking-wider leading-8 font-sans'>A place where you can share your thoughts and ideas with the world. A place where you can share your thoughts and ideas with the world.</p>
-                <div className="buy w-36 flex justify-center gap-2 items-center py-4 mt-10 rounded-sm text-lg text-white font-bold tracking-widest cursor-pointer" onClick={() => navigate('/purchase/university/signup')}>
-                    Buy
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-</svg>
+                <div className='flex gap-8'>
+                  <div className="buy w-36 flex justify-center gap-2 items-center py-4 mt-10 rounded-sm text-lg text-white font-bold tracking-widest cursor-pointer" onClick={() => navigate('/university/dashboard')}>
+                      Dashboard
+                  </div>
+                  <div className="buy w-36 flex justify-center gap-2 items-center py-4 mt-10 rounded-sm text-lg text-white font-bold tracking-widest cursor-pointer" onClick={() => navigate('/university/signup')}>
+                      Buy
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
 
+                  </div>
                 </div>
             </div>
             <div className='w-4/12 h-96 relative'>
