@@ -13,6 +13,7 @@ import { FiUsers } from "react-icons/fi";
 import { VscBook } from "react-icons/vsc";
 import { BiEditAlt } from "react-icons/bi";
 import { BsGraphUp } from "react-icons/bs";
+import { MdOutlineDashboardCustomize } from "react-icons/md";
 
 function Sidebarstudent({openSidebarVal, theme}) {
     // console.log(openSidebarVal);
@@ -180,9 +181,10 @@ function Sidebarstudent({openSidebarVal, theme}) {
 
 const Sidebaruniversity = () => {
         const menus = [
-          { name: "teachers", link: "/", icon: TfiBlackboard },
-          { name: "students", link: "/", icon: FiUsers },
-          { name: "courses", link: "/", icon: VscBook },
+          { name: "dashboard", link: "/university/dashboard", icon: MdOutlineDashboardCustomize },
+          { name: "teachers", link: "/university/teachers", icon: TfiBlackboard },
+          { name: "students", link: "/university/students", icon: FiUsers },
+          { name: "courses", link: "/university/courses", icon: VscBook },
           { name: "edit", link: "/", icon: BiEditAlt, margin: true },
           { name: "Analyse", link: "/", icon: BsGraphUp },
           { name: "Setting", link: "/", icon: RiSettings4Line },
