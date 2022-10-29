@@ -41,3 +41,7 @@
 .buy{
     background-color: #9900ff;
 }
+
+details[open]{
+    border: 1px solid #9900ff;
+}
