@@ -359,6 +359,104 @@ const getUniversityStudentCount = async (req, res) => {
 }
 
 
+// POST route
+const getUniversityTeacherData = async (req, res) => {
+    const teacherId = req.body.teacherId;
+    const universityId = req.body.universityId;
+    try {
+        models.Teacher.find({ _id: teacherId, university: universityId }, (err, teacher) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(teacher);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// POST route
+const getUniversityTeacherWaitlist = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Teacher.find({ university: universityId, status: "waitlist" }, (err, teachers) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(teachers);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// POST route
+const getUniversityTeacherWaitlistById = async (req, res) => {
+    const teacherId = req.body.teacherId;
+    const universityId = req.body.universityId;
+    try {
+        models.Teacher.find({ _id: teacherId, university: universityId, status: "waitlist" }, (err, teacher) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(teacher);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// Patch route
+const acceptTeacherWaitlist = async (req, res) => {
+    const teacherId = req.body.teacherId;
+    const universityId = req.body.universityId;
+    try {
+        models.Teacher.find({ _id: teacherId, university: universityId, status: "waitlist" }, (err, teacher) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                teacher[0].status = "active";
+                teacher[0].save((err) => {
+                    if (err)
+                        res.status(500).json(err);
+                    else
+                        res.status(200).json({ message: "Teacher accepted" });
+                });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// Patch route
+const rejectTeacherWaitlist = async (req, res) => {
+    const teacherId = req.body.teacherId;
+    const universityId = req.body.universityId;
+    try {
+        models.Teacher.find({ _id: teacherId, university: universityId, status: "waitlist" }, (err, teacher) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                teacher[0].status = "rejected";
+                teacher[0].save((err) => {
+                    if (err)
+                        res.status(500).json(err);
+                    else
+                        res.status(200).json({ message: "Teacher rejected" });
+                });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 
 module.exports = {
     home,
