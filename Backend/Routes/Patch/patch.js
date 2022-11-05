@@ -7,4 +7,8 @@ const router = express.Router();
 
 router.patch("/university/edit", authoriseUniversity, controls.universityEdit);
 
+router.patch("/university/teacher/edit/:id", authoriseUniversity, controls.universityTeacherEdit);
+
+router.patch("/university/student/edit/:id", authoriseUniversity, controls.universityStudentEdit);
+
 module.exports = router;
