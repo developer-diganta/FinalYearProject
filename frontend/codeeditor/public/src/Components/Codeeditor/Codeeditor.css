@@ -1,0 +1,189 @@
+.cm-lineNumbers {
+  background-color: #1F1F28;
+}
+
+.editorHead{
+    background-color: #f2f2f2;
+}
+
+.themeSelector:focus{
+    outline: none;
+}
+
+.run, .submit{
+  background-color: #EFEFEF;
+}
+
+.run{
+  background-color: #d1e3e2;
+  border: 1px dashed  #829d9c;
+}
+
+.submit{
+  background-color: #27393b;
+  color: #FFF;
+}
+
+.footer{
+  background-color: #f2f2f2;
+}
+
+.box{
+  max-width: 20px;
+  max-height: 20px;
+  border-radius: 4px;
+  min-width: 20px;
+  min-height: 20px;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+}
+
+.box_fill_1{
+  max-width: 60%;
+  min-width: 60%;
+  max-height: 18px;
+  min-height: 18px;
+  background-color: #d1d5db;
+  border: 2px solid #d1d5db;
+  /* border */
+}
+
+.box_fill_2{
+  max-width: 25%;
+  min-width: 25%;
+  max-height: 18px;
+  min-height: 18px;
+  background-color: #d1d5db;
+  border: 2px solid #d1d5db;
+  /* border */
+}
+
+.br{
+  background-color: #f2f2f2;
+  border: 2px solid #d1d5db;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.res-header{
+  border-bottom: 1px solid #d1d5db;
+}
+
+.divder{
+  max-width: 10px;
+  min-width: 10px;
+  min-height: 100vh;
+  max-height: 102vh;
+  background-color: #d1d5db;
+}
+
+
+.output{
+  /* position: relative;   */
+  position: absolute;
+  background-color: #FFF;
+  height: 190px;
+  width: 100%;
+  bottom: 0px;
+  animation: slide-up 1s;
+}
+
+.output_box{
+  position: relative;
+  background-color: #FFF;
+  height: 82%;
+  /* width: 100%; */
+  overflow-y: scroll;
+}
+
+.hide-op{
+  animation: slide-down 1s;
+  display: none;
+}
+
+.options{
+  width: 100%;
+  position: fixed;
+  right: auto;
+  bottom: auto;
+  z-index: 1000;
+  height: 100%;
+}
+
+.inner_op{
+  padding: 2px;
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+}
+
+@keyframes slide-down {
+  0% {
+    bottom: 0px;
+  }
+  100% {
+    bottom: -900px;
+  }
+}
+
+@keyframes slide-up{
+  0%{
+    bottom: -400px;
+  }
+  100%{
+    bottom: 0px;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.dw{
+  background-color: #293462;
+  color: #FFF;
+}
+
+.tooltip_1 {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip_1 .tooltiptext_1 {
+  visibility: hidden;
+  width: 160px;
+  background-color: #FFF;
+  color: #000000;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  border: 1px solid #000000;
+
+  /* Position the tooltip */
+  position: absolute;
+  top: 50%;
+  left: -4rem;
+  z-index: 1;
+}
+
+.tooltip_1:hover .tooltiptext_1 {
+  visibility: visible;
+}
