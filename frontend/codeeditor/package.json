@@ -9,7 +9,6 @@
     "@lezer/highlight": "^1.0.0",
     "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@uiw/codemirror-theme-dracula": "^4.11.0",
     "@uiw/codemirror-theme-github": "^4.11.0",
@@ -53,6 +52,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^13.4.0",
+    "react-test-renderer": "^18.2.0",
+    "redux-mock-store": "^1.5.4",
     "tailwindcss": "^3.1.5"
   }
 }
