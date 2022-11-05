@@ -1,0 +1,48 @@
+.a{
+    position: absolute;
+    min-width: 300px;
+    min-height: 300px;
+    border-radius: 100% 0% 100% 0% / 100% 0% 100% 0% ;
+    background-color: rgba(153, 0, 255, 1);
+    overflow: hidden;
+}
+
+.a1{
+    left: 80px;
+    bottom: -20px;
+}
+
+.b{
+    transform: rotate(30deg);
+    bottom: -20px;
+    left: 80px;
+    background-color: rgba(153, 0, 255, 0.3);
+}
+
+.c{
+    transform: rotate(60deg);
+    bottom: -20px;
+    left: 80px;
+    background-color: rgba(153, 0, 255, 0.4);
+}
+
+.d{
+    transform: rotate(120deg);
+    bottom: -20px;
+    left: 80px;
+    background-color: rgba(153, 0, 255, 0.6);
+}
+
+.unv_img{
+    height: 30rem;
+    top: -76px;
+    clip-path: circle(56.2% at 20% 52%);
+}
+
+.buy{
+    background-color: #9900ff;
+}
+
+details[open]{
+    border: 1px solid #9900ff;
+}
