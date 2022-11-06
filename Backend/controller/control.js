@@ -457,6 +457,169 @@ const rejectTeacherWaitlist = async (req, res) => {
     }
 }
 
+// POST route
+
+const getUniversityStudentWaitlist = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ university: universityId, status: "waitlist" }, (err, students) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(students);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// POST route
+const getUniversityStudentWaitlistById = async (req, res) => {
+    const studentId = req.body.studentId;
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ _id: studentId, university: universityId, status: "waitlist" }, (err, student) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(student);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// Patch  route
+const acceptStudentWaitlist = async (req, res) => {
+    const studentId = req.body.studentId;
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ _id: studentId, university: universityId, status: "waitlist" }, (err, student) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                student[0].status = "active";
+                student[0].save((err) => {
+                    if (err)
+                        res.status(500).json(err);
+                    else
+                        res.status(200).json({ message: "Student accepted" });
+                });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// Patch route
+const rejectStudentWaitlist = async (req, res) => {
+    const studentId = req.body.studentId;
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ _id: studentId, university: universityId, status: "waitlist" }, (err, student) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                student[0].status = "rejected";
+                student[0].save((err) => {
+                    if (err)
+                        res.status(500).json(err);
+                    else
+                        res.status(200).json({ message: "Student rejected" });
+                });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// Patch route
+const acceptAllStudentWaitlist = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ university: universityId, status: "waitlist" }, (err, students) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                students.forEach(student => {
+                    student.status = "active";
+                    student.save((err) => {
+                        if (err)
+                            res.status(500).json(err);
+                    });
+                });
+                res.status(200).json({ message: "All students accepted" });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// Patch route
+const rejectAllStudentWaitlist = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Student.find({ university: universityId, status: "waitlist" }, (err, students) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                students.forEach(student => {
+                    student.status = "rejected";
+                    student.save((err) => {
+                        if (err)
+                            res.status(500).json(err);
+                    });
+                });
+                res.status(200).json({ message: "All students rejected" });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+//  GET route
+const getUniversityCourse = async (req, res) => {
+    const universityId = req.body.universityId;
+    try {
+        models.Course.find({ university: universityId }, (err, courses) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(courses);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+// GET route
+const getUniversityCourseByTeacherId = async (req, res) => {
+    const teacherId = req.body.teacherId;
+    const universityId = req.body.universityId;
+    try {
+        models.Course.find({ teacher: teacherId, university: universityId }, (err, courses) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json(courses);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 
 module.exports = {
     home,
@@ -472,6 +635,20 @@ module.exports = {
     getUniversityContract,
     contractExpiryDetails,
     getUniversityStudentData,
-    getUniversityStudentCount
+    getUniversityStudentCount,
+    getUniversityTeacherData,
+    getUniversityStudentWaitlist,
+    getUniversityStudentWaitlistById,
+    acceptStudentWaitlist,
+    rejectStudentWaitlist,
+    acceptAllStudentWaitlist,
+    rejectAllStudentWaitlist,
+    getUniversityCourse,
+    getUniversityCourseByTeacherId,
+    getUniversityTeacherWaitlist,
+    getUniversityTeacherWaitlistById,
+    acceptTeacherWaitlist,
+    rejectTeacherWaitlist,
+    
 };
 
