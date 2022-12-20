@@ -11,6 +11,7 @@ import UniversitySignup from './Components/University/UniversitySignup';
 import UniversityLanding from './Components/University/UniversityLanding';
 import UniversityTeacher from './Components/University/UniversityTeacher';
 import UniversityGeneralPage from './Components/University/UniversityGeneralPage';
+import UniversityLogin from './Components/University/UniversityLogin';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             {/* Purchase product university */}
             <Route path='/university' element={<UniversityLanding />} />
             <Route path='/university/signup' element={<UniversitySignup />} />
+            <Route path='/university/login' element={<UniversityLogin />} />
             <Route path='/university/:unvpage' element={<UniversityGeneralPage />} />
             {/* Signup, signin and mail-verification */}
             <Route path='/signup/student' element={<StudentSignup />} />

@@ -3,6 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../AppHeader/Header';
+import LandingHeader from '../../Landing/LandingHeader';
 import './TeacherSignup.css';
 
 function TeacherSignup() {
@@ -10,6 +11,7 @@ const[name, setName] = useState();
 const[username, setUsername] = useState();
 const[email, setEmail] = useState();
 const[password, setPassword] = useState();
+const[university, setUniversity] = useState();
 
 const navigate = useNavigate();
 
@@ -32,14 +34,10 @@ async function getFormValue(event){
 }
   return (
     <div>
-    <Header show={'logo'} />
+      <LandingHeader />
     <div className="signup flex justify-center">
-        <div className="signup_left w-1/2 lg:w-0">
-          <div className="flex items-center text-4xl gap-1 justify-center h-full">
-              <h1>L</h1>
-              <img className='w-14 h-14' style={{borderRadius: "50%", border: "2px solid #FFF"}} src="/tan.png" alt="Coding Ninjas" />
-              <h1>GO</h1>
-          </div>
+        <div className="signup_left w-1/2 lg:w-0 flex items-center justify-center">
+          <img style={{height: "80vh"}} src="/signup.svg" alt="" />
         </div>
 
         <div className="signup_right w-1/2 lg:w-full flex flex-col items-center">
@@ -68,6 +66,24 @@ async function getFormValue(event){
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
               <input type="password" placeholder="Enter your password" onChange={(ele) => setPassword(ele.target.value)} />
+            </div>
+            {/* create an input dropdown field for choosing university names */}
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+              </svg>
+              <select className='w-full' name="university" id="university" onChange={(ele) => setUniversity(ele.target.value)}>
+                <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your university</option>
+                <option value="IIT Bombay">IIT Bombay</option>
+                <option value="IIT Delhi">IIT Delhi</option>
+                <option value="IIT Kanpur">IIT Kanpur</option>
+                <option value="IIT Kharagpur">IIT Kharagpur</option>
+                <option value="IIT Madras">IIT Madras</option>
+                <option value="IIT Roorkee">IIT Roorkee</option>
+                <option value="IIT Guwahati">IIT Guwahati</option>
+                <option value="IIT Hyderabad">IIT Hyderabad</option>
+
+              </select>
             </div>
               <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
           </form>

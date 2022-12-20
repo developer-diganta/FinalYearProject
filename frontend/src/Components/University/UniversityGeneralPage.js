@@ -19,9 +19,16 @@ function UniversityGeneralPage() {
 
     useEffect(() => {
         console.log("abcd");
+        const token = localStorage.getItem('signup_token');
+        // const{unvSign} = useSelector((state) => state.counter);
+        console.log(token);
         if(!unvSign){
             console.log("abcd");
-            navigate('/university/signup')
+            navigate('/university/signup');
+        }
+        else{
+            console.log("sjdhfsjfgjgfej");
+            navigate('/university/dashboard');
         }
     }, [])
 

@@ -3,7 +3,7 @@ import './Sidebar.css';
 //import useDispatch()
 import { useDispatch, useSelector } from 'react-redux';
 import { incrementAsync, setOpenClose } from '../../Redux/Counter';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiSettings4Line } from "react-icons/ri";
@@ -193,6 +193,7 @@ const Sidebaruniversity = () => {
         const[smallOpen, setSmallOpen] = useState(false);
         const dispatch = useDispatch();
         const { openClose } = useSelector((state) => state.counter);
+        const navigate = useNavigate();
         return (
           <div data-testid='sidebar'>
             <section className="flex gap-6">
@@ -201,8 +202,8 @@ const Sidebaruniversity = () => {
                   open ? "w-full" : "w-16"
                 } duration-500 text-gray-100 px-4 md:relative md:px-0`}
               >
-                <div className="py-3 flex justify-between mn md:bg-[#9900ff] z-50 md:px-2">
-                  <div className='text-4xl' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}}>Slate</div>
+                <div className="py-3 flex justify-between mn md:bg-[#9900ff] z-50 md:px-2 items-center">
+                  <div className='text-4xl' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}} onClick={() => navigate('/')}>Slate</div>
                   <div className='md:hidden'>
                     <HiMenuAlt3
                       size={26}
