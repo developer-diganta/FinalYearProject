@@ -6,7 +6,7 @@ function LandingHeader() {
     const[smallHeader, setSmallHeader] = useState(false);
     const navigate = useNavigate();
   return (
-    <div className='bg-white shadow-md'>
+    <div className='bg-white shadow-md z-40 relative'>
         <div className="landing_header flex justify-between">
             <div className="landing_header_left">
                 <img className='bg w-28' src="/SLATE.png" alt="" />
