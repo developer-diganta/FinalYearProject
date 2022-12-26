@@ -185,7 +185,7 @@ const Sidebaruniversity = () => {
           { name: "teachers", link: "/university/teachers", icon: TfiBlackboard },
           { name: "students", link: "/university/students", icon: FiUsers },
           { name: "courses", link: "/university/courses", icon: VscBook },
-          { name: "edit", link: "/", icon: BiEditAlt, margin: true },
+          { name: "edit", link: "/university/edit", icon: BiEditAlt, margin: true },
           { name: "Analyse", link: "/", icon: BsGraphUp },
           { name: "Setting", link: "/", icon: RiSettings4Line },
         ];

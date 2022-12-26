@@ -63,11 +63,16 @@ function UniversitySignup() {
     console.log(name, email, password, phone);
   }
 
-  useEffect(() => {
-    if(register){
-      navigate('/purchase/university/payment');
-    }
-  }, [register, navigate])
+  // const signup_token = localStorage.getItem('signup_token');
+
+  // useEffect(() => {
+  //   if(register){
+  //     navigate('/purchase/university/payment');
+  //   }
+  //   if(signup_token){
+  //     navigate('/university/dashboard');
+  //   }
+  // }, [])
 
   return (
     <div>
