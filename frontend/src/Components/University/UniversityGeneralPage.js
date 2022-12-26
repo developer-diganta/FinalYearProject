@@ -13,6 +13,7 @@ import UniversityCourses from './UniversityCourses';
 
 function UniversityGeneralPage() {
     const { openClose, unvSign } = useSelector((state) => state.counter);
+    // const signup_token = localStorage.getItem('signup_token');
     const navigate = useNavigate();
 
     const{unvpage} = useParams();
@@ -22,13 +23,13 @@ function UniversityGeneralPage() {
         const token = localStorage.getItem('signup_token');
         // const{unvSign} = useSelector((state) => state.counter);
         console.log(token);
-        if(!unvSign){
-            console.log("abcd");
-            navigate('/university/signup');
+        if(token){
+            console.log("sjdhfsjfgjgfej");
+            navigate('/university/dashboard');
         }
         else{
             console.log("sjdhfsjfgjgfej");
-            navigate('/university/dashboard');
+            navigate('/university/signup');
         }
     }, [])
 

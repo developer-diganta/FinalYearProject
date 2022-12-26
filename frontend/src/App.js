@@ -12,6 +12,7 @@ import UniversityLanding from './Components/University/UniversityLanding';
 import UniversityTeacher from './Components/University/UniversityTeacher';
 import UniversityGeneralPage from './Components/University/UniversityGeneralPage';
 import UniversityLogin from './Components/University/UniversityLogin';
+import EditPage from './Components/University/EditPage';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path='/university/signup' element={<UniversitySignup />} />
             <Route path='/university/login' element={<UniversityLogin />} />
             <Route path='/university/:unvpage' element={<UniversityGeneralPage />} />
+            <Route path='/university/edit' element={<EditPage />} />
             {/* Signup, signin and mail-verification */}
             <Route path='/signup/student' element={<StudentSignup />} />
             <Route path='/signup/teacher' element={<TeacherSignup />} />
