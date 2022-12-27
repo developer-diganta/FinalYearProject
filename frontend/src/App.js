@@ -13,6 +13,7 @@ import UniversityTeacher from './Components/University/UniversityTeacher';
 import UniversityGeneralPage from './Components/University/UniversityGeneralPage';
 import UniversityLogin from './Components/University/UniversityLogin';
 import EditPage from './Components/University/EditPage';
+import TeacherProf from './Components/Teacher/TeacherProfile.js/TeacherProf';
 
 
 function App() {
@@ -29,8 +30,11 @@ function App() {
             <Route path='/university/:unvpage' element={<UniversityGeneralPage />} />
             <Route path='/university/edit' element={<EditPage />} />
             {/* Signup, signin and mail-verification */}
-            <Route path='/signup/student' element={<StudentSignup />} />
-            <Route path='/signup/teacher' element={<TeacherSignup />} />
+            <Route path='/student/signup' element={<StudentSignup />} />
+            {/* Teacher routes */}
+            <Route path='/teacher/signup' element={<TeacherSignup />} />
+            <Route path='/teacher/:id' element={<TeacherProf />} />
+
             <Route path='/mailverification/:message' element={<Verificatin />} />
 
             <Route path='/:id/solve' element={<Codeeditor />} />
