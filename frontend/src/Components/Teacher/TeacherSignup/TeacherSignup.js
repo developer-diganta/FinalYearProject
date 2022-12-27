@@ -85,7 +85,7 @@ async function getFormValue(event){
 
               </select>
             </div>
-              <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
+              <button className='sign_up_btn px-4 py-2 my-4' onClick={() => navigate('/teacher/2')}>continue</button>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>
