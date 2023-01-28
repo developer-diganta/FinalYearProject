@@ -8,13 +8,18 @@ const { route } = require("../..");
 const router = express.Router();
 
 // router.post('/', controls.home);
+// Code editor routes
 router.post('/submit', controls.submit);
 
-router.post('/signup/teacher', controls.signupTeacher);
+router.post('/submit/student', controls.submitStudent);
 
+
+// Admin routes
 router.post("/admin/signin", controls.adminSignIn);
 
-router.post("/university/signup",controls.universitySignUp);
+
+
+router.post("/university/signup", controls.universitySignUp);
 
 router.post("/university/signin", controls.universityLogin);
 
@@ -30,9 +35,6 @@ router.post("/university/student", authoriseUniversity, controls.getUniversitySt
 
 router.post("/university/student/count", authoriseUniversity, controls.getUniversityStudentCount);
 
-
-// NEW
-
 router.post("/university/teacher/:id", authoriseUniversity, controls.getUniversityTeacherData);
 
 router.post("/university/teacher/waitlist", authoriseUniversity, controls.getUniversityTeacherWaitlist);
@@ -42,8 +44,6 @@ router.post("/university/teacher/waitlist/:id", authoriseUniversity, controls.ge
 router.post("/university/teacher/waitlist/accept/:id", authoriseUniversity, controls.acceptTeacherWaitlist);
 
 router.post("/university/teacher/waitlist/reject/:id", authoriseUniversity, controls.rejectTeacherWaitlist);
-
-//  FOR UNIVERSITY STUDENTS
 
 router.post("/university/student/waitlist", authoriseUniversity, controls.getUniversityStudentWaitlist);
 
@@ -57,10 +57,22 @@ router.post("/university/student/waitlist/accept/all", authoriseUniversity, cont
 
 router.post("/university/student/waitlist/reject/all", authoriseUniversity, controls.rejectAllStudentWaitlist);
 
-// UNIVERSITY COURSES
-
 router.post("/university/course", authoriseUniversity, controls.getUniversityCourse);
 
+router.post("/university/allUniversities", authoriseUniversity, controls.getAllUniversities);
+
 router.post("/university/course/teacher/:id", authoriseUniversity, controls.getUniversityCourseByTeacherId);
+
+
+
+// Student routes
+router.post("/student/signup", controls.studentSignUp);
+
+// Teacher routes
+router.post('/signup/teacher', controls.signupTeacher);
+
+router.post("/teacher/signin", controls.teacherLogin);
+
+
 
 module.exports = router; 

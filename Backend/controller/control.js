@@ -9,12 +9,12 @@ const saltRounds = require("../configs/saltRounds");
 const bcrypt = require("bcrypt");
 const { signUpSchema } = require("../configs/joi-configs.js");
 const jwt = require("jsonwebtoken");
-const generateToken = require("../utils/Auth/jwtGeneration"); 
+const generateToken = require("../utils/Auth/jwtGeneration");
 
 // const passport = require("passport");
 let languageIds = null;
 const adminLogin = {}
-const getProgrammingLanguageIds = async () => { 
+const getProgrammingLanguageIds = async () => {
     languageIds = await programmingLanguageIds();
 }
 getProgrammingLanguageIds();
@@ -59,12 +59,11 @@ const submit = async (req, res) => {
         newSubmission.save((err) => {
             if (err)
                 console.log(err)
-            else
-            {
+            else {
                 const options = {
                     method: 'GET',
                     url: 'https://judge0-ce.p.rapidapi.com/submissions/' + response.data.token,
-                    params: {base64_encoded: 'true', fields: '*'},
+                    params: { base64_encoded: 'true', fields: '*' },
                     headers: {
                         'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
                         'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
@@ -86,42 +85,53 @@ const submit = async (req, res) => {
 
 
 const signupTeacher = async (req, res) => {
-    const { name, username, email, password } = req.body;
-    console.log(username);
+    const { name, username, email, password, uniId } = req.body;
     try {
         const validate = await signUpSchema.validateAsync({ username, password, email });
         bcrypt.hash(password, saltRounds, async (err, hash) => {
             if (err) {
-                 res.status(500).json(err);
+                res.status(500).json(err);
             } else {
-            models.Teacher.find({ $or: [{ username: username }, {email:email} ]}, async (err, teacher) => {
+                // find if valid uniId
+                models.University.findById(uniId, (err, university) => {
                     if (err) {
                         res.status(500).json(err);
-                    } else if (teacher.length) {
-                        console.log(teacher);
-                        res.status(400).json({ message: "Teacher already exists" });
+                    } else if (!university) {
+                        res.status(400).json({ message: "Invalid University Id" });
                     } else {
-                        const newTeacher = new models.Teacher({
-                            name: name,
-                            username: username,
-                            email: email,
-                            password: hash,
-            
-                        });
-                        console.log(newTeacher);
-                        await newTeacher.save((err) => {
-                            if (err)
+                        models.Teacher.find({ $or: [{ username: username }, { email: email }] }, async (err, teacher) => {
+                            if (err) {
                                 res.status(500).json(err);
-                            else {
-                                const token = generateToken(username, email);
-                                res.status(200).json({ auth: true, token: token });
+                            } else if (teacher.length) {
+                                console.log(teacher);
+                                res.status(400).json({ message: "Teacher already exists" });
+                            } else {
+                                const newTeacher = new models.Teacher({
+                                    name: name,
+                                    username: username,
+                                    email: email,
+                                    password: hash,
+                                    status: 'waitlist',
+                                    university: uniId
+
+                                });
+                                console.log(newTeacher);
+                                await newTeacher.save((err) => {
+                                    if (err)
+                                        res.status(500).json(err);
+                                    else {
+                                        const token = generateToken(username, email);
+                                        res.status(200).json({ auth: true, token: token });
+                                    }
+                                });
                             }
                         });
                     }
-                });     
+                })
+
             }
         });
-    } catch(error) {
+    } catch (error) {
         res.status(422).json(error);
     }
 }
@@ -130,7 +140,7 @@ const adminSignIn = async (req, res) => {
     const { username, password } = req.body;
     try {
         const validate = await signUpSchema.validateAsync({ username, password });
-        if (username ===  process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
             const time = new Date.getTime() / 1000();
             const token = generateToken(username, time);
             adminLogin = {
@@ -140,7 +150,7 @@ const adminSignIn = async (req, res) => {
             res.status(200).json({ auth: true, token: token });
         }
     }
-    catch(error) {
+    catch (error) {
         res.status(422).json(error);
     }
 }
@@ -178,7 +188,7 @@ const universitySignUp = async (req, res) => {
                             password: hash,
                             phone: phone,
                             contract: [
-                                { status: "pending" }
+                                { status: "waitlist" }
                             ]
                         });
                         console.log(newUniversity);
@@ -200,11 +210,12 @@ const universitySignUp = async (req, res) => {
 }
 
 const universityLogin = async (req, res) => {
-    console.log("here")
+    console.log(req.body.password)
     const { email, password } = req.body;
     try {
         // const validate = await signUpSchema.validateAsync({ username, password });
         models.University.find({ email: email }, async (err, university) => {
+            console.log(university)
             if (err) {
                 res.status(500).json(err);
             } else if (university.length) {
@@ -212,7 +223,7 @@ const universityLogin = async (req, res) => {
                     if (err) {
                         res.status(500).json(err);
                     } else if (result) {
-                        console.log("RRR",university)
+                        console.log("RRR", university)
                         const token = generateToken(email, university[0].phone);
                         res.status(200).json({ auth: true, token: token });
                     } else {
@@ -231,16 +242,16 @@ const universityLogin = async (req, res) => {
 const universityTeacherData = async (req, res) => {
     models.University.find({ email: req.body.email }, (err, university) => {
         if (err)
-        res.status(500).json(err);
+            res.status(500).json(err);
         else {
             models.Teacher.find({ university: university[0]._id }, (err, teachers) => {
                 if (err)
-                res.status(500).json(err);
+                    res.status(500).json(err);
                 else
-                res.status(200).json(teachers);
+                    res.status(200).json(teachers);
             });
         }
-    }) 
+    })
 }
 
 const universityTeacherCount = async (req, res) => {
@@ -379,6 +390,7 @@ const getUniversityTeacherData = async (req, res) => {
 // POST route
 const getUniversityTeacherWaitlist = async (req, res) => {
     const universityId = req.body.universityId;
+    
     try {
         models.Teacher.find({ university: universityId, status: "waitlist" }, (err, teachers) => {
             if (err)
@@ -619,7 +631,136 @@ const getUniversityCourseByTeacherId = async (req, res) => {
         res.status(500).json(error);
     }
 }
+// POST route
 
+const studentSignUp = async (req, res) => {
+    const { name, email, password, uniId } = req.body;
+    console.log(uniId)
+    try {
+        bcrypt.hash(password, 10, (err, hash) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                // check if valid uniId
+                models.University.find({ _id: uniId }, (err, university) => {
+                    if (err)
+                        res.status(500).json(err);
+                    else {
+                        if (university.length > 0) {
+                            //    check if student exists
+                            models.Student.find({ email: email }, (err, student) => {
+                                if (err)
+                                    res.status(500).json(err);
+                                else {
+                                    if (student.length > 0) {
+                                        res.status(200).json({ message: "Student already exists" });
+                                    }
+                                    else {
+                                        const student = new models.Student({
+                                            name: name,
+                                            email: email,
+                                            password: hash,
+                                            university: uniId,
+                                            status: "waitlist"
+                                        });
+                                        student.save((err) => {
+                                            if (err)
+                                                res.status(500).json(err);
+                                            else {
+                                                                      console.log("here")
+                                                const token = generateToken(name, email);
+                                                res.status(200).json({ auth: true, token: token });
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            console.log("here")
+                            res.status(200).json({ message: "Invalid university id" });
+
+                        }
+                    }
+                });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const getAllUniversities = async (req, res) => {
+    try {
+        models.University.find({}, { _id: 1, name: 1 }, (err, universities) => {
+            if (err) {
+                res.status(500).json(err);
+            }
+            else
+                res.status(200).json(universities);
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const teacherLogin = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        
+        models.Teacher.find({ email: email }, (err, teacher) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                if (teacher.length > 0) {
+                    bcrypt.compare(password, teacher[0].password, (err, result) => {
+                        if (err)
+                            res.status(500).json(err);
+                        else {
+                            if (result) {
+                                const token = generateToken(teacher[0].name, teacher[0].email);
+                                res.status(200).json({ auth: true, token: token });
+                            }
+                            else
+                                res.status(200).json({ message: "Invalid password" });
+                        }
+                    });
+                }
+                else
+                    res.status(200).json({ message: "Invalid email" });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+
+
+const submitStudent = async (req, res) => {
+    const { student_id, code, question_id, language_id } = req.body;
+    try {
+        let encoded = Buffer.from(code).toString('base64');
+        const submission = new models.Submission({
+            student: student_id,
+            question: question_id,
+            language: language_id,
+            code: encoded
+        });
+        submission.save((err) => {
+            if (err)
+                res.status(500).json(err);
+            else
+                res.status(200).json({ message: "Submission successful" });
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+};
 
 module.exports = {
     home,
@@ -649,6 +790,9 @@ module.exports = {
     getUniversityTeacherWaitlistById,
     acceptTeacherWaitlist,
     rejectTeacherWaitlist,
-    
+    studentSignUp,
+    getAllUniversities,
+    teacherLogin,
+    submitStudent
 };
 
