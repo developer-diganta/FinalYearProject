@@ -1,14 +1,31 @@
 import React from 'react'
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function LandingHeader() {
     const[smallHeader, setSmallHeader] = useState(false);
+    const[sticky, setSticky] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 20) {
+                setSticky(true);
+            } else {
+                setSticky(false);
+            }
+        }
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        }
+    }, []);
+
   return (
-    <div className='bg-white shadow-md z-40 relative'>
+    <div className={`bg-white relative ${sticky ? 'shadow-lg' : ''} ${sticky ? 'w-full' : ''}`} style={{position: sticky ? "fixed" : "static", transition: "top 0.8s ease", zIndex: "200"}}>
         <div className="landing_header flex justify-between">
-            <div className="landing_header_left">
+            <div className="landing_header_left pl-8">
                 <img className='bg w-28' src="/SLATE.png" alt="" />
             </div>
             <div className='flex items-center'>
