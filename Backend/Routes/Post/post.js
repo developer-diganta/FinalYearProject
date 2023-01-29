@@ -63,7 +63,9 @@ router.post("/university/allUniversities", authoriseUniversity, controls.getAllU
 
 router.post("/university/course/teacher/:id", authoriseUniversity, controls.getUniversityCourseByTeacherId);
 
+router.post("/university/course/add", authoriseUniversity, controls.addCourse);
 
+router.post("/university/course/add/teacher", authoriseUniversity, controls.addCourseTeacher);
 
 // Student routes
 router.post("/student/signup", controls.studentSignUp);
@@ -73,6 +75,8 @@ router.post('/signup/teacher', controls.signupTeacher);
 
 router.post("/teacher/signin", controls.teacherLogin);
 
+router.post("/teacher/course/getCourses", authorise, controls.getCoursesForTeacher);
 
+router.post("/teacher/course/addQuestion", authorise, controls.addQuestion);
 
 module.exports = router; 
