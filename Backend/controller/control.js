@@ -196,8 +196,8 @@ const universitySignUp = async (req, res) => {
                             if (err)
                                 res.status(500).json(err);
                             else {
-                                const token = generateToken(email, phone);
-                                res.status(200).json({ auth: true, token: token });
+                                const token = generateToken(email);
+                                res.status(200).json({ auth: true, token: token, id: newUniversity._id });
                             }
                         });
                     }
@@ -224,8 +224,8 @@ const universityLogin = async (req, res) => {
                         res.status(500).json(err);
                     } else if (result) {
                         console.log("RRR", university)
-                        const token = generateToken(email, university[0].phone);
-                        res.status(200).json({ auth: true, token: token });
+                        const token = generateToken(email);
+                        res.status(200).json({ auth: true, token: token, id: university[0]._id });
                     } else {
                         res.status(400).json({ message: "Invalid password" });
                     }
@@ -740,27 +740,7 @@ const teacherLogin = async (req, res) => {
 
 
 
-const submitStudent = async (req, res) => {
-    const { student_id, code, question_id, language_id } = req.body;
-    try {
-        let encoded = Buffer.from(code).toString('base64');
-        const submission = new models.Submission({
-            student: student_id,
-            question: question_id,
-            language: language_id,
-            code: encoded
-        });
-        submission.save((err) => {
-            if (err)
-                res.status(500).json(err);
-            else
-                res.status(200).json({ message: "Submission successful" });
-        });
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-};
+
  
 const addCourse = async (req, res) => {
     const { 
@@ -891,10 +871,9 @@ const addQuestion = async (req, res) => {
         difficulty,
         category,
         tags,
-        dateCreated,
-        dateModified,
-        datePublished,
+        datePublished
     } = req.body;
+    console.log(req.body)
     try {
         models.University.find({ _id: universityId }, (err, university) => {
             if (err) {
@@ -917,10 +896,10 @@ const addQuestion = async (req, res) => {
                                             if (teacher[0].university !== universityId) {
                                                 res.status(200).json({ message: "Invalid teacher id" });
                                             }
-                                            if (!teacher[0].courses.includes(courseId)) {
+                                            if (!teacher[0].course===courseId) {
                                                 res.status(200).json({ message: "Invalid course id" });
                                             }
-                                            const question = new models.Question({
+                                            const questionNew = new models.Question({
                                                 university: universityId,
                                                 course: courseId,
                                                 teacher: teacherId,
@@ -931,18 +910,17 @@ const addQuestion = async (req, res) => {
                                                 difficulty: difficulty,
                                                 category: category,
                                                 tags: tags,
-                                                dateCreated: dateCreated,
-                                                dateModified: dateModified,
+                                                dateCreated: new Date().toISOString(),
+                                                dateModified: new Date().toISOString(),
                                                 datePublished: datePublished,
                                             });
-                                            question.save((err) => {
+                                            questionNew.save((err) => {
                                                 if (err) {
                                                     res.status(500).json(err);
                                                 } else {
                                                     res.status(200).json({ message: "Question added successfully" });
                                                 }
-                                            }
-                                            );
+                                            });
                                         } else {
                                             res.status(200).json({ message: "Invalid teacher id" });
                                         }
@@ -962,7 +940,100 @@ const addQuestion = async (req, res) => {
         res.status(500).json(error);
     }
 }
-    
+
+const checkUniversityIdValidity = async (universityId) => {
+    const res = models.University.find({_id: universityId}, (err, university) => {
+        if(err)
+            return false;
+        else{
+            if(university.length > 0)
+                return true;
+            else
+                return false;
+        }
+    });
+    return res;
+}
+
+const checkCourseIdValidity = async (universityId, courseId) => {
+    const checkUniId = await checkUniversityIdValidity(universityId);
+    if(checkUniId){
+        models.Course.find({_id: courseId}, (err, course) => {
+            if(err)
+                return false;
+            else{
+                if(course.length > 0 && course[0].university === universityId)
+                    return true;
+                else
+                    return false;
+            }
+        });
+    }else{
+        return false;
+    }
+}
+
+const submitStudent = async (req, res) => {
+    const { student_id, code, question_id, language_id } = req.body;
+    try {
+        models.Question.find({ _id: question_id }, (err, question) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (question.length > 0) {
+                    console.log(question[0])
+                    console.log("INPUT:",question[0].input)
+                    let encoded = base64encode(code);
+                    console.log({encoded})
+                    const options = {
+                        method: 'POST',
+                        url: 'https://judge0-ce.p.rapidapi.com/submissions',
+                        params: { base64_encoded: 'true', fields: '*' },
+                        headers: {
+                            'content-type': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                            'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+                        },
+                        data:{
+                            "language_id": language_id,
+                            "source_code": encoded,
+                            "stdin": base64encode(question[0].input),
+                            "expected_output": base64encode(question[0].output)
+                        }
+                    };
+                    console.log({options})
+                    axios.request(options).then(function (response) {
+                        const options = {
+                            method: 'GET',
+                            url: 'https://judge0-ce.p.rapidapi.com/submissions/' + response.data.token,
+                            params: { base64_encoded: 'true', fields: '*' },
+                            headers: {
+                                'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                                'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+                            }
+                        };
+                        axios.request(options).then(function (response) {
+                            addSubmissionLog(response.data.token);
+                            res.status(200).json((response.data));
+                        }).catch(function (error) {
+                            console.error(error);
+                        });
+
+                    }).catch(function (error) {
+                        console.error(error);
+                        res.status(500).json(error);
+                    });
+                } else {
+                    res.status(200).json({ message: "Invalid question id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 module.exports = {
     home,
     languages,
