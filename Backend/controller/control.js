@@ -241,17 +241,16 @@ const universityLogin = async (req, res) => {
 
 const universityTeacherData = async (req, res) => {
     console.log(req.body.universityId);
-    models.University.find({ _id: req.body.universityId, status: "active" }, (err, university) => {
+    models.University.find({ _id: req.body.universityId}, (err, university) => {
         if (err)
             res.status(500).json(err);
         else {
-            models.Teacher.find({ university: university[0]._id }, (err, teachers) => {
+            models.Teacher.find({ university: university[0]._id, status: "active" }, (err, teachers) => {
                 if (err)
                     res.status(500).json(err);
                 else
                     res.status(200).json(teachers);
             });
-
         }
     })
 }
