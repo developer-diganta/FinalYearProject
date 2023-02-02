@@ -7,7 +7,7 @@ import './TeacherProf.css'
 
 function TeacherProf() {
     const { openClose, unvSign } = useSelector((state) => state.counter);
-    const[a, setStatus] = useState(false);
+    const[a, setStatus] = useState(true);
     console.log(a);
   return (
     <>

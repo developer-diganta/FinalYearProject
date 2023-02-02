@@ -56,6 +56,7 @@ function UniversitySignup() {
     console.log("************************************", unv_signup_res, unv_signup_res.data.token);
     if(unv_signup_res.data.token){
       localStorage.setItem('signup_token', unv_signup_res.data.token);
+      localStorage.setItem('university__id', unv_signup_res.data._id);
       dispatch(universitySignup(true));
       navigate('/university/dashboard');
     }

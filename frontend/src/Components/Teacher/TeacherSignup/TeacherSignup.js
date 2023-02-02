@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { backend_url } from '../../../BackendRoutes';
 import Header from '../../AppHeader/Header';
 import LandingHeader from '../../Landing/LandingHeader';
 import './TeacherSignup.css';
@@ -12,28 +14,49 @@ const[username, setUsername] = useState();
 const[email, setEmail] = useState();
 const[password, setPassword] = useState();
 const[university, setUniversity] = useState();
+const[unId, setUnId] = useState();
 
 const navigate = useNavigate();
+const teacher__token = localStorage.getItem('teacher__token');
+const teacher__id = localStorage.getItem('teacher__id');
 
 async function getFormValue(event){
   event.preventDefault();
-  console.log(name, username, email, password);
-  const res = await axios.post('http://localhost:5000/signup/teacher', {name: name, username: username, email: email, password: password});
-  console.log(res);
-  // if res.data.message === 'pending' then redirect to login page
-  // else show error message
-  if(res.data.status === 'Pending'){
-    navigate('/mailverification/success');
-  }
-  else if(res.data.status === 'exists'){
-    navigate('/mailverification/exists');
-  }
-  else{
-    navigate('/mailverification/error');
+  console.log(name, username, email, password, unId);
+  const res = await axios.post(backend_url + '/signup/teacher', {name: name, username: username, email: email, password: password, uniId: unId});
+  console.log("hvjvjvjvjvj", res, res.data._id);
+  localStorage.setItem('teacher__token', res.data.token);
+  localStorage.setItem('teacher__id', res.data._id);
+  if(res.data.auth == true){
+    navigate('/teacher/status');
   }
 }
+
+  useEffect(() => {
+    async function getAllUniversity(){
+      console.log("jgfwjegfkw", backend_url);
+      const res = await axios.post(backend_url + '/university/allUniversities');
+      console.log(res);
+      setUniversity(res.data);
+    }
+    getAllUniversity();
+  }, []);
+
+  async function checkStatus(){
+    console.log("89263486379836822963865555");
+    const res = await axios.post(backend_url + '/detail/teacher', {teacherId: teacher__id});
+    console.log("hjgjgjgjgjg", res);
+  }
+
+  useEffect(() => {
+    if(teacher__token){
+      checkStatus();
+      navigate('/teacher/status');
+    }
+  }, []);
+
   return (
-    <div>
+    <div style={{minHeight: "110vh"}}>
       <LandingHeader />
     <div className="signup flex justify-center">
         <div className="signup_left w-1/2 lg:w-0 flex items-center justify-center">
@@ -72,20 +95,24 @@ async function getFormValue(event){
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
               </svg>
-              <select className='w-full' name="university" id="university" onChange={(ele) => setUniversity(ele.target.value)}>
+              <select className='w-full' name="university" id="university" onChange={(ele) => setUnId(ele.target.value)}>
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your university</option>
-                <option value="IIT Bombay">IIT Bombay</option>
+                {/* <option value="IIT Bombay">IIT Bombay</option>
                 <option value="IIT Delhi">IIT Delhi</option>
                 <option value="IIT Kanpur">IIT Kanpur</option>
                 <option value="IIT Kharagpur">IIT Kharagpur</option>
                 <option value="IIT Madras">IIT Madras</option>
                 <option value="IIT Roorkee">IIT Roorkee</option>
                 <option value="IIT Guwahati">IIT Guwahati</option>
-                <option value="IIT Hyderabad">IIT Hyderabad</option>
-
+                <option value="IIT Hyderabad">IIT Hyderabad</option> */}
+                {
+                    university ? university.map((uni, index) => {
+                        return <option key={index} value={uni._id}>{uni.name}</option>
+                    }) : null
+                }
               </select>
             </div>
-              <button className='sign_up_btn px-4 py-2 my-4' onClick={() => navigate('/teacher/2')}>continue</button>
+              <button className='sign_up_btn px-4 py-2 my-4' onClick={getFormValue}>continue</button>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>

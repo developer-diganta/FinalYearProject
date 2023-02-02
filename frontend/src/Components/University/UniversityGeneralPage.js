@@ -38,7 +38,7 @@ function UniversityGeneralPage() {
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <Sidebaruniversity />
         </div>
-        <div className={`pt-4 pl-6 bg-[#F4F6F8] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen`}>
+        <div className={`pt-4 pl-6 bg-[#f8f9fa] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen`}>
             <div style={{display: unvpage === 'dashboard' ? "block" : "none"}}><UniversityDashboard /></div>
             <div style={{display: unvpage === 'teachers' ? "block" : "none"}}><UniversityTeacher /></div>
             <div style={{display: unvpage === 'students' ? "block" : "none"}}><UniversityStudents /></div>

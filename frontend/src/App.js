@@ -14,6 +14,7 @@ import UniversityGeneralPage from './Components/University/UniversityGeneralPage
 import UniversityLogin from './Components/University/UniversityLogin';
 import EditPage from './Components/University/EditPage';
 import TeacherProf from './Components/Teacher/TeacherProfile.js/TeacherProf';
+import Status from './Components/Teacher/Pages/Status';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path='/student/signup' element={<StudentSignup />} />
             {/* Teacher routes */}
             <Route path='/teacher/signup' element={<TeacherSignup />} />
+            <Route path='/teacher/status' element={<Status />} />
             <Route path='/teacher/:id' element={<TeacherProf />} />
 
             <Route path='/mailverification/:message' element={<Verificatin />} />
