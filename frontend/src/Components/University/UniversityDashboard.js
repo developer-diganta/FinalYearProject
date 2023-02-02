@@ -9,7 +9,8 @@ import { universitySignup } from '../../Redux/Counter';
 
 function UniversityDashboard() {
 
-    const { openClose, unvSign } = useSelector((state) => state.counter);
+    // const { openClose, unvSign } = useSelector((state) => state.counter);
+    const unv__id = localStorage.getItem('university__id');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ function UniversityDashboard() {
             <h1 className='text-lg'>🖐 Hello <span className='text-[#9900ff] font-semibold'>@Admin</span></h1>
         </div>
         <div className='flex justify-center text-xl py-4'>
-            <p className='bg-[#9900ff] px-20 py-2 text-white font-semibold sm:text-base sm:px-8 sm:w-full text-center' style={{textShadow: "2px 2px 2px rgba(0, 0, 0, 0.4"}}>id: university_id</p>
+            <p className='bg-[#9900ff] px-20 py-2 text-white font-semibold sm:text-base sm:px-8 sm:w-full text-center' style={{textShadow: "2px 2px 2px rgba(0, 0, 0, 0.4"}}>id: {unv__id}</p>
         </div>
         <div className="validity bg-white p-2 my-2 shadow-md text-semibold text-lg flex justify-between items-center rounded-md">
             <p>Expire in 200 days</p>

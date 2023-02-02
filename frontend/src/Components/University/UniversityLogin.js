@@ -12,11 +12,8 @@ import { backend_url } from '../../BackendRoutes';
 
 function UniversityLogin() {
   
-  const[name, setName] = useState();
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
-  const[phone, setPhone] = useState();
-  const[register, setRegister] = useState(false);
   const[message, setMessage] = useState();
   const dispatch = useDispatch();
 
@@ -24,49 +21,17 @@ function UniversityLogin() {
 
   async function getFormValue(event){
     event.preventDefault();
-    console.log(name, email, password, phone);
-    // check for empty fields
-    var check = true;
-    if(name === undefined || email === undefined || password === undefined || phone === undefined){
-      setMessage("Please fill all the fields");
-      check = false;
-      return;
-    }
-    // check for valid email
-    if(!email.includes("@")){
-      setMessage("Please enter a valid email");
-      check = false;
-      return;
-    }
-    // check for valid phone number
-    if(phone.length !== 10){
-      setMessage("Please enter a valid phone number");
-      check = false;
-      return;
-    }
-    // check for valid password
-    if (!(password.match(/[a-z]/g) && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[^a-zA-Z\d]/g) && password.length >= 8)){
-      setMessage("Please enter a valid password");
-      check = false;
-      return;
-    }
-    if(check){
-      setMessage();
-    }
-    const unv_signup_res = await axios.post(backend_url+'/university/signup', {name, email, password, phone});
+    console.log("782372532593529");
+    const unv_signup_res = await axios.post(backend_url + '/university/signin', {email, password});
     console.log("************************************", unv_signup_res, unv_signup_res.data.token);
     if(unv_signup_res.data.token){
       localStorage.setItem('signup_token', unv_signup_res.data.token);
-      dispatch(universitySignup(true));
+      localStorage.setItem('university__id', unv_signup_res.data._id);
+      // dispatch(universitySignup(true));
       navigate('/university/dashboard');
     }
   }
 
-  useEffect(() => {
-    if(register){
-      navigate('/purchase/university/payment');
-    }
-  }, [register, navigate])
 
   return (
     <div>
@@ -106,10 +71,7 @@ function UniversityLogin() {
               </svg>
               <input className='' type="password" placeholder="Enter password" onChange={(ele) => setPassword(ele.target.value)} />
             </div>
-              <button className='sign_up_btn px-4 py-2 my-4' onClick={() => {
-                dispatch(universitySignup(true))
-                navigate('/university/dashboard')
-                }}>continue</button>
+              <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
               <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/signup')}>create</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
