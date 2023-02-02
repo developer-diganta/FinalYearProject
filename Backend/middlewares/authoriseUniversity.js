@@ -15,8 +15,8 @@ const author = (req, res, next) => {
                 res.status(401).json({message:"Verification Failed"});
             }
             else {
-                console.log(decoded.userName,req.email)
-                if (req.body.email === decoded.userName && req.body.phone === decoded.email)
+                // console.log(decoded.userName,req.email)
+                if (req.body.email === decoded.email)
                     next();
                 else
                     res.status(401).json({message:"Verification Failed"});
