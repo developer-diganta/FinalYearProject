@@ -13,16 +13,16 @@ question = {
     dateCreated: Date,
     dateModified: Date,
     date_published: Date,
-    students_attempted: [{
+    studentsAttempted: [{
         student_id: String,
     }],
-    students_correct: [{
+    studentsCorrect: [{
         student_id: String,
     }],
-    students_incorrect: [{
+    studentsIncorrect: [{
         student_id: String,
     }],
-    students_unattempted: [{
+    studentsUnattempted: [{
         student_id: String,
     }],
 
