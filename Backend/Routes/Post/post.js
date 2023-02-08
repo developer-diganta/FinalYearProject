@@ -79,6 +79,6 @@ router.post("/teacher/course/getCourses", authorise, controls.getCoursesForTeach
 
 router.post("/teacher/course/addQuestion", controls.addQuestion);
 
-router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);
+// router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);
 
 module.exports = router; 

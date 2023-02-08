@@ -669,7 +669,7 @@ const studentSignUp = async (req, res) => {
                                                 res.status(500).json(err);
                                             else {
                                                 const token = generateToken(email);
-                                                res.status(200).json({ auth: true, token: token, id: student._id });
+                                                res.status(200).json({ auth: true, token: token, _id: student._id });
                                             }
                                         });
                                     }
@@ -721,7 +721,7 @@ const teacherLogin = async (req, res) => {
                         else {
                             if (result) {
                                 const token = generateToken(teacher[0].name, teacher[0].email);
-                                res.status(200).json({ auth: true, token: token });
+                                res.status(200).json({ auth: true, token: token, _id: teacher[0]._id });
                             }
                             else
                                 res.status(200).json({ message: "Invalid password" });
@@ -1026,7 +1026,7 @@ const submitStudent = async (req, res) => {
                             "expected_output": base64encode(question[0].output)
                         }
                     };
-                    console.log({options})
+
                     axios.request(options).then(function (response) {
                         const options = {
                             method: 'GET',
@@ -1039,6 +1039,36 @@ const submitStudent = async (req, res) => {
                         };
                         axios.request(options).then(function (response) {
                             addSubmissionLog(response.data.token);
+                            const newSubmission = new models.Submission({
+                                student: student_id,
+                                question: question_id,
+                                code: code,
+                                language: language_id,
+                                status: response.data.status.id,
+                                dateCreated: new Date().toISOString(),
+                            });
+                            question[0].studentsAttempted.push(student_id);
+                            if (response.data.status.id === 3) {
+                                // add student id to students_correct array of question
+                                question[0].studentsCorrect.push(student_id);
+                                question[0].save((err) => {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        console.log("Question updated successfully");
+                                    }
+                                });
+                            } else {
+                                question[0].studentsIncorrect.push(student_id);
+                                question[0].save((err) => {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        console.log("Question updated successfully");
+                                    }
+                                });
+                            }
+                            
                             res.status(200).json((response.data));
                         }).catch(function (error) {
                             console.error(error);
@@ -1072,6 +1102,67 @@ const getTeacherData = async (req, res) => {
                 }
             }
         });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const addCourseStudent = async (req, res) => {
+
+    const { courseId, studentId, universityId } = req.body;
+    try {
+        const checkUniId = await checkUniversityIdValidity(universityId);
+        if (checkUniId) {
+            const checkCourseId = await checkCourseIdValidity(courseId);
+            if (checkCourseId) {
+                // add only if not present
+                models.Course.findByIdAndUpdate(courseId, { $addToSet: { students: studentId } }, (err, course) => {
+                if (err) {
+                        res.status(500).json(err);
+                    } else {
+                        if (course) {
+                            res.status(200).json({ message: "Student added to course successfully" });
+                        } else {
+                            res.status(200).json({ message: "Invalid course id" });
+                        }
+                    }
+                });
+            } else {
+                res.status(200).json({ message: "Invalid course id" });
+            }
+        } else {
+            res.status(200).json({ message: "Invalid university id" });
+        }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const removeCourseStudent = async (req, res) => {
+    const { courseId, studentId, universityId } = req.body;
+    try {
+        const checkUniId = await checkUniversityIdValidity(universityId);
+        if (checkUniId) {
+            const checkCourseId = await checkCourseIdValidity(courseId);
+            if (checkCourseId) {
+
+                models.Course.findByIdAndUpdate(courseId, { $pull: { students: studentId } }, (err, course) => {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else {
+                        if (course) {
+                            res.status(200).json({ message: "Student removed from course successfully" });
+                        } else {
+                            res.status(200).json({ message: "Invalid course id" });
+                        }
+                    }
+                });
+            } else {
+                res.status(200).json({ message: "Invalid course id" });
+            }
+        } else {
+            res.status(200).json({ message: "Invalid university id" });
+        }
     } catch (error) {
         res.status(500).json(error);
     }
@@ -1113,5 +1204,6 @@ module.exports = {
     addCourseTeacher,
     getCoursesForTeacher,
     addQuestion,
+    addCourseStudent,
+    removeCourseStudent,
 };
-
