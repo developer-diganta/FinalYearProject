@@ -121,7 +121,7 @@ const signupTeacher = async (req, res) => {
                                         res.status(500).json(err);
                                     else {
                                         const token = generateToken(username, email);
-                                        res.status(200).json({ auth: true, token: token });
+                                        res.status(200).json({ auth: true, token: token, _id: newTeacher._id });
                                     }
                                 });
                             }
@@ -197,7 +197,7 @@ const universitySignUp = async (req, res) => {
                                 res.status(500).json(err);
                             else {
                                 const token = generateToken(email);
-                                res.status(200).json({ auth: true, token: token, id: newUniversity._id });
+                                res.status(200).json({ auth: true, token: token, _id: newUniversity._id });
                             }
                         });
                     }
@@ -225,7 +225,7 @@ const universityLogin = async (req, res) => {
                     } else if (result) {
                         console.log("RRR", university)
                         const token = generateToken(email);
-                        res.status(200).json({ auth: true, token: token, id: university[0]._id });
+                        res.status(200).json({ auth: true, token: token, _id: university[0]._id });
                     } else {
                         res.status(400).json({ message: "Invalid password" });
                     }
