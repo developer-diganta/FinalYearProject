@@ -3,14 +3,16 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { universitySignup } from '../../Redux/Counter';
-import Header from '../AppHeader/Header';
-import LandingHeader from '../Landing/LandingHeader';
-import { BiCheck, BiPhone } from 'react-icons/bi';
+// import { universitySignup } from '../../Redux/Counter';
+// import Header from '../AppHeader/Header';
+// import LandingHeader from '../Landing/LandingHeader';
+// import { BiCheck, BiPhone } from 'react-icons/bi';
 import axios from 'axios';
-import { backend_url } from '../../BackendRoutes';
+import { backend_url } from '../../../BackendRoutes';
+import LandingHeader from '../../Landing/LandingHeader';
+// import { backend_url } from '../../BackendRoutes';
 
-function UniversityLogin() {
+function TeacherLogin() {
   
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
@@ -22,13 +24,13 @@ function UniversityLogin() {
   async function getFormValue(event){
     event.preventDefault();
     console.log("782372532593529");
-    const unv_signup_res = await axios.post(backend_url + '/university/signin', {email, password});
-    console.log("************************************", unv_signup_res);
-    if(unv_signup_res.data.token && unv_signup_res.data._id){
-      localStorage.setItem('signup_token', unv_signup_res.data.token);
-      localStorage.setItem('university__id', unv_signup_res.data._id);
+    const teacher__login = await axios.post(backend_url + '/teacher/signin', {email, password});
+    console.log("************************************", teacher__login);
+    if(teacher__login.data.token && teacher__login.data._id){
+      localStorage.setItem('teacher__token', teacher__login.data.token);
+      localStorage.setItem('teacher__id', teacher__login.data._id);
       // dispatch(universitySignup(true));
-      navigate('/university/dashboard');
+      navigate('/teacher/dashboard');
     }
   }
 
@@ -72,7 +74,7 @@ function UniversityLogin() {
               <input className='' type="password" placeholder="Enter password" onChange={(ele) => setPassword(ele.target.value)} />
             </div>
               <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
-              <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/signup')}>create</span> </h1></div>
+              <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/teacher/signup')}>create</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>
@@ -90,4 +92,4 @@ function UniversityLogin() {
   )
 }
 
-export default UniversityLogin
+export default TeacherLogin;
