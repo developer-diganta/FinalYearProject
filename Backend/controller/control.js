@@ -1175,6 +1175,35 @@ const removeCourseStudent = async (req, res) => {
     }
 }
 
+const getMultiCourses = async (req, res) => {
+    const { universityId, teacherId, courseIds } = req.body;
+    try {
+        const checkUniId = await checkUniversityIdValidity(universityId);
+        if (checkUniId) {
+            const checkTeacherId = await checkTeacherIdValidity(teacherId);
+            if (checkTeacherId) {
+                models.Course.find({ _id: { $in: courseIds } }, (err, courses) => {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else {
+                        if (courses.length > 0) {
+                            res.status(200).json(courses);
+                        } else {
+                            res.status(200).json({ message: "Invalid course ids" });
+                        }
+                    }
+                });
+            } else {
+                res.status(200).json({ message: "Invalid teacher id" });
+            }
+        } else {
+            res.status(200).json({ message: "Invalid university id" });
+        }
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 module.exports = {
     home,
     languages,
@@ -1214,4 +1243,5 @@ module.exports = {
     addCourseStudent,
     removeCourseStudent,
     getTeacherData,
+    getMultiCourses
 };

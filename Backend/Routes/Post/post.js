@@ -81,6 +81,7 @@ router.post("/teacher/course/addQuestion", controls.addQuestion);
 
 router.post("/teacher/data",controls.getTeacherData);
 
+router.post("/university/getMultiCourses", controls.getMultiCourses);
 // router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);
 
 module.exports = router; 
