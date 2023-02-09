@@ -6,6 +6,8 @@ import { useState } from 'react'
 import './Pages.css'
 import { useEffect } from 'react'
 import { AiOutlineClose } from "react-icons/ai";
+import SidebarTEacher from '../Sidebar/SidebarTEacher'
+import { useSelector } from 'react-redux'
 
 var activity = [
     {
@@ -103,6 +105,7 @@ function Dashboard() {
     const[value, onChange] = useState(new Date());
     const[date, setDate] = useState('')
     const[dateClick, setDateClick] = useState(false)
+    const { openClose, unvSign } = useSelector((state) => state.counter);
 
     function getDayActivity(date) {
         // format date in yyyy-mm-dd format
@@ -134,49 +137,54 @@ function Dashboard() {
     }, [])
 
   return (
-    <div className='dashboard_1 bg-[#fbfbfb]'>
-        <TeacherHeader />
-        <div className='flex gap-2 mx-6 mt-10 '>
-            <div className="calender w-2/4 rounded-lg shadow-2xl p-4">
-                <Calendar onChange={onChange} value={value} 
+    <div className='flex md:block'>
+        <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
+            <SidebarTEacher />
+        </div>
+        <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
+            <TeacherHeader />
+            <div className='flex gap-2 mx-6 mt-10 '>
+                <div className="calender w-2/4 rounded-lg shadow-2xl p-4">
+                    <Calendar onChange={onChange} value={value} 
 
-                    // activeStartDate={new Date()}
-                    allowPartialRange={true}
-                    onClickDay={(value, event) => {
-                        // console.log(value, event)
-                        getDayActivity(value)
-                        setDateClick(true)
-                    }}
-                />
-            </div>
-            <div className={`${dateClick ? 'task' : ''} w-2/4 bg-[#2D3436] ${dateClick === true ? '' : 'hidden'}`}>
-                <div className='flex justify-center items-center relative bg-[#733ef0] pl-1' style={{paddingTop: "14px", paddingBottom: "14px"}}>
-                    <AiOutlineClose className='text-2xl cursor-pointer text-white absolute left-2' onClick={() => setDateClick(!dateClick)} />
-                    <h1 className='text-[#FFF] font-bold'>{date ? date : ''}</h1>
+                        // activeStartDate={new Date()}
+                        allowPartialRange={true}
+                        onClickDay={(value, event) => {
+                            // console.log(value, event)
+                            getDayActivity(value)
+                            setDateClick(true)
+                        }}
+                    />
                 </div>
-                {
-                    activity.filter(item => item.date == date).length === 0 ? 
-                    <div className='flex justify-center items-center h-96 flex-col gap-4'>
-                        <img className='w-32 h-32 bg-white rounded-full shadow-md' src="/empty_bird.svg" alt="" />
-                        <h4 className='text-white font-semibold' style={{letterSpacing: "1px"}}>nothing for today!!</h4>
+                <div className={`${dateClick ? 'task' : ''} w-2/4 bg-[#2D3436] ${dateClick === true ? '' : 'hidden'}`}>
+                    <div className='flex justify-center items-center relative bg-[#733ef0] pl-1' style={{paddingTop: "14px", paddingBottom: "14px"}}>
+                        <AiOutlineClose className='text-2xl cursor-pointer text-white absolute left-2' onClick={() => setDateClick(!dateClick)} />
+                        <h1 className='text-[#FFF] font-bold'>{date ? date : ''}</h1>
                     </div>
-                    :
-                    activity.filter(item => item.date == date).map((item, key) => (
-                        <div className='task_1 rounded-lg shadow-2xl p-4 mt-10'>
-                            <div className='flex justify-between'>
-                                <div className='flex gap-2 items-center'>
+                    {
+                        activity.filter(item => item.date == date).length === 0 ? 
+                        <div className='flex justify-center items-center h-96 flex-col gap-4'>
+                            <img className='w-32 h-32 bg-white rounded-full shadow-md' src="/empty_bird.svg" alt="" />
+                            <h4 className='text-white font-semibold' style={{letterSpacing: "1px"}}>nothing for today!!</h4>
+                        </div>
+                        :
+                        activity.filter(item => item.date == date).map((item, key) => (
+                            <div className='task_1 rounded-lg shadow-2xl p-4 mt-10'>
+                                <div className='flex justify-between'>
+                                    <div className='flex gap-2 items-center'>
+                                        <div className='flex flex-col'>
+                                            <h1 className='text-[#FFF] font-bold'>{item.title}</h1>
+                                            <p className='text-[#FFF]'>{item.description}</p>
+                                        </div>
+                                    </div>
                                     <div className='flex flex-col'>
-                                        <h1 className='text-[#FFF] font-bold'>{item.title}</h1>
-                                        <p className='text-[#FFF]'>{item.description}</p>
+                                        <p className='text-[#FFF]'>{item.time}</p>
                                     </div>
                                 </div>
-                                <div className='flex flex-col'>
-                                    <p className='text-[#FFF]'>{item.time}</p>
-                                </div>
                             </div>
-                        </div>
-                    ))
-                }
+                        ))
+                    }
+                </div>
             </div>
         </div>
     </div>

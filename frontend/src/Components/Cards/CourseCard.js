@@ -1,12 +1,14 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function CourseCard({courseName}) {
+  const navigate = useNavigate()
   return (
-    <div className='grid grid-cols-4 gap-14 md:grid-cols-2 sm:grid-cols-2 text-center'>
-        <h1 className='bg-white border-2 border-[#6b00b3] flex justify-center items-center rounded-lg shadow-lg text-[#6b00b3] text-lg font-semibold transiti duration-150 hover:scale-105 hover:shadow-2xl' style={{maxWidth: "160px", minHeight: "160px", maxHeight: "160px"}}>{courseName}</h1>
-        <h1 className='bg-white border-2 border-[#6b00b3] flex justify-center items-center rounded-lg shadow-lg text-[#6b00b3] text-lg font-semibold transiti duration-150 hover:scale-105 hover:shadow-2xl' style={{maxWidth: "160px", minHeight: "160px", maxHeight: "160px"}}>{courseName}</h1>
-        <h1 className='bg-white border-2 border-[#6b00b3] flex justify-center items-center rounded-lg shadow-lg text-[#6b00b3] text-lg font-semibold transiti duration-150 hover:scale-105 hover:shadow-2xl' style={{maxWidth: "160px", minHeight: "160px", maxHeight: "160px"}}>{courseName}</h1>
-        <h1 className='bg-white border-2 border-[#6b00b3] flex justify-center items-center rounded-lg shadow-lg text-[#6b00b3] text-lg font-semibold transiti duration-150 hover:scale-105 hover:shadow-2xl' style={{maxWidth: "160px", minHeight: "160px", maxHeight: "160px"}}>{courseName}</h1>
+    <div className='course_card md:mx-auto mx-auto'>
+        <h1 className='bg-white border-2 border-[#6b00b3] flex justify-center items-center rounded-sm shadow-sm text-[#6b00b3] text-lg font-semibold transiti duration-150 hover:scale-105 hover:shadow-2xl cursor-pointer w-[10rem] h-[10rem]' 
+        // style={{maxWidth: "160px", minHeight: "160px", maxHeight: "160px"}}
+          onClick={() => navigate('/university/course/' + courseName)}
+        >{courseName}</h1>
     </div>
   )
 }
