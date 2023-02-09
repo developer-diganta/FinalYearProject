@@ -65,7 +65,7 @@ router.post("/university/course/teacher/:id", authoriseUniversity, controls.getU
 
 router.post("/university/course/add", authoriseUniversity, controls.addCourse);
 
-router.post("/university/course/add/teacher", authoriseUniversity, controls.addCourseTeacher);
+router.post("/university/course/add/teacher",  controls.addCourseTeacher);
 
 // Student routes
 router.post("/student/signup", controls.studentSignUp);
@@ -78,6 +78,8 @@ router.post("/teacher/signin", controls.teacherLogin);
 router.post("/teacher/course/getCourses", authorise, controls.getCoursesForTeacher);
 
 router.post("/teacher/course/addQuestion", controls.addQuestion);
+
+router.post("/teacher/data",controls.getTeacherData);
 
 // router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);
 

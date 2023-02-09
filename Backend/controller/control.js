@@ -791,6 +791,7 @@ const addCourseTeacher = async (req, res) => {
         courseId,
         teacherId,
     } = req.body;
+    console.log(req.body)
     try{
         models.University.find({ _id: universityId }, (err, university) => {
             if(err){
@@ -803,15 +804,21 @@ const addCourseTeacher = async (req, res) => {
                         else{
                             if(course.length > 0){
                                 if(course[0].university == universityId){
+                                    console.log("ETT")
                                     models.Teacher.find({_id: teacherId}, (err, teacher) => {
                                         if(err)
                                             res.status(500).json(err);
                                         else{
                                             if(teacher.length > 0){
+                                                console.log('12421421')
                                                 models.Teacher.updateOne({_id: teacherId}, {$push: {courses: courseId}}, (err) => {
-                                                    if(err)
+                                                    if(err){
+                                                        console.log(err)
                                                         res.status(500).json(err);
+
+                                                    }
                                                     else{
+                                                        console.log("HERERE")
                                                         res.status(200).json({ message: "Course added successfully" });
                                                     }
                                                 });
@@ -1206,4 +1213,5 @@ module.exports = {
     addQuestion,
     addCourseStudent,
     removeCourseStudent,
+    getTeacherData,
 };

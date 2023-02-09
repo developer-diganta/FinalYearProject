@@ -14,9 +14,7 @@ teacher = {
             dept_name : String
         }
     ],
-    courses : [{
-        course_id : String
-    }]
+    courses : Array
 }
 
 module.exports = teacher;
