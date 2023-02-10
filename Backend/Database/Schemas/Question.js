@@ -1,8 +1,7 @@
 question = {
     title: String,
     question: String,
-    question_id : String,
-    course_id : String,
+    course : String,
     answer_key_file: String,
     answer_key_file_name: String,
     input: String,
