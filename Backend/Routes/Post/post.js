@@ -75,12 +75,17 @@ router.post('/signup/teacher', controls.signupTeacher);
 
 router.post("/teacher/signin", controls.teacherLogin);
 
-router.post("/teacher/course/getCourses", authorise, controls.getCoursesForTeacher);
+router.post("/teacher/course/getCourses", controls.getCoursesForTeacher);
 
 router.post("/teacher/course/addQuestion", controls.addQuestion);
 
 router.post("/teacher/data",controls.getTeacherData);
 
+router.post("/university/getMultiCourses", controls.getMultiCourses);
 // router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);
 
+
+
+
+router.post("/university/course/details", controls.getCourseDetails);
 module.exports = router; 

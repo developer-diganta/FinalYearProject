@@ -15,7 +15,7 @@ const author = (req, res, next) => {
                 res.status(401).json({message:"Verification Failed"});
             }
             else {
-                if (req.email === decoded.email)
+                if (req.body.email === decoded.email)
                     next();
                 else
                     res.status(401).json({message:"Verification Failed"});
