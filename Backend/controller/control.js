@@ -751,6 +751,7 @@ const addCourse = async (req, res) => {
         courseType,
         expectedCourseDuration,
         courseCompilers,
+        courseStartDate
     } = req.body;
     try{
         models.University.find({ _id: universityId }, (err, university) => {
@@ -767,6 +768,7 @@ const addCourse = async (req, res) => {
                         courseType: courseType,
                         expectedCourseDuration: expectedCourseDuration,
                         courseCompilers: courseCompilers,
+                        courseStartDate: courseStartDate
                     });
                     course.save((err) => {
                         if(err){
@@ -854,7 +856,15 @@ const getCoursesForTeacher = async (req, res) => {
                 res.status(500).json(err);
             else{
                 if(teacher.length > 0){
-                    res.status(200).json(teacher[0].courses);
+                //    find all course details from course array
+                    models.Course.find({ _id: { $in: teacher[0].courses } }, (err, courses) => {
+                        if (err)
+                            res.status(500).json(err);
+                        else {
+                            console.log(courses.length)
+                            res.status(200).json(courses);
+                        }
+                    });
 
                 }else{
                     res.status(200).json({ message: "Invalid teacher id" });
@@ -954,21 +964,26 @@ const addQuestion = async (req, res) => {
 
 
 const checkUniversityIdValidity = async (universityId) => {
-    const res = models.University.find({_id: universityId}, (err, university) => {
+    console.log("CHECK HERE")
+    let val = false;
+    models.University.find({_id: universityId}, (err, university) => {
         if(err)
             return false;
         else{
-            if(university.length > 0)
-                return true;
+            if (university.length > 0) {
+                console.log("IIIIIIIIIIIIIIIIII")
+                val = true;
+            }
             else
                 return false;
         }
     });
-    return res;
+    return val
 }
 
 const checkCourseIdValidity = async (universityId, courseId) => {
     const checkUniId = await checkUniversityIdValidity(universityId);
+    console.log({checkUniId})
     if(checkUniId){
         models.Course.find({_id: courseId}, (err, course) => {
             if(err)
@@ -1176,33 +1191,92 @@ const removeCourseStudent = async (req, res) => {
 }
 
 const getMultiCourses = async (req, res) => {
-    const { universityId, teacherId, courseIds } = req.body;
+    const { teacherId, courseIds } = req.body;
+    console.log(teacherId);
     try {
-        const checkUniId = await checkUniversityIdValidity(universityId);
-        if (checkUniId) {
-            const checkTeacherId = await checkTeacherIdValidity(teacherId);
-            if (checkTeacherId) {
-                models.Course.find({ _id: { $in: courseIds } }, (err, courses) => {
+
+        const checkTeacherId = true
+        const courses = [];
+        if (checkTeacherId) {
+            const y = JSON.parse(courseIds);
+            console.log("HELLO")
+            console.log(y);
+            for (let i = 0; i < courseIds.length; i++) {
+                models.Course.find({
+                    _id: new ObjectId(courseIds[i]), 
+                }, (err, course) => {
                     if (err) {
-                        res.status(500).json(err);
+                        console.log("QQQQQQ")
+                        console.log(err);
                     } else {
-                        if (courses.length > 0) {
-                            res.status(200).json(courses);
+                        if (course.length > 0) {
+                            console.log("LLLLL")
+                            courses.push(course[0]);
+                            if (i === courseIds.length - 1) {
+                                res.status(200).json(courses);
+                            }
                         } else {
                             res.status(200).json({ message: "Invalid course ids" });
                         }
                     }
                 });
-            } else {
-                res.status(200).json({ message: "Invalid teacher id" });
             }
         } else {
-            res.status(200).json({ message: "Invalid university id" });
+            res.status(200).json({ message: "Invalid teacher id" });
         }
+
+            //     models.Course.find({ _id: { $in: courseIds } }, (err, courses) => {
+            //         if (err) {
+            //             res.status(500).json(err);
+            //         } else {
+            //             if (courses.length > 0) {
+            //                 res.status(200).json(courses);
+            //             } else {
+            //                 res.status(200).json({ message: "Invalid course ids" });
+            //             }
+            //         }
+            //     });
+            // } else {
+            //     res.status(200).json({ message: "Invalid teacher id" });
+            // }
+
     } catch (error) {
         res.status(500).json(error);
     }
 }
+
+const getCourseDetails = async (req, res) => {
+    const { universityId, courseId } = req.body;
+    try {
+        
+        models.University.find({ _id: universityId }, (err, university) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (university.length > 0) {
+                    models.Course.find({ _id: courseId }, (err, course) => {
+                        if (err) {
+                            res.status(500).json(err);
+                        } else {
+                            if (course.length > 0) {
+                                res.status(200).json(course[0]);
+                            }
+                            else {
+                                res.status(200).json({ message: "Invalid course id" });
+                            }
+                        }
+                    });
+                } else {
+                    res.status(200).json({ message: "Invalid university id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+
+}
+
 
 module.exports = {
     home,
@@ -1243,5 +1317,6 @@ module.exports = {
     addCourseStudent,
     removeCourseStudent,
     getTeacherData,
-    getMultiCourses
+    getMultiCourses,
+    getCourseDetails
 };
