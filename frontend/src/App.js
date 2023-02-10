@@ -25,6 +25,7 @@ import Dashboard from './Components/Teacher/Pages/Dashboard';
 import PreviouCourse from './Components/Teacher/Courses/PreviouCourse';
 import CurrentCourse from './Components/Teacher/Courses/CurrentCourse';
 import CourseOfTeacher from './Components/Teacher/Courses/CourseOfTeacher';
+import CreateQuestionForm from './Components/Teacher/Courses/DifferentOptions/CreateQuestionForm';
 
 
 function App() {
@@ -46,7 +47,7 @@ function App() {
             <Route path='/university/courses' element={<UniversityCourses />} />
 
             <Route path='/university/edit' element={<EditPage />} />
-            <Route path='/university/course/:course' element={<Course />} />
+            <Route path='/university/course/:courseId' element={<Course />} />
             <Route path='/university/addcourse' element={<CourseCreateForm />} />
             
             {/* Teacher routes */}
@@ -58,6 +59,7 @@ function App() {
             <Route path='/teacher/previouscourse' element={<PreviouCourse />} />
             <Route path='/teacher/currentcourse' element={<CurrentCourse />} />
             <Route path='/teacher/previouscourse/:options' element={<CourseOfTeacher />} />
+            <Route path='/teacher/createcourse' element={<CreateQuestionForm />} />
 
             <Route path='/mailverification/:message' element={<Verificatin />} />
 

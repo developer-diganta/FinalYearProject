@@ -14,16 +14,14 @@ function CourseCreateForm() {
     const[courseType, setCourseType] = useState();
     const[startDate, setStartDate] = useState();
     const[endDate, setEndDate] = useState();
-    const[selecttedTeacher, setSelectedTeacher] = useState();
     const[compilers, setCompilers] = useState([]);
     const token = localStorage.getItem('signup_token');
     const unv__id = localStorage.getItem('university__id');
-    const[teachet, setTeacher] = useState([]);
     const navigate = useNavigate();
 
     async function setNewCourse(event){
         event.preventDefault();
-        console.log(name, description, courseType, startDate, endDate, compilers, selecttedTeacher);
+        console.log(name, description, courseType, startDate, endDate, compilers);
         const date1 = new Date(startDate);
         const date2 = new Date(endDate);
         const diffTime = Math.abs(date2 - date1);
@@ -46,15 +44,7 @@ function CourseCreateForm() {
         console.log(new__course);
         if(new__course.data.message === "Course added successfully"){
             console.log("course added successfully");
-            const new__course__add__teacher = await instance.post(backend_url + '/university/course/add/teacher', {
-                universityId: unv__id,
-                courseId: new__course.data._id,
-                teacherId: selecttedTeacher,
-            })
-            console.log(new__course__add__teacher);
-            if(new__course__add__teacher.data.message === "Course added successfully"){
-                navigate('/university/courses');
-            }
+            navigate('/university/courses');
         }
         else{
             alert("something went wrong");
@@ -67,20 +57,6 @@ function CourseCreateForm() {
             setCompilers([...compilers, comp]);
         }
     }
-
-    async function getAllAcceptedTeachers(){
-        const instance = axios.create({
-          headers: {
-            'x-auth-token': token,
-          },
-        });
-        const accepted__teachers = await instance.post(backend_url + '/university/teacher', {universityId: unv__id});
-        console.log("acceptedTeachers", accepted__teachers);
-        setTeacher(accepted__teachers.data);
-      }
-      useEffect(() => {
-        getAllAcceptedTeachers();
-      }, [])
 
   return (
     <div className='course__create__form flex'>
@@ -104,16 +80,6 @@ function CourseCreateForm() {
                         <p className='pb-2 capitalize text-[#444d5c] font-semibold'>end</p>
                         <input className='end__date shadow-sm' type="date" onChange={(event) => setEndDate(event.target.value)} />
                     </div>
-                </div>
-                <div className="select__teachers mb-8">
-                    <p className='pb-2 capitalize text-[#444d5c] font-semibold'>select teacher</p>
-                    {/* cretae a selecter for teachers */}
-                    <select className='select__teacher shadow-sm w-full' onChange={(event) => setSelectedTeacher(event.target.value)}>
-                        <option value="0">select teacher</option>
-                        {teachet.map((teacher) => (
-                            <option value={teacher._id}>{teacher.name}</option>
-                        ))}
-                    </select>
                 </div>
                 <p className='compiler__option pb-2 capitalize text[#444d5c] font-semibold'>compilers</p>
                 <div className="course__compiler flex gap-8">

@@ -1,7 +1,9 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import '../Courses.css'
 
 function Question() {
+  const navigate = useNavigate();
   const demo__questions = [
   {
     title: "String",
@@ -29,7 +31,7 @@ function Question() {
   return (
     <div className='questions'>
       <div className='relative w-full h-16 mt-4'>
-        <div className='create__course__button'>Cretae Question</div>
+        <div className='create__course__button' onClick={() => navigate('/teacher/createcourse')}>Cretae Question</div>
       </div>
       {
         demo__questions.map((question) => {
