@@ -74,7 +74,7 @@ const SidebarTEacher = () => {
 
                     <div
                     key={i}
-                    onClick={() => {menu.name === "courses" ? setCourseOpen(!courseOpen) : console.log()}}
+                    onClick={() => {menu.name === "courses" ? setCourseOpen(!courseOpen) : navigate(menu?.link)}}
                     className={` ${
                         menu?.margin && "mt-5"
                     } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md cursor-pointer`}
