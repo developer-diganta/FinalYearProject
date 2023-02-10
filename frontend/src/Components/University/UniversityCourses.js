@@ -40,7 +40,7 @@ function UniversityCourses() {
           <div className='grid grid-cols-4 gap-14 md:grid-cols-3 sm:grid-cols-1 text-center'>
             {
               universityCourse.map((course) => (
-                <CourseCard courseName={course.name} />
+                <CourseCard courseName={course.name} courseId={course._id} />
               ))
             }
             <div className="add__course bg-[#dee2e6] border-2 border-[#889696] text-[#889696] border-dashed flex flex-col justify-center items-center rounded-sm text-lg font-semibold transiti duration-150 hover:scale-105 hover:shadow-2xl cursor-pointer mx-auto w-[10rem] h-[10rem]"

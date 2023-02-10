@@ -60,7 +60,7 @@ function PreviouCourse() {
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <SidebarTEacher />
         </div>
-        <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen ml-4`} style={{float: "right"}}>
+        <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <div className='pb-1 my-2 mx-2' style={{backgroundImage: "radial-gradient(circle, #c0392b, #c7254c, #c2206e, #af3090, #8e44ad)"}}>
                 <h2 className='bg-[#E2DEED] font-semibold p-1' style={{letterSpacing: "1px"}}>Previous course</h2>
             </div>
