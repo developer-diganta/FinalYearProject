@@ -1277,6 +1277,28 @@ const getCourseDetails = async (req, res) => {
 
 }
 
+const getQuestionByCourseId = async (req, res) => {
+    const { courseId } = req.body;
+    const questions = [];
+    try {
+        models.Question.find({ courseId: courseId }, (err, question) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (question.length > 0) {
+                    res.status(200).json(question);
+                } else {
+                    res.status(200).json({ message: "Invalid course id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+
+
 
 module.exports = {
     home,
@@ -1318,5 +1340,6 @@ module.exports = {
     removeCourseStudent,
     getTeacherData,
     getMultiCourses,
-    getCourseDetails
+    getCourseDetails,
+    getQuestionByCourseId
 };
