@@ -8,21 +8,21 @@ import { useNavigate } from 'react-router-dom';
 function Status() {
   const teacher__id = localStorage.getItem('teacher__id');
   const navigate = useNavigate();
-  useEffect(() => {
-    async function getStatus(){
-      const instance = axios.create({
-        headers: {
-          'x-auth-token': localStorage.getItem('teacher__token'),
-        }
-      });
-      const res = await instance.post(backend_url + '/teacher/' + teacher__id, {teacherId: teacher__id});
-      console.log("hjgjgjgjgjg", res);
-      if(res.data[0].status === "active"){
-        navigate('/teacher/dashboard');
-      }
-    }
-    // getStatus();
-  }, [teacher__id, navigate]);
+  // useEffect(() => {
+  //   async function getStatus(){
+  //     const instance = axios.create({
+  //       headers: {
+  //         'x-auth-token': localStorage.getItem('teacher__token'),
+  //       }
+  //     });
+  //     const res = await instance.post(backend_url + '/teacher/data', {teacherId: teacher__id});
+  //     console.log("hjgjgjgjgjg", res);
+  //     if(res.data[0].status === "active"){
+  //       navigate('/teacher/dashboard');
+  //     }
+  //   }
+  //   getStatus();
+  // }, [teacher__id, navigate]);
 
   return (
     <>

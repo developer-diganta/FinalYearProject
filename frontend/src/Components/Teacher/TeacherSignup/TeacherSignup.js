@@ -42,15 +42,8 @@ async function getFormValue(event){
     getAllUniversity();
   }, []);
 
-  async function checkStatus(){
-    console.log("89263486379836822963865555");
-    const res = await axios.post(backend_url + '/detail/teacher', {teacherId: teacher__id});
-    console.log("hjgjgjgjgjg", res);
-  }
-
   useEffect(() => {
     if(teacher__token){
-      checkStatus();
       navigate('/teacher/status');
     }
   }, []);
@@ -113,6 +106,7 @@ async function getFormValue(event){
               </select>
             </div>
               <button className='sign_up_btn px-4 py-2 my-4' onClick={getFormValue}>continue</button>
+              <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/teacher/login')}>login</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>

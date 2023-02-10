@@ -1,0 +1,65 @@
+.solve__question{
+    border: 1px solid #9667e0;
+    color: #9667e0;
+}
+
+.solve__question:hover{
+    background-color: #9667e0;
+    color: #FFF;
+}
+
+.course__option{
+    font-family: sans-serif;
+    letter-spacing: 4px;
+}
+
+.course__option li{
+    border: 0.001rem solid #adb5bd;
+}
+
+.create__course__button{
+    position: absolute;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 2px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #FFF;
+    padding: 10px;
+    font-size: 14px;
+    color: #000000;
+    box-shadow: -10px 14px 20px rgba(34, 34, 34, 0.5);
+    transition: all 0.2s ease;
+    font-family: sans-serif;
+    letter-spacing: 2px;
+}
+
+.create__course__button::before{
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: -10px;
+    width: 10px;
+    height: 100%;
+    background-color: #dee2e6;
+    transform: 0.2s ease;
+    transform: rotate(0deg) skewY(-45deg);
+}
+
+.create__course__button::after{
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: -6px;
+    width: 101%;
+    height: 10px;
+    background-color: #adb5bd;
+    transform: 0.2s ease;
+    transform: rotate(0deg) skewX(-45deg);
+}
+
+.create__course__button:active{
+    box-shadow: none;
+    top: 8px;
+}
