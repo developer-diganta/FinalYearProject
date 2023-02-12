@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const { signUpSchema } = require("../configs/joi-configs.js");
 const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/Auth/jwtGeneration");
+const { model } = require("mongoose");
 
 // const passport = require("passport");
 let languageIds = null;
@@ -1297,7 +1298,134 @@ const getQuestionByCourseId = async (req, res) => {
     }
 }
 
+const getQuestionById = async (req, res) => {
+    const { questionId } = req.body;
+    try {
+        models.Question.findById(questionId, (err, question) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (question) {
+                    res.status(200).json(question);
+                } else {
+                    res.status(200).json({ message: "Invalid question id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
 
+const getQuestionAnalysis = async (req, res) => {
+    const { questionId } = req.body;
+    try {
+        models.Question.find(
+            { _id: questionId },
+            {
+                _id: 1,
+                studentsAttempted: 1,
+                studentsCorrect: 1,
+                studentsIncorrect: 1,
+                studentsUnattempted: 1,
+            },
+            (err, question) => {
+                if (err) 
+                    res.status(500).json(err);
+                else {
+                    if (question.length > 0) {
+                        res.status(200).json(question[0]);
+                    } else {
+                        res.status(200).json({ message: "Invalid question id" });
+                    }
+                }
+            }
+        )
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const getStudents = async (req, res) => {
+    const { universityId } = req.body;
+    try {
+        models.University.findById({ _id: universityId }, (err, university) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (university) {
+                    models.Student.find(
+                        { universityId: universityId },
+                        (err, students) => {
+                            if (err) {
+                                res.status(500).json(err);
+                            }
+                            else {
+                                if (students.length > 0) {
+                                    res.status(200).json(students);
+                                } else {
+                                    res.status(200).json({ message: "No students found" });
+                                }
+                            }
+                        })
+                } else {
+                    res.status(200).json({ message: "Invalid university id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const addStudentToCourse = async (req, res) => {
+    const { courseId, studentId } = req.body;
+    try {
+        models.Course.findById(
+            { _id: courseId },
+            (err, course) => {
+                if (err)
+                    res.status(500).json(err);
+                else {
+                    if (course) {
+                        models.Student.findById(
+                            { _id: studentId },
+                            (err, student) => {
+                                if (err)
+                                    res.status(500).json(err);
+                                else {
+                                    if (student) {
+                                        models.Course.updateOne(
+                                            { _id: courseId },
+                                            {
+                                                $push: {
+                                                    students: studentId,
+                                                },
+                                            },
+                                            (err, course) => {
+                                                if (err) {
+                                                    res.status(500).json(err);
+                                                } else {
+                                                    res.status(200).json(course);
+                                                }
+                                            }
+                                        );
+                                    } else {
+                                        res.status(200).json({ message: "Invalid student id" });
+                                    }
+                                }
+                            }
+                        );
+                    } else {
+                        res.status(200).json({ message: "Invalid course id" });
+                    }
+                }
+            }
+        );
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
 
 
 module.exports = {
@@ -1341,5 +1469,9 @@ module.exports = {
     getTeacherData,
     getMultiCourses,
     getCourseDetails,
-    getQuestionByCourseId
+    getQuestionByCourseId,
+    getQuestionById,
+    getQuestionAnalysis,
+    getStudents,
+    addStudentToCourse,
 };

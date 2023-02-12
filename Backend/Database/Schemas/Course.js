@@ -7,6 +7,7 @@ course = {
     expectedCourseDuration: Number,
     courseCompilers: Array,
     courseStartDate: Date,
+    // courseMaterial: Array,
 }
 
 module.exports = course;

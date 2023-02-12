@@ -90,4 +90,19 @@ router.post("/university/getMultiCourses", controls.getMultiCourses);
 router.post("/university/course/details", controls.getCourseDetails);
 
 router.post("/teacher/course/questions", controls.getQuestionByCourseId);
+
+
+
+router.post("/teacher/course/questionById", controls.getQuestionById);
+
+router.post("/teacher/course/question/analysis", controls.getQuestionAnalysis);
+
+
+router.post("/university/getStudents", controls.getStudents);
+
+router.post("/university/course/addStudent", controls.addStudentToCourse);
+
+// later
+router.post("/teacher/course/question/edit", controls.editQuestion);
+
 module.exports = router; 

@@ -1,9 +1,9 @@
 question = {
     title: String,
     question: String,
-    course : String,
-    answer_key_file: String,
-    answer_key_file_name: String,
+    course: String,
+    solution: String,
+    solutionDescription: String,
     input: String,
     output: String, 
     difficulty: String,
@@ -12,18 +12,10 @@ question = {
     dateCreated: Date,
     dateModified: Date,
     date_published: Date,
-    studentsAttempted: [{
-        student_id: String,
-    }],
-    studentsCorrect: [{
-        student_id: String,
-    }],
-    studentsIncorrect: [{
-        student_id: String,
-    }],
-    studentsUnattempted: [{
-        student_id: String,
-    }],
+    studentsAttempted: Array,
+    studentsCorrect: Array,
+    studentsIncorrect: Array,
+    studentsUnattempted: Array,
 
 }
 
