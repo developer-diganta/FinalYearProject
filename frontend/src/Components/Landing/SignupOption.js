@@ -25,6 +25,26 @@ function SignupOption() {
             navigate('/teacher/signup');
         }
     }
+
+    async function checkForStudentSignup(){
+        console.log("Check??")
+        const student__token = localStorage.getItem('student__token');
+        const student__id = localStorage.getItem('student__id');
+        if(student__token){
+            const res = await axios.post(backend_url + '/student/data', {studentId: student__id});
+            console.log("15", res.data.status);
+            if(res.data.status === "active"){
+                navigate('/student/dashboard');
+            }
+            else{
+                navigate('/student/status');
+            }
+        }
+        else{
+            navigate('/student/signup');
+        }
+    }
+
   return (
     <div>
         <LandingHeader />
@@ -39,7 +59,9 @@ function SignupOption() {
                     <img className='w-full h-full' src="teacher.svg" alt="" />
                     <p className='flex justify-center pt-4 text-2xl font-semibold'>Teacher</p>
                 </div>
-                <div className="as_student relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => navigate('/signup/student')}>
+                <div className="as_student relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => {
+                    checkForStudentSignup();
+                }}>
                     <img className='w-full h-full' src="student.svg" alt="" />
                     <p className='flex justify-center pt-4 text-2xl font-semibold'>Student</p>
                 </div>

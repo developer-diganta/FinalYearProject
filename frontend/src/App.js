@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Codeeditor from './Components/Codeeditor/Codeeditor';
-import Path from './Components/Student/Pages/Path/Path';
+// import Path from './Components/Student/Pages/Path/Path';
 import TeacherSignup from './Components/Teacher/TeacherSignup/TeacherSignup';
 import Verificatin from './Components/Verification/Verificatin';
 import LandingPage from './Components/Landing/LandingPage';
@@ -26,6 +26,10 @@ import PreviouCourse from './Components/Teacher/Courses/PreviouCourse';
 import CurrentCourse from './Components/Teacher/Courses/CurrentCourse';
 import CourseOfTeacher from './Components/Teacher/Courses/CourseOfTeacher';
 import CreateQuestionForm from './Components/Teacher/Courses/DifferentOptions/CreateQuestionForm';
+import StudentDashboard from './Components/Student/StudentProfile/StudentDashboard';
+import StudentStatus from './Components/Student/Pages/StudentStatus';
+import StudentLogin from './Components/Student/StudentSignup/StudentLogin';
+import UniversityPendingStudents from './Components/University/UniversityPendingStudents';
 
 
 function App() {
@@ -43,6 +47,7 @@ function App() {
             
             <Route path='/university/dashboard' element={<UniversityDashboard />} />
             <Route path='/university/teachers' element={<UniversityTeacher />} />
+            <Route path='/university/pendingstudents' element={<UniversityPendingStudents />} />
             <Route path='/university/students' element={<UniversityStudents />} />
             <Route path='/university/courses' element={<UniversityCourses />} />
 
@@ -67,7 +72,10 @@ function App() {
             <Route path='/:id/solve' element={<Codeeditor />} />
             {/* Signup, signin and mail-verification */}
             <Route path='/student/signup' element={<StudentSignup />} />
-            <Route path='/student/path' element={<Path />} />
+            {/* <Route path='/student/path' element={<Path />} /> */}
+            <Route path='/student/dashboard' element={<StudentDashboard />} />
+            <Route path='/student/status' element={<StudentStatus />} />
+            <Route path='/student/login' element={<StudentLogin />} />
           </Routes>
     </div>
   );

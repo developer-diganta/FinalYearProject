@@ -27,6 +27,7 @@ async function getFormValue(event){
   console.log("hvjvjvjvjvj", res, res.data._id);
   localStorage.setItem('teacher__token', res.data.token);
   localStorage.setItem('teacher__id', res.data._id);
+  localStorage.setItem('teacher__email', email);
   if(res.data.auth == true){
     navigate('/teacher/status');
   }
