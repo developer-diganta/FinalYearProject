@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../Courses.css'
 
-function Question() {
+function Question({coursestate, courseDetail}) {
   const navigate = useNavigate();
   const demo__questions = [
   {
@@ -30,8 +30,8 @@ function Question() {
 
   return (
     <div className='questions'>
-      <div className='relative w-full h-16 mt-4'>
-        <div className='create__course__button' onClick={() => navigate('/teacher/createcourse')}>Cretae Question</div>
+      <div className={`relative w-full h-16 mt-4 ${coursestate === 'current' ? 'block' : 'hidden'}`}>
+        <div className='create__course__button' onClick={() => navigate('/teacher/createquestion', {state: courseDetail})}>Create Question +</div>
       </div>
       {
         demo__questions.map((question) => {

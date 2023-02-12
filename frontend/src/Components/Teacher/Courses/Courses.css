@@ -63,3 +63,42 @@
     box-shadow: none;
     top: 8px;
 }
+
+.create__question__form input,
+.create__question__form textarea,
+.create__question__form select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    font-family: sans-serif;
+    letter-spacing: 2px;
+    outline: none;
+}
+
+.create__question__form p{
+    font-family: sans-serif;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+.form_check input{
+    width: 10%;
+    margin-block: auto;
+}
+
+.form_check label{
+    font-family: sans-serif;
+    letter-spacing: 2px;
+    margin-block: auto;
+}
+
+.form_check{
+    /* background-color: #9667e0; */
+    /* margin-left: 20px; */
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    margin: 10px 20px;
+}
