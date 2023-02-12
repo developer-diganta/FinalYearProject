@@ -40,6 +40,7 @@ function CourseCreateForm() {
         courseType: courseType,
         expectedCourseDuration: course__duration,
         courseCompilers: compilers,
+        courseStartDate: startDate,
         });
         console.log(new__course);
         if(new__course.data.message === "Course added successfully"){

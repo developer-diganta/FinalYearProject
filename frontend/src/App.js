@@ -59,7 +59,8 @@ function App() {
             <Route path='/teacher/previouscourse' element={<PreviouCourse />} />
             <Route path='/teacher/currentcourse' element={<CurrentCourse />} />
             <Route path='/teacher/previouscourse/:options' element={<CourseOfTeacher />} />
-            <Route path='/teacher/createcourse' element={<CreateQuestionForm />} />
+            <Route path='/teacher/currentcourse/:options' element={<CourseOfTeacher />} />
+            <Route path='/teacher/createquestion' element={<CreateQuestionForm />} />
 
             <Route path='/mailverification/:message' element={<Verificatin />} />
 

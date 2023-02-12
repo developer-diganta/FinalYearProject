@@ -14,32 +14,32 @@ function PreviouCourse() {
     const teacher__email = localStorage.getItem('teacher__email');
     const navigate = useNavigate();
     // make an array of courses
-    const courses = [
-        {
-            id: 1,
-            title: 'Course 1',
-            description: 'This is the description of the course 1',
-            date: '2023-01-26',
-            time: '10:00',
-            status: 'pending'
-        },
-        {
-            id: 2,
-            title: 'Course 2',
-            description: 'This is the description of the course 2',
-            date: '2023-01-01',
-            time: '10:00',
-            status: 'pending'
-        },
-        {
-            id: 3,
-            title: 'Course 3',
-            description: 'This is the description of the course 3',
-            date: '2023-01-16',
-            time: '10:00',
-            status: 'pending'
-        },
-    ]
+    // const courses = [
+    //     {
+    //         id: 1,
+    //         title: 'Course 1',
+    //         description: 'This is the description of the course 1',
+    //         date: '2023-01-26',
+    //         time: '10:00',
+    //         status: 'pending'
+    //     },
+    //     {
+    //         id: 2,
+    //         title: 'Course 2',
+    //         description: 'This is the description of the course 2',
+    //         date: '2023-01-01',
+    //         time: '10:00',
+    //         status: 'pending'
+    //     },
+    //     {
+    //         id: 3,
+    //         title: 'Course 3',
+    //         description: 'This is the description of the course 3',
+    //         date: '2023-01-16',
+    //         time: '10:00',
+    //         status: 'pending'
+    //     },
+    // ]
 
     async function getPreviousCourses(){
         const instance = axios.create({
@@ -47,8 +47,18 @@ function PreviouCourse() {
                 'x-auth-token': teacherToken,
             },
         });
-        const previous__courses = await instance.post(backend_url + `/teacher/course/getCourses`, {teacherId: teacherId, email: teacher__email});
-        console.log(previous__courses);
+        const all__courses = await instance.post(backend_url + `/teacher/course/getCourses`, {teacherId: teacherId, email: teacher__email});
+        console.log(all__courses);
+        const previous__courses = all__courses.data.filter((course) => {
+            const today = new Date();
+            const course__date = new Date(course.courseStartDate);
+            console.log(today, course__date);
+            const diffTime = Math.abs(today - course__date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            console.log(diffDays); 
+            return course.expectedCourseDuration < diffDays;
+        });
+        setPreviousCourses(previous__courses);
     }
     useState(() => {
         getPreviousCourses();
@@ -56,7 +66,7 @@ function PreviouCourse() {
 
 
   return (
-    <div className='flex md:block'>
+    <div className='previous__courses flex md:block'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <SidebarTEacher />
         </div>
@@ -66,11 +76,11 @@ function PreviouCourse() {
             </div>
             <div className="courses grid grid-cols-2 mx-2">
                 {
-                    courses.map((course) => (
-                        <div className="course mr-4 my-4 flex hover:scale-105 hover:shadow-lg" key={course.id} style={{}}>
+                    previousCourses.map((course) => (
+                        <div className="course mr-4 my-4 flex hover:scale-105 hover:shadow-lg" key={course._id} style={{}}>
                             <div className='w-10/12 bg-[#E2DEED] p-3'>
                                 <div className="course__title text-lg font-semibold pb-2">
-                                    <h3>{course.title}</h3>
+                                    <h3>{course.name}</h3>
                                 </div>
                                 <div className="course__description text-sm">
                                     <p>{course.description}</p>
@@ -78,7 +88,7 @@ function PreviouCourse() {
                                 <p className='text-sm font-semibold text-[#7F00FF]'>Completed</p>
                             </div>
                             <div className='w-2/12 bg-[#8a66ec] p-3 flex justify-center items-center text-white font-bold text-xl cursor-pointer'
-                                onClick={() => navigate('/teacher/previouscourse/questions')}
+                                onClick={() => navigate('/teacher/previouscourse/questions', {state: {course, coursestate: 'previous'}})}
                             >
                                 <BsArrowReturnRight />
                             </div>
