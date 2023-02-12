@@ -1,36 +1,60 @@
 import axios from 'axios';
+import { async } from 'q';
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { backend_url } from '../../BackendRoutes';
 import Sidebaruniversity from './Sidebaruniversity/Sidebaruniversity';
 
-function UniversityStudents() {
-    const { openClose, unvSign } = useSelector((state) => state.counter);
-    const[students, setStudents] = useState();
-    const university__id = localStorage.getItem('university__id');
-    const university__token = localStorage.getItem('signup_token');
-    const navigate = useNavigate();
-  
-    useEffect(() => {
-        async function getAllStudents(){
-          const instance = axios.create({
-            headers: {
-              'x-auth-token': university__token
-            }
-          });
+function UniversityPendingStudents() {
+  const { openClose, unvSign } = useSelector((state) => state.counter);
+  const[students, setStudents] = useState();
+  const university__id = localStorage.getItem('university__id');
+  const university__token = localStorage.getItem('signup_token');
+  const navigate = useNavigate();
+
+  async function acceptStudent(studentId){
     
-          console.log("jgfwjegfkw", backend_url);
-          const res = await instance.post(backend_url + '/university/student', {universityId: university__id});
-          console.log(res);
-          setStudents(res.data.filter((item,index)=>{
-              return item.status === 'active';
-          }));
+    const instance = axios.create({
+      headers: {
+        'x-auth-token': university__token
+      }
+    });
+    console.log("*******************************.", studentId)
+    const res = await instance.post(backend_url + '/university/student/waitlist/accept/' + studentId, {studentId: studentId, universityId: university__id});
+    console.log(res);
+    alert(res.data.message);
+  }
+
+  async function rejectStudent(studentId){
+    const instance = axios.create({
+      headers: {
+        'x-auth-token': university__token
+      }
+    });
+
+    const res = await instance.post(backend_url + '/university/student/waitlist/reject/' + studentId, {studentId: studentId, universityId: university__id});
+    console.log(res);
+    alert(res.data.message);
+  }
+
+  useEffect(() => {
+    async function getAllStudents(){
+      const instance = axios.create({
+        headers: {
+          'x-auth-token': university__token
         }
-        getAllStudents();
-      }, []);
+      });
+
+      console.log("jgfwjegfkw", backend_url);
+      const res = await instance.post(backend_url + '/university/student/waitlist', {universityId: university__id});
+      console.log(res);
+      setStudents(res.data);
+    }
+    getAllStudents();
+  }, []);
 
   return (
     <div className='flex md:block'>
@@ -41,8 +65,8 @@ function UniversityStudents() {
           <div className='flex justify-start gap-8 items-center'>
             <h1 className='bg-[#9900ff] w-60 py-2 text-center text-white font-semibold uppercase tracking-wider rounded-full shadow-lg mb-8 md:text-sm sm:text-xs md:w-48 md:mx-auto cursor-pointer' onClick={() => navigate('/university/students')}>Active Students</h1>
             <h1 className='bg-[#9900ff] w-60 py-2 text-center text-white font-semibold uppercase tracking-wider rounded-full shadow-lg mb-8 md:text-sm sm:text-xs md:w-48 md:mx-auto cursor-pointer' onClick={() => navigate('/university/pendingstudents')}>Pending Students</h1>
-          </div>
-        <div>
+          </div>        
+      <div>
           {/* <div className='flex justify-between bg-[#2e004d] text-white text-lg font-semibold py-2'>
               <div className='w-1/4 text-center md:text-xs sm:text-[10px] md:w-auto md:p-2'>Name</div>
               <div className='w-1/4 text-center md:text-xs sm:text-[10px] md:w-auto md:p-2'>Roll No</div>
@@ -58,17 +82,17 @@ function UniversityStudents() {
           {
             students && students.map((student, index) => {
               return (
-                <div className='bg-[#f8f9fa] transition duration-200 ease-out my-4 flex justify-between items-center py-2 pr-4 w-5/6 md:w-full'>
+                <div className='bg-[#f8f9fa] transition duration-200 ease-out my-4 flex justify-between items-center py-2 pr-4'>
                   {/* <div></div> */}
                   <div className='w-1/4 text-center md:text-xs sm:text-[10px] flex items-center gap-4 pl-4' style={{fontFamily: "sans-serif", letterSpacing: "1px"}}>
                     <span className="number h-6 w-6 flex justify-center items-center rounded-md" style={{border: "1px solid #000000"}}>{index+1}</span>
                     {student.name}
                   </div>
                   <div className='w-1/4 text-center md:text-xs sm:text-[10px] text-sm' style={{fontFamily: "sans-serif", letterSpacing: "1px"}}>{student.email}</div>
-                  {/* <div className='flex gap-4'>
+                  <div className='flex gap-4'>
                     <button className='bg-[#A3C7D6] px-2 py-1 text-white rounded-sm' onClick={() => acceptStudent(student._id)}>Accept</button>
                     <button className='bg-[#D3756B] px-2 py-1 text-white rounded-sm' onClick={() => rejectStudent(student._id)}>Reject</button>
-                  </div> */}
+                  </div>
                 </div>
               )
             })
@@ -79,4 +103,4 @@ function UniversityStudents() {
   )
 }
 
-export default UniversityStudents
+export default UniversityPendingStudents

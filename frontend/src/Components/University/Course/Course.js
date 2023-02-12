@@ -3,9 +3,10 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { backend_url } from '../../../BackendRoutes';
 import Sidebaruniversity from '../Sidebaruniversity/Sidebaruniversity';
+import { MdDoubleArrow } from 'react-icons/md';
 
 function Course() {
     // get the course name from the url
@@ -14,10 +15,12 @@ function Course() {
     const unv__id = localStorage.getItem('university__id');
     const[teachet, setTeacher] = useState([]);
     const[selecttedTeacher, setSelectedTeacher] = useState();
+    const[students, setStudents] = useState([]);
 
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8];
+    const location = useLocation();
 
     const { openClose, unvSign } = useSelector((state) => state.counter);
+
     async function getAllAcceptedTeachers(){
       const instance = axios.create({
         headers: {
@@ -57,11 +60,25 @@ function Course() {
         }
     }
 
+    async function getAllStudents(){
+      const instance = axios.create({
+        headers: {
+          'x-auth-token': token
+        }
+      });
 
+      console.log("jgfwjegfkw", backend_url);
+      const res = await instance.post(backend_url + '/university/student', {universityId: unv__id});
+      console.log(res);
+      setStudents(res.data.filter((item,index)=>{
+          return item.status === 'active';
+      }));
+    }
     
     useEffect(() => {
       getAllAcceptedTeachers();
       getCourseDetails();
+      getAllStudents();
     }, [])
 
   return (
@@ -69,42 +86,48 @@ function Course() {
       <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
           <Sidebaruniversity />
       </div>
-      <div className={`pt-4 pl-6 bg-[#f8f9fa] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen`} style={{float: "right"}}>
-          <div className="select__teachers mb-8">
-              <p className='pb-4 capitalize text-[#444d5c] font-semibold'>select teacher</p>
-              {/* cretae a selecter for teachers */}
-              <select className='select__teacher shadow-sm w-full py-2 h-10' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onChange={(event) => setSelectedTeacher(event.target.value)}>
-                  <option value="0">select teacher</option>
-                  {teachet.map((teacher) => (
-                      <option value={teacher._id}>{teacher.name}</option>
-                  ))}
-              </select>
+      <div className={`bg-[#f8f9fa] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
+          <div className='bg-[#E2DEED] font-semibold pl-6 text-sm py-2 flex gap-2 items-center' style={{letterSpacing: "1px"}}>
+            <h2>Course</h2>
+            <MdDoubleArrow className='rounded-full m-1 w-4 h-4 p-1 text-white' style={{backgroundImage: "linear-gradient(to right top, #ef32d9, #ff1987, #ff7332, #fbb800, #a8eb12)"}} />
+            <h2>{location.state.courseName}</h2>
           </div>
-          <button className='bg-[#D9CFEF] py-2 px-4 rounded-sm text-sm' style={{fontFamily: "sans-serif", letterSpacing: "1px"}} onClick={() => {
-            assignTeacherToCourse();
-          }}>Set Teacher</button>
-          <div className="student__add">
-            <p className='pb-4 pt-10 capitalize text-[#444d5c] font-semibold'>Add Students</p>
-            <div className="students__options bg-white shadow-xl px-8 py-4 h-48 rounded-md" style={{overflowY: "scroll", border: "1px solid #D7D6D9"}}>
-                
-                {
-                  arr.map((ele) => {
-                    return (
-                      <div className="student__option flex justify-between px-4 py-1 my-2 bg-[#F4F1F9]" 
-                      // style={{border: "1px solid red"}}
-                      >
-                          <p className="name">name</p>
-                          <p className="email">email</p>
-                          <p className="roll">role</p>
-                          <input style={{width: "20px"}} value={ele} type="checkbox" />
-                      </div>
-                    )
-                  })
-                }
+          <div className='pt-4 pl-6 pr-6 mt-4'>
+            <div className="select__teachers mb-8 w-4/5">
+                <p className='pb-4 capitalize text-[#444d5c] font-semibold'>select teacher</p>
+                {/* cretae a selecter for teachers */}
+                <select className='select__teacher shadow-sm w-full py-2 h-10' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onChange={(event) => setSelectedTeacher(event.target.value)}>
+                    <option value="0">select teacher</option>
+                    {teachet.map((teacher) => (
+                        <option value={teacher._id}>{teacher.name}</option>
+                    ))}
+                </select>
             </div>
-            <button className='bg-[#D9CFEF] py-2 px-4 rounded-sm text-sm my-8' style={{fontFamily: "sans-serif", letterSpacing: "1px"}} onClick={() => {
-            // assignTeacherToCourse();
-          }}>Add Students</button>
+            <button className='bg-[#D9CFEF] py-2 px-4 rounded-sm text-sm' style={{fontFamily: "sans-serif", letterSpacing: "1px"}} onClick={() => {
+              assignTeacherToCourse();
+            }}>Set Teacher</button>
+            <div className="student__add w-4/5">
+              <p className='pb-4 pt-10 capitalize text-[#444d5c] font-semibold'>Add Students</p>
+              <div className="students__options bg-white shadow-xl px-8 py-4 h-48 rounded-md" style={{overflowY: "scroll", border: "1px solid #D7D6D9"}}>
+                  
+                  {
+                    students.map((student) => {
+                      return (
+                        <div className="student__option flex justify-between px-4 py-1 my-2 bg-[#F4F1F9] items-center" 
+                        // style={{border: "1px solid red"}}
+                        >
+                            <p className="name" style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>{student.name}</p>
+                            <p className="email text-sm" style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>{student.email}</p>
+                            <input style={{width: "20px"}} value={student._id} type="checkbox" />
+                        </div>
+                      )
+                    })
+                  }
+              </div>
+              <button className='bg-[#D9CFEF] py-2 px-4 rounded-sm text-sm my-8' style={{fontFamily: "sans-serif", letterSpacing: "1px"}} onClick={() => {
+              // assignTeacherToCourse();
+            }}>Add Students</button>
+            </div>
           </div>
       </div>
     </div>

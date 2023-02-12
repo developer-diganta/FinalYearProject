@@ -1,6 +1,9 @@
+import axios from 'axios';
 import React from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { backend_url } from '../../../BackendRoutes';
 import Header from '../../AppHeader/Header';
 import LandingHeader from '../../Landing/LandingHeader';
 import './Signup.css';
@@ -8,17 +11,37 @@ import './Signup.css';
 function StudentSignup() {
 
   const[name, setName] = useState();
-  const[username, setUsername] = useState();
+  // const[username, setUsername] = useState();
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
   const[university, setUniversity] = useState();
+  const[allUniversity, setAllUniversity] = useState([]);
 
   const navigate = useNavigate();
 
   async function getFormValue(event){
     event.preventDefault();
-    console.log(name, username, email, password, university);
+    console.log(name, email, password, university);
+    const res = await axios.post(backend_url + '/student/signup', {name: name, email: email, password: password, uniId: university});
+    console.log("hvjvjvjvjvj", res, res.data._id);
+    localStorage.setItem('student__token', res.data.token);
+    localStorage.setItem('student__id', res.data._id);
+    localStorage.setItem('student__email', email);
+    if(res.data.auth == true){
+      navigate('/student/status');
+    }
   }
+
+  useEffect(() => {
+    async function getAllUniversity(){
+      console.log("jgfwjegfkw", backend_url);
+      const res = await axios.post(backend_url + '/university/allUniversities');
+      console.log(res);
+      setAllUniversity(res.data);
+    }
+    getAllUniversity();
+  }, []);
+
   return (
     <div className="signup">
       <LandingHeader />
@@ -56,19 +79,23 @@ function StudentSignup() {
               </svg>
               <select className='w-full' name="university" id="university" onChange={(ele) => setUniversity(ele.target.value)}>
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your university</option>
-                <option value="IIT Bombay">IIT Bombay</option>
+                {/* <option value="IIT Bombay">IIT Bombay</option>
                 <option value="IIT Delhi">IIT Delhi</option>
                 <option value="IIT Kanpur">IIT Kanpur</option>
                 <option value="IIT Kharagpur">IIT Kharagpur</option>
                 <option value="IIT Madras">IIT Madras</option>
                 <option value="IIT Roorkee">IIT Roorkee</option>
                 <option value="IIT Guwahati">IIT Guwahati</option>
-                <option value="IIT Hyderabad">IIT Hyderabad</option>
-
+                <option value="IIT Hyderabad">IIT Hyderabad</option> */}
+                {
+                    allUniversity ? allUniversity.map((uni, index) => {
+                        return <option key={index} value={uni._id}>{uni.name}</option>
+                    }) : null
+                }
               </select>
             </div>
               <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
-              <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}}>login</span> </h1></div>
+              <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/student/login')}>login</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>

@@ -71,7 +71,7 @@ function CurrentCourse() {
         </div>
         <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <div className='pb-1 my-2 mx-2' style={{backgroundImage: "radial-gradient(circle, #c0392b, #c7254c, #c2206e, #af3090, #8e44ad)"}}>
-                <h2 className='bg-[#E2DEED] font-semibold p-1' style={{letterSpacing: "1px"}}>Previous course</h2>
+                <h2 className='bg-[#E2DEED] font-semibold p-1' style={{letterSpacing: "1px"}}>Current course</h2>
             </div>
             <div className="courses grid grid-cols-2 mx-2">
                 {

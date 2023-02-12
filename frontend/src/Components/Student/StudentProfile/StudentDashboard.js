@@ -1,108 +1,108 @@
 import React from 'react'
-import '../TeacherProfile.js/TeacherProf.css'
-import TeacherHeader from './TeacherHeader'
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import StudentHeader from '../Pages/StudentHeader';
+import SidebarStudent from '../Sidebar/SidebarStudent';
 import Calendar from 'react-calendar'
-import { useState } from 'react'
-import './Pages.css'
-import { useEffect } from 'react'
+
 import { AiOutlineClose } from "react-icons/ai";
-import SidebarTEacher from '../Sidebar/SidebarTEacher'
-import { useSelector } from 'react-redux'
 
 var activity = [
-    {
-        id: 1,
-        title: 'Task 1',
-        description: 'This is the description of the task 1',
-        date: '2023-01-26',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 2,
-        title: 'Task 2',
-        description: 'This is the description of the task 2',
-        date: '2023-01-01',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 3,
-        title: 'Task 3',
-        description: 'This is the description of the task 3',
-        date: '2023-01-16',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 4,
-        title: 'Task 4',
-        description: 'This is the description of the task 4',
-        date: '2023-01-04',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 5,
-        title: 'Task 5',
-        description: 'This is the description of the task 5',
-        date: '2023-01-17',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 6,
-        title: 'Task 6',
-        description: 'This is the description of the task 6',
-        date: '2022-09-05',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 7,
-        title: 'Task 7',
-        description: 'This is the description of the task 7',
-        date: '2021-09-01',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 8,
-        title: 'Task 8',
-        description: 'This is the description of the task 8',
-        date: '2021-09-01',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 9,
-        title: 'Task 9',
-        description: 'This is the description of the task 9',
-        date: '2021-09-01',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 10,
-        title: 'Task 10',
-        description: 'This is the description of the task 10',
-        // today date
-        date: '2023-01-19',
-        time: '10:00',
-        status: 'pending'
-    },
-    {
-        id: 11,
-        title: 'Task 11',
-        description: 'This is the description of the task 11',
-        date: '2023-01-19',
-        time: '10:00',
-        status: 'pending'
-    },
+  {
+      id: 1,
+      title: 'Task 1',
+      description: 'This is the description of the task 1',
+      date: '2023-01-26',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 2,
+      title: 'Task 2',
+      description: 'This is the description of the task 2',
+      date: '2023-01-01',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 3,
+      title: 'Task 3',
+      description: 'This is the description of the task 3',
+      date: '2023-01-16',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 4,
+      title: 'Task 4',
+      description: 'This is the description of the task 4',
+      date: '2023-01-04',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 5,
+      title: 'Task 5',
+      description: 'This is the description of the task 5',
+      date: '2023-01-17',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 6,
+      title: 'Task 6',
+      description: 'This is the description of the task 6',
+      date: '2022-09-05',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 7,
+      title: 'Task 7',
+      description: 'This is the description of the task 7',
+      date: '2021-09-01',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 8,
+      title: 'Task 8',
+      description: 'This is the description of the task 8',
+      date: '2021-09-01',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 9,
+      title: 'Task 9',
+      description: 'This is the description of the task 9',
+      date: '2021-09-01',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 10,
+      title: 'Task 10',
+      description: 'This is the description of the task 10',
+      // today date
+      date: '2023-01-19',
+      time: '10:00',
+      status: 'pending'
+  },
+  {
+      id: 11,
+      title: 'Task 11',
+      description: 'This is the description of the task 11',
+      date: '2023-01-19',
+      time: '10:00',
+      status: 'pending'
+  },
 ]
 
-function Dashboard() {
-    const[value, onChange] = useState(new Date());
+
+function StudentDashboard() {
+  const[value, onChange] = useState(new Date());
     const[date, setDate] = useState('')
     const[dateClick, setDateClick] = useState(false)
     const { openClose, unvSign } = useSelector((state) => state.counter);
@@ -135,14 +135,13 @@ function Dashboard() {
         // console.log(tasks);
         setDate([year, month, day].join('-'));
     }, [])
-
   return (
-    <div className='teacter__dashboard flex md:block'>
+    <div className='student__dashboard flex md:block'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
-            <SidebarTEacher />
+            <SidebarStudent />
         </div>
         <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
-            <TeacherHeader />
+            <StudentHeader />
             <div className='flex gap-2 mx-6 mt-10 '>
                 <div className="calender w-2/4 rounded-lg shadow-2xl p-4">
                     <Calendar onChange={onChange} value={value} 
@@ -191,4 +190,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default StudentDashboard

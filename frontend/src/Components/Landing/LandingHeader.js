@@ -25,7 +25,7 @@ function LandingHeader() {
   return (
     <div className={`bg-white relative ${sticky ? 'shadow-lg' : ''} ${sticky ? 'w-full' : ''}`} style={{position: sticky ? "fixed" : "static", transition: "top 0.8s ease", zIndex: "200"}}>
         <div className="landing_header flex justify-between">
-            <div className="landing_header_left pl-8">
+            <div className="landing_header_left pl-8" onClick={() => navigate('/')}>
                 <img className='bg w-28' src="/SLATE.png" alt="" />
             </div>
             <div className='flex items-center'>
