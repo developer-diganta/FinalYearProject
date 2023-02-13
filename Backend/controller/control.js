@@ -366,10 +366,10 @@ const getRemainingStudents = async (req, res) => {
     const results = [];
     try {
         let selected = await models.Student.find({ university: universityId });
- 
+
         for (let i = 0; i < selected.length; i++) {
             const student = selected[i];
-            for(var j = 0; j < student.courses.length; j++) {
+            for (var j = 0; j < student.courses.length; j++) {
                 if (student.courses[j].course_id == courseId) {
                     selectedStudents.push(student);
                 }
@@ -380,7 +380,7 @@ const getRemainingStudents = async (req, res) => {
             const selectedStudentsMap = new Map();
             selectedStudents.forEach(student => {
                 selectedStudentsMap.set(JSON.stringify(student._id), student);
-                
+
             });
             allStudents.forEach(student => {
                 if (!selectedStudentsMap.has(JSON.stringify(student._id))) {
@@ -1495,6 +1495,57 @@ const addStudentToCourse = async (req, res) => {
 }
 
 
+
+const studentLogin = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+
+        models.Student.find({ email: email }, (err, student) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                if (student.length > 0) {
+                    bcrypt.compare(password, student[0].password, (err, result) => {
+                        if (err)
+                            res.status(500).json(err);
+                        else {
+                            if (result) {
+                                const token = generateToken(student[0].name, student[0].email);
+                                res.status(200).json({ auth: true, token: token, _id: student[0]._id });
+                            }
+                            else
+                                res.status(200).json({ message: "Invalid password" });
+                        }
+                    });
+                }
+                else
+                    res.status(200).json({ message: "Invalid email" });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const getStudentData = async (req, res) => {
+    const { studentId } = req.body;
+    try {
+        models.Student.find({ _id: studentId }, (err, student) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (student.length > 0) {
+                    res.status(200).json(student[0]);
+                } else {
+                    res.status(200).json({ message: "Invalid student id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
 module.exports = {
     home,
     languages,
@@ -1541,5 +1592,7 @@ module.exports = {
     getQuestionAnalysis,
     getStudents,
     addStudentToCourse,
-    getRemainingStudents
+    getRemainingStudents,
+    getStudentData,
+    studentLogin
 };
