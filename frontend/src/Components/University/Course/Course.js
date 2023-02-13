@@ -68,11 +68,17 @@ function Course() {
       });
 
       console.log("jgfwjegfkw", backend_url);
-      const res = await instance.post(backend_url + '/university/student', {universityId: unv__id});
-      console.log(res);
-      setStudents(res.data.filter((item,index)=>{
+      const res = await instance.post(backend_url + '/university/course/remainingStudents', {universityId: unv__id, courseId: courseId});
+      console.log("72.", res);
+      setStudents(res.data.results.filter((item,index)=>{
           return item.status === 'active';
       }));
+      // setStudents(res.data);
+    }
+
+    async function addStudentsToCourse(student__id){
+      const res = await axios.post(backend_url + '/university/course/add/student', {courseId: courseId, studentId: student__id, universityId: unv__id});
+      console.log(res);
     }
     
     useEffect(() => {
@@ -118,15 +124,15 @@ function Course() {
                         >
                             <p className="name" style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>{student.name}</p>
                             <p className="email text-sm" style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>{student.email}</p>
-                            <input style={{width: "20px"}} value={student._id} type="checkbox" />
+                            {/* <input style={{width: "20px"}} value={student._id} type="checkbox" /> */}
+                            <button className='bg-[#D9CFEF] py-2 px-4 rounded-sm text-sm' style={{fontFamily: "sans-serif", letterSpacing: "1px"}} onClick={() => {
+                              addStudentsToCourse(student._id);
+                            }}>Add</button>
                         </div>
                       )
                     })
                   }
               </div>
-              <button className='bg-[#D9CFEF] py-2 px-4 rounded-sm text-sm my-8' style={{fontFamily: "sans-serif", letterSpacing: "1px"}} onClick={() => {
-              // assignTeacherToCourse();
-            }}>Add Students</button>
             </div>
           </div>
       </div>
