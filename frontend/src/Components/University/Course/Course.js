@@ -119,7 +119,7 @@ function Course() {
                   {
                     students.map((student) => {
                       return (
-                        <div className="student__option flex justify-between px-4 py-1 my-2 bg-[#F4F1F9] items-center" 
+                        <div className="student__option flex justify-between pl-4 my-2 bg-[#F4F1F9] items-center" 
                         // style={{border: "1px solid red"}}
                         >
                             <p className="name" style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>{student.name}</p>

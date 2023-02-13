@@ -39,7 +39,7 @@ const Sidebaruniversity = () => {
             } duration-500 text-gray-100 px-4 md:relative md:px-0`}
           >
             <div className="py-3 flex justify-between mn md:bg-[#9900ff] z-50 md:px-2 items-center">
-              <div className='text-4xl' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}} onClick={() => navigate('/')}>Slate</div>
+              <div className='text-4xl cursor-pointer' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}} onClick={() => navigate('/')}>Slate</div>
               <div className='md:hidden'>
                 <HiMenuAlt3
                   size={26}

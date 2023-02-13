@@ -30,6 +30,7 @@ import StudentDashboard from './Components/Student/StudentProfile/StudentDashboa
 import StudentStatus from './Components/Student/Pages/StudentStatus';
 import StudentLogin from './Components/Student/StudentSignup/StudentLogin';
 import UniversityPendingStudents from './Components/University/UniversityPendingStudents';
+import QuestionDetail from './Components/Teacher/Courses/DifferentOptions/QuestionDetail';
 
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
             <Route path='/teacher/previouscourse/:options' element={<CourseOfTeacher />} />
             <Route path='/teacher/currentcourse/:options' element={<CourseOfTeacher />} />
             <Route path='/teacher/createquestion' element={<CreateQuestionForm />} />
+            <Route path='/teacher/question/questiondetail' element={<QuestionDetail />} />
 
             <Route path='/mailverification/:message' element={<Verificatin />} />
 

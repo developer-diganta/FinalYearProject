@@ -36,7 +36,7 @@ function Question({coursestate, courseDetail}) {
       {
         demo__questions.map((question) => {
           return (
-            <div className='question bg-white my-6 py-6 px-4 flex justify-between items-end rounded-sm shadow-lg'>
+            <div className='question bg-white my-6 py-6 px-4 flex justify-between items-end rounded-sm shadow-lg' onClick={() => navigate('/teacher/question/questiondetail', {state: question})}>
               <div className=''>
                 <div className='question__title'>
                   <h3 className='text-xl font-bold'>{question.title}</h3>
@@ -48,9 +48,9 @@ function Question({coursestate, courseDetail}) {
                   <p className='text-base'>{question.question}</p>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <div className='solve__question px-4 py-2 rounded-sm hover:scale-105 cursor-pointer hover:shadow-lg'>Solve Question</div>
-              </div>
+              </div> */}
             </div>
           )
         })
