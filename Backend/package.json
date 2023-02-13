@@ -23,10 +23,12 @@
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "mongoose": "^6.4.3",
+    "natural": "^6.2.0",
     "nodejs-base64": "^2.0.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.1.2",
+    "string-similarity": "^4.0.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

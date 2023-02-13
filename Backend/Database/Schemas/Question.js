@@ -16,6 +16,7 @@ question = {
     studentsCorrect: Array,
     studentsIncorrect: Array,
     studentsUnattempted: Array,
+    plagarismAnalysis: Array,
 
 }
 

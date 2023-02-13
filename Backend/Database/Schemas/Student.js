@@ -6,8 +6,7 @@ student = {
     status: String,
     courses: [{
         course_id: String,
-        course_name: String,
-        course_grade: Number,
+        course_grade: String,
         completed: Boolean,
         completed_date: Date,
         start_date: Date,

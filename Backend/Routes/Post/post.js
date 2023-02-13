@@ -34,6 +34,8 @@ router.post("/university/contract/expiry", authoriseUniversity, controls.contrac
 
 router.post("/university/student", authoriseUniversity, controls.getUniversityStudentData);
 
+router.post("/university/course/remainingStudents",  controls.getRemainingStudents);
+
 router.post("/university/student/count", authoriseUniversity, controls.getUniversityStudentCount);
 
 router.post("/university/teacher/:id", authoriseUniversity, controls.getUniversityTeacherData);
@@ -49,7 +51,7 @@ router.post("/university/student/waitlist", authoriseUniversity, controls.getUni
 
 router.post("/university/student/waitlist/:id", authoriseUniversity, controls.getUniversityStudentWaitlistById);
 
-router.post("/university/student/waitlist/accept/:id", authoriseUniversity, controls.acceptStudentWaitlist);
+router.post("/university/student/waitlist/accept/byId", authoriseUniversity, controls.acceptStudentWaitlist);
 
 router.post("/university/student/waitlist/reject/:id", authoriseUniversity, controls.rejectStudentWaitlist);
 
@@ -67,6 +69,8 @@ router.post("/university/course/add", authoriseUniversity, controls.addCourse);
 
 router.post("/university/course/add/teacher",  controls.addCourseTeacher);
 
+
+router.post("/university/course/add/student",  controls.addCourseStudent);
 // Student routes
 router.post("/student/signup", controls.studentSignUp);
 
@@ -103,6 +107,6 @@ router.post("/university/getStudents", controls.getStudents);
 router.post("/university/course/addStudent", controls.addStudentToCourse);
 
 // later
-router.post("/teacher/course/question/edit", controls.editQuestion);
+// router.post("/teacher/course/question/edit", controls.editQuestion);
 
 module.exports = router; 
