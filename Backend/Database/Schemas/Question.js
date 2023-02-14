@@ -6,6 +6,8 @@ question = {
     solutionDescription: String,
     input: String,
     output: String, 
+    sampleInput: String,
+    sampleOutput: String,
     difficulty: String,
     category: String,
     tags: [String],
