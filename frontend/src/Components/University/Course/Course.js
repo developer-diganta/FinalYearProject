@@ -79,6 +79,9 @@ function Course() {
     async function addStudentsToCourse(student__id){
       const res = await axios.post(backend_url + '/university/course/add/student', {courseId: courseId, studentId: student__id, universityId: unv__id});
       console.log(res);
+      if(res.data){
+        alert(res.data.message);
+      }
     }
     
     useEffect(() => {
@@ -119,7 +122,7 @@ function Course() {
                   {
                     students.map((student) => {
                       return (
-                        <div className="student__option flex justify-between px-4 py-1 my-2 bg-[#F4F1F9] items-center" 
+                        <div className="student__option flex justify-between px-4 my-2 bg-[#F4F1F9] items-center" 
                         // style={{border: "1px solid red"}}
                         >
                             <p className="name" style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>{student.name}</p>

@@ -35,15 +35,15 @@ function Course() {
       <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
           <SidebarTEacher />
       </div>
-      <div className={`dashboard_1 bg-[#F6F6F6] px-4 ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
-          <div className='pb-1 my-2 mx-2' style={{backgroundImage: "radial-gradient(circle, #c0392b, #c7254c, #c2206e, #af3090, #8e44ad)"}}>
-              <div className='bg-[#E2DEED] font-semibold p-1 flex gap-2 items-center' style={{letterSpacing: "1px"}}>
+      <div className={`dashboard_1 bg-[#F6F6F6] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
+          <div className='' style={{backgroundImage: "radial-gradient(circle, #c0392b, #c7254c, #c2206e, #af3090, #8e44ad)", paddingBottom: "2px"}}>
+              <div className='bg-[#E2DEED] font-semibold py-1 px-6 flex gap-2 items-center' style={{letterSpacing: "1px"}}>
                 <h2>{location.state.coursestate === 'previous' ? 'Previous Course' : 'Current Course'}</h2>
                 <MdDoubleArrow className='rounded-full m-1 w-6 h-6 p-1 text-white' style={{backgroundImage: "linear-gradient(to right top, #ef32d9, #ff1987, #ff7332, #fbb800, #a8eb12)"}} />
                 <h2>{location.state.course.name}</h2>
               </div>
           </div>
-          <div className='flex mx-2 gap-4'>
+          <div className='flex mx-2 gap-4 px-4 mt-4'>
             <div className='left_dashboard w-5/6'>
               {
                 (() => {
