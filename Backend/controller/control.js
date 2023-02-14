@@ -15,13 +15,17 @@ const PlagiarismChecker = require("../utils/PlagarismChecker/plagarismChecker");
 
 // const passport = require("passport");
 let languageIds = null;
+
+
 const adminLogin = {}
+
 const getProgrammingLanguageIds = async () => {
     languageIds = await programmingLanguageIds();
 }
+
 getProgrammingLanguageIds();
 
-require('dotenv').config();
+require('dotenv').config(); 
 
 const home = (req, res) => {
     res.status(200).send("Hello World!");
@@ -51,7 +55,12 @@ const submit = async (req, res) => {
             'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
             'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
         },
-        data: `{"language_id":63,"source_code":"${encoded}"}`
+        data: `{
+            "language_id":63,
+            "source_code":"${encoded}",
+            "stdin":"${req.body.sampleInput}",
+            "expected_output":"${req.body.sampleOutput}",
+        }`
     };
 
     axios.request(options).then(function (response) {
@@ -94,7 +103,7 @@ const signupTeacher = async (req, res) => {
             if (err) {
                 res.status(500).json(err);
             } else {
-                // find if valid uniId
+
                 models.University.findById(uniId, (err, university) => {
                     if (err) {
                         res.status(500).json(err);
@@ -361,34 +370,20 @@ const getUniversityStudentData = async (req, res) => {
 
 const getRemainingStudents = async (req, res) => {
     const { universityId, courseId } = req.body;
-    let selectedStudents = [];
     let allStudents = [];
     const results = [];
     try {
-        let selected = await models.Student.find({ university: universityId });
-
-        for (let i = 0; i < selected.length; i++) {
-            const student = selected[i];
-            for (var j = 0; j < student.courses.length; j++) {
-                if (student.courses[j].course_id == courseId) {
-                    selectedStudents.push(student);
+        const students = await models.Student.find({ university: universityId });
+        for (let i = 0;i<students.length;i++) {
+            const currentStudent = students[i];
+            for (let j = 0;j<currentStudent.courses.length;j++) {
+                if (currentStudent.courses[j].course !== courseId) {
+                    results.push(currentStudent);
+                    break;
                 }
             }
         }
-        if (selectedStudents.length) {
-            allStudents = await models.Student.find({ university: universityId });
-            const selectedStudentsMap = new Map();
-            selectedStudents.forEach(student => {
-                selectedStudentsMap.set(JSON.stringify(student._id), student);
-
-            });
-            allStudents.forEach(student => {
-                if (!selectedStudentsMap.has(JSON.stringify(student._id))) {
-                    results.push(student);
-                }
-            });
-        }
-        res.status(200).json({ results });
+        res.status(200).json(results);
     }
     catch (error) {
         console.log(error)
@@ -1064,126 +1059,99 @@ const submitStudent = async (req, res) => {
     const { student_id, code, question_id, language_id } = req.body;
     let plagarized = false;
     try {
-        await models.Question.find({ _id: question_id }, (err, question) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-                if (question.length > 0) {
-                    let encoded = base64encode(code);
-                    const options = {
-                        method: 'POST',
-                        url: 'https://judge0-ce.p.rapidapi.com/submissions',
-                        params: { base64_encoded: 'true', fields: '*' },
-                        headers: {
-                            'content-type': 'application/json',
-                            'Content-Type': 'application/json',
-                            'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
-                            'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
-                        },
-                        data: {
-                            "language_id": language_id,
-                            "source_code": encoded,
-                            "stdin": base64encode(question[0].input),
-                            "expected_output": base64encode(question[0].output)
-                        }
-                    };
 
-                    axios.request(options).then(function (response) {
-                        const options = {
-                            method: 'GET',
-                            url: 'https://judge0-ce.p.rapidapi.com/submissions/' + response.data.token,
-                            params: { base64_encoded: 'true', fields: '*' },
-                            headers: {
-                                'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
-                                'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
-                            }
-                        };
-                        axios.request(options).then(async function (response) {
-                            addSubmissionLog(response.data.token);
-                            const newSubmission = new models.Submission({
-                                student: student_id,
-                                question: question_id,
-                                code: code,
-                                language: language_id,
-                                status: response.data.status.id,
-                                dateCreated: new Date().toISOString(),
-                                plagarized: false
-                            });
-
-                            newSubmission.save((err) => {
-                                if (err) {
-                                    res.status(500).json(err);
-                                    return;
-                                } else {
-                                    question[0].studentsAttempted.push(student_id);
-                                    if (response.data.status.id === 3) {
-                                        // add student id to students_correct array of question
-                                        question[0].studentsCorrect.push(student_id);
-                                    } else {
-                                        question[0].studentsIncorrect.push(student_id);
-                                    }
-                                    models.Submission.find({
-                                        question: question_id,
-                                    },
-                                        (err, submissions) => {
-                                            if (err) {
-                                                res.status(500).json(err);
-                                                return;
-                                            }
-                                            else {
-                                                if (submissions.length >= 0) {
-                                                    const checker = new PlagiarismChecker(submissions, student_id);
-                                                    const plagarismCheck = checker.check();
-                                                    question[0].plagarismAnalysis = plagarismCheck;
-                                                    if (plagarismCheck[plagarismCheck.length - 1].isPlagarized) {
-                                                        console.log("Plagarized")
-                                                        plagarized = true;
-                                                    }
-                                                    question[0].save((err) => {
-                                                        if (err) {
-                                                            console.log("ererererrrererereerererer")
-                                                            res.status(500).json(err);
-                                                        } else {
-                                                            console.log("Question updated successfully");
-                                                        }
-                                                    });
-                                                    console.log({ plagarized })
-                                                    let status = "";
-                                                    // if (plagarized === true) {
-                                                    //     console.log("Plagarized")
-                                                    //     models.Submission.findByIdAndUpdate(newSubmission._id, { plagarized: true }, (err, submission) => {
-                                                    //         if (err) {
-                                                    //             console.log("ererererrrererereerererer")
-                                                    //             res.status(500).json(err);
-                                                    //             return;
-                                                    //         }
-                                                    //     });
-                                                    // }
-                                                    console.log("last")
-                                                    // res.status(200).json({ message: "Submission successful" });
-
-                                                }
-                                            }
-                                        });
-                                }
-                            });
-
-                        }).catch(function (error) {
-                            console.error(error);
-                        });
-
-                    }).catch(function (error) {
-                        console.error(error);
-                        res.status(500).json(error);
-                    });
-                } else {
-                    res.status(200).json({ message: "Invalid question id" });
-                }
+        const question = await models.Question.findById(question_id).exec();
+        console.log("1.Retrieved question");
+        let encoded = base64encode(code);
+        const options = {
+            method: 'POST',
+            url: 'https://judge0-ce.p.rapidapi.com/submissions',
+            params: { base64_encoded: 'true', fields: '*' },
+            headers: {
+                'content-type': 'application/json',
+                'Content-Type': 'application/json',
+                'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+            },
+            data: {
+                "source_code": encoded,
+                "language_id": language_id,
+                "stdin": base64encode(question.input),
+                "expected_output": base64encode(question.output)
             }
+        };
+
+        const response = await axios.request(options);
+        console.log("2.Received response from compiler");
+        const { token } = response.data;
+        const getSubmissionOptions = {
+            method: 'GET',
+            url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+            params: { base64_encoded: 'true', fields: '*' },
+            headers: {
+                'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+            }
+        };
+
+        const submissionResponse = await axios.request(getSubmissionOptions);
+        console.log("3.Received submission response from compiler");
+
+        addSubmissionLog(submissionResponse.data.token);
+
+        const newSubmission = new models.Submission({
+              student: student_id,
+              question: question_id,
+              code: code,
+              language: language_id,
+              status: submissionResponse.data.status.id,
+              dateCreated: new Date().toISOString(),
+              plagarized: false
         });
-    } catch (error) {
+        
+        const submissionToDB = await newSubmission.save();
+        console.log("4.Saved to Submission DB");
+
+        question.studentsAttempted.push(student_id);
+
+        if(submissionResponse.data.status.id === 3) {
+            question.studentsCorrect.push(student_id);
+        } else {
+            question.studentsIncorrect.push(student_id);
+        }
+
+        const getSubmissionData = await models.Submission.find({ question: question_id }).exec();
+
+        console.log("5.Retrieved submission data from DB");
+
+        const checker = new PlagiarismChecker(getSubmissionData, student_id);
+        const plagarismCheck = await checker.check();
+
+        question.plagarismAnalysis = plagarismCheck;
+
+        if(plagarismCheck[plagarismCheck.length - 1].isPlagarised) {
+            plagarized = true;
+        }
+
+        const questionSave = await question.save();
+        
+        console.log("6.Saved to Question DB");
+
+        if (plagarized) {
+            const submissionByIdUpdate = await models.Submission.findByIdAndUpdate(submissionToDB._id, { plagarized: true }).exec();
+            console.log("Plagarism Detected");
+            if (!submissionByIdUpdate) {
+                res.status(500).json({ message: "Error updating submission" });
+            }
+        }
+        console.log("7.Updated submission DB");
+        res.status(200).json({ message: "Submission successful" });
+    }
+    catch (error) {
+        console.log(error)
         res.status(500).json(error);
     }
+
 }
 
 
@@ -1211,7 +1179,6 @@ const addCourseStudent = async (req, res) => {
 
     const { courseId, studentId } = req.body;
     try {
-        // add only if not present
         models.Student.findByIdAndUpdate(studentId, {
             $push: {
                 courses: { course_id: courseId, course_grade: 'I', completed: false, progress: 0 }
@@ -1224,8 +1191,8 @@ const addCourseStudent = async (req, res) => {
             }
         });
     } catch (error) {
+        res.status(500).json(error);
     }
-    res.status(500).json(error);
 }
 
 const removeCourseStudent = async (req, res) => {
@@ -1274,7 +1241,6 @@ const getMultiCourses = async (req, res) => {
                     _id: new ObjectId(courseIds[i]),
                 }, (err, course) => {
                     if (err) {
-                        console.log("QQQQQQ")
                         console.log(err);
                     } else {
                         if (course.length > 0) {
@@ -1373,7 +1339,18 @@ const getQuestionById = async (req, res) => {
                 res.status(500).json(err);
             } else {
                 if (question) {
-                    res.status(200).json(question);
+                    const result = {
+                        _id: question._id,
+                        title: question.title,
+                        question: question.question,
+                        course: question.course,
+                        sampleInput: question.sampleInput,
+                        sampleOutput: question.sampleOutput,
+                        difficulty: question.difficulty,
+                        category: question.category,
+                        tags: question.tags,
+                        dateCreated: question.dateCreated,
+                    }
                 } else {
                     res.status(200).json({ message: "Invalid question id" });
                 }
@@ -1546,6 +1523,180 @@ const getStudentData = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
+const getQuestionForStudent = async (req, res) => {
+    //  title: String,
+    // question: String,
+    // course: String,
+    // solution: String,
+    // solutionDescription: String,
+    // input: String,
+    // output: String, 
+    // sampleInput: String,
+    // sampleOutput: String,
+    // difficulty: String,
+    // category: String,
+    // tags: [String],
+    // dateCreated: Date,
+    // dateModified: Date,
+    // date_published: Date,
+    // studentsAttempted: Array,
+    // studentsCorrect: Array,
+    // studentsIncorrect: Array,
+    // studentsUnattempted: Array,
+    // plagarismAnalysis: Array,
+
+    try {
+        const { questionId, universityId, courseId, studentId } = req.body;
+        const student = await models.Student.findById({ _id: studentId }).exec();
+        if(!student){
+            res.status(404).json({message: "Invalid student id"});
+            return;
+        }
+
+        const university = await models.University.findById({ _id: universityId }).exec();
+        if (!university) {
+            res.status(404).json({ message: "Invalid university id" });
+            return;
+        }
+
+        if (student.university !== universityId) {
+            console.log("line 1576");
+            console.log(student.university);
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+
+
+        const course = await models.Course.findById({ _id: courseId }).exec();
+
+        if (!course) {
+            console.log("line 1584");
+            res.status(404).json({ message: "Invalid course id" });
+            return;
+        }
+
+        if (course.university !== universityId) {
+            console.log("line 1590");
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+
+        let enrolled = false;
+        
+        for (var courseOfStudent of student.courses) {
+            if (courseOfStudent.course_id === courseId) {
+                console.log("line 1596");
+                enrolled = true;
+            }
+        }
+
+        if (!enrolled) {
+            console.log("line 1600");
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+
+        const question = await models.Question.findById({ _id: questionId }).exec();
+
+        if (question.course !== courseId) {
+            console.log("line 1604");
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+        console.log({questionId});
+
+        const questionForStudent = await models.Question.findById(questionId, {
+        title: 1,
+        question: 1,
+        course: 1,
+        sampleInput: 1,
+        sampleOutput: 1,
+        difficulty: 1,
+        category: 1,
+        tags: 1,
+        dateCreated: 1,
+        }).exec();
+
+        res.status(200).json(questionForStudent);
+        return;
+
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const showQuestionsToStudent = async (req, res) => {
+    try {
+        const { questionId, universityId, courseId, studentId } = req.body;
+        const student = await models.Student.findById({ _id: studentId }).exec();
+        if (!student) {
+            res.status(404).json({ message: "Invalid student id" });
+            return;
+        }
+
+        const university = await models.University.findById({ _id: universityId }).exec();
+        if (!university) {
+            res.status(404).json({ message: "Invalid university id" });
+            return;
+        }
+
+        if (student.university !== universityId) {
+            console.log("line 1576");
+            console.log(student.university);
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+
+
+        const course = await models.Course.findById({ _id: courseId }).exec();
+
+        if (!course) {
+            console.log("line 1584");
+            res.status(404).json({ message: "Invalid course id" });
+            return;
+        }
+
+        if (course.university !== universityId) {
+            console.log("line 1590");
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+
+        let enrolled = false;
+        
+        for (var courseOfStudent of student.courses) {
+            if (courseOfStudent.course_id === courseId) {
+                console.log("line 1596");
+                enrolled = true;
+            }
+        }
+
+        if (!enrolled) {
+            console.log("line 1600");
+            res.status(403).json({ message: "FORBIDDEN" });
+            return;
+        }
+        
+        const questions = await models.Question.find({ course: courseId }, {
+            title: 1,
+            question: 1,
+            course: 1,
+            sampleInput: 1,
+            sampleOutput: 1,
+            difficulty: 1,
+            category: 1,
+            tags: 1,
+            dateCreated: 1,
+        }).exec();
+
+        res.status(200).json(questions);
+        return;
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 module.exports = {
     home,
     languages,
@@ -1594,5 +1745,7 @@ module.exports = {
     addStudentToCourse,
     getRemainingStudents,
     getStudentData,
-    studentLogin
+    studentLogin,
+    getQuestionForStudent,
+    showQuestionsToStudent
 };

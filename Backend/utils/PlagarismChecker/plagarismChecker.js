@@ -11,7 +11,7 @@ class PlagiarismChecker {
     for (const submission of this.submissions) {
       const scores = [];
       for (const compareSubmission of this.submissions) {
-        if (compareSubmission._id.toString() === submission._id.toString()) {
+        if (compareSubmission.student.toString() === this.studentId.toString()) {
           continue;
         }
         const similarityScore = stringSimilarity.compareTwoStrings(submission.code, compareSubmission.code);
