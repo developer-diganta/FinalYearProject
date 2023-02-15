@@ -25,7 +25,7 @@ const getProgrammingLanguageIds = async () => {
 
 getProgrammingLanguageIds();
 
-require('dotenv').config(); 
+require('dotenv').config();
 
 const home = (req, res) => {
     res.status(200).send("Hello World!");
@@ -374,9 +374,9 @@ const getRemainingStudents = async (req, res) => {
     const results = [];
     try {
         const students = await models.Student.find({ university: universityId });
-        for (let i = 0;i<students.length;i++) {
+        for (let i = 0; i < students.length; i++) {
             const currentStudent = students[i];
-            for (let j = 0;j<currentStudent.courses.length;j++) {
+            for (let j = 0; j < currentStudent.courses.length; j++) {
                 if (currentStudent.courses[j].course !== courseId) {
                     results.push(currentStudent);
                     break;
@@ -1095,26 +1095,27 @@ const submitStudent = async (req, res) => {
         };
 
         const submissionResponse = await axios.request(getSubmissionOptions);
+        console.log(submissionResponse)
         console.log("3.Received submission response from compiler");
 
         addSubmissionLog(submissionResponse.data.token);
 
         const newSubmission = new models.Submission({
-              student: student_id,
-              question: question_id,
-              code: code,
-              language: language_id,
-              status: submissionResponse.data.status.id,
-              dateCreated: new Date().toISOString(),
-              plagarized: false
+            student: student_id,
+            question: question_id,
+            code: code,
+            language: language_id,
+            status: submissionResponse.data.status.id,
+            dateCreated: new Date().toISOString(),
+            plagarized: false
         });
-        
+
         const submissionToDB = await newSubmission.save();
         console.log("4.Saved to Submission DB");
 
         question.studentsAttempted.push(student_id);
 
-        if(submissionResponse.data.status.id === 3) {
+        if (submissionResponse.data.status.id === 3) {
             question.studentsCorrect.push(student_id);
         } else {
             question.studentsIncorrect.push(student_id);
@@ -1129,12 +1130,12 @@ const submitStudent = async (req, res) => {
 
         question.plagarismAnalysis = plagarismCheck;
 
-        if(plagarismCheck[plagarismCheck.length - 1].isPlagarised) {
+        if (plagarismCheck[plagarismCheck.length - 1].isPlagarised) {
             plagarized = true;
         }
 
         const questionSave = await question.save();
-        
+
         console.log("6.Saved to Question DB");
 
         if (plagarized) {
@@ -1145,7 +1146,7 @@ const submitStudent = async (req, res) => {
             }
         }
         console.log("7.Updated submission DB");
-        res.status(200).json({ message: "Submission successful" });
+        res.status(200).json(submissionResponse.data);
     }
     catch (error) {
         console.log(error)
@@ -1525,32 +1526,12 @@ const getStudentData = async (req, res) => {
 }
 
 const getQuestionForStudent = async (req, res) => {
-    //  title: String,
-    // question: String,
-    // course: String,
-    // solution: String,
-    // solutionDescription: String,
-    // input: String,
-    // output: String, 
-    // sampleInput: String,
-    // sampleOutput: String,
-    // difficulty: String,
-    // category: String,
-    // tags: [String],
-    // dateCreated: Date,
-    // dateModified: Date,
-    // date_published: Date,
-    // studentsAttempted: Array,
-    // studentsCorrect: Array,
-    // studentsIncorrect: Array,
-    // studentsUnattempted: Array,
-    // plagarismAnalysis: Array,
 
     try {
         const { questionId, universityId, courseId, studentId } = req.body;
         const student = await models.Student.findById({ _id: studentId }).exec();
-        if(!student){
-            res.status(404).json({message: "Invalid student id"});
+        if (!student) {
+            res.status(404).json({ message: "Invalid student id" });
             return;
         }
 
@@ -1583,7 +1564,7 @@ const getQuestionForStudent = async (req, res) => {
         }
 
         let enrolled = false;
-        
+
         for (var courseOfStudent of student.courses) {
             if (courseOfStudent.course_id === courseId) {
                 console.log("line 1596");
@@ -1604,18 +1585,18 @@ const getQuestionForStudent = async (req, res) => {
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
-        console.log({questionId});
+        console.log({ questionId });
 
         const questionForStudent = await models.Question.findById(questionId, {
-        title: 1,
-        question: 1,
-        course: 1,
-        sampleInput: 1,
-        sampleOutput: 1,
-        difficulty: 1,
-        category: 1,
-        tags: 1,
-        dateCreated: 1,
+            title: 1,
+            question: 1,
+            course: 1,
+            sampleInput: 1,
+            sampleOutput: 1,
+            difficulty: 1,
+            category: 1,
+            tags: 1,
+            dateCreated: 1,
         }).exec();
 
         res.status(200).json(questionForStudent);
@@ -1664,7 +1645,7 @@ const showQuestionsToStudent = async (req, res) => {
         }
 
         let enrolled = false;
-        
+
         for (var courseOfStudent of student.courses) {
             if (courseOfStudent.course_id === courseId) {
                 console.log("line 1596");
@@ -1677,7 +1658,7 @@ const showQuestionsToStudent = async (req, res) => {
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
-        
+
         const questions = await models.Question.find({ course: courseId }, {
             title: 1,
             question: 1,
@@ -1696,6 +1677,111 @@ const showQuestionsToStudent = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
+const getStudentPerformance = async (req, res) => {
+            let studentDataMap = new Map();
+    const { studentId } = req.body;
+    try {
+        const student = await models.Student.findById({ _id: studentId }).exec();
+        if (!student) {
+            res.status(404).json({ message: "Invalid student id" });
+            return;
+        }
+        const studentMap = new Map();
+        const studentSubmissions = await models.Submission.find({ student: studentId }).exec();
+        if (studentSubmissions.length === 0) {
+            res.status(200).json({ message: "No submissions found" });
+            return;
+        }
+        // console.log(studentSubmissions);
+        const question = await models.Question.find({}).exec();
+        const questionMap = new Map();
+
+        question.forEach((question) => {
+            questionMap.set(JSON.stringify(question._id), question);
+        });
+
+
+        studentDataMap.set("easy", 0);
+        studentDataMap.set("easyAccepted", 0);
+        studentDataMap.set("easyRejected", 0);
+        studentDataMap.set("medium", 0);
+        studentDataMap.set("mediumAccepted", 0);
+        studentDataMap.set("mediumRejected", 0);
+        studentDataMap.set("hard", 0);
+        studentDataMap.set("hardAccepted", 0);
+        studentDataMap.set("hardRejected", 0);
+        studentDataMap.set("accepted", [])
+        studentDataMap.set("rejected", [])
+        studentSubmissions.forEach((submission) => {
+
+            console.log(questionMap.get(JSON.stringify(submission.question)).title);
+
+            if (submission.status.id === 3) {
+                switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
+                    case "easy":
+                        studentDataMap.set("easy", studentDataMap.get("easy") + 1);
+                        studentDataMap.set("easyAccepted", studentDataMap.get("easyAccepted") + 1);
+                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "medium":
+                        studentDataMap.set("medium", studentDataMap.get("medium") + 1);
+                        studentDataMap.set("mediumAccepted", studentDataMap.get("mediumAccepted") + 1);
+                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "hard":
+                        studentDataMap.set("hard", studentDataMap.get("hard") + 1);
+                        studentDataMap.set("hardAccepted", studentDataMap.get("hardAccepted") + 1);
+                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                }
+            } else {
+                switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
+                    case "easy":
+                        studentDataMap.set("easy", studentDataMap.get("easy") + 1);
+                        studentDataMap.set("easyRejected", studentDataMap.get("easyRejected") + 1);
+                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "medium":
+                        studentDataMap.set("medium", studentDataMap.get("medium") + 1);
+                        studentDataMap.set("mediumRejected", studentDataMap.get("mediumRejected") + 1);
+                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "hard":
+                        studentDataMap.set("hard", studentDataMap.get("hard") + 1);
+                        studentDataMap.set("hardRejected", studentDataMap.get("hardRejected") + 1);
+                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                }
+            }
+            
+        });
+        studentDataMap.set("total", studentDataMap.get("easy") + studentDataMap.get("medium") + studentDataMap.get("hard"));
+        res.status(200).json(Object.fromEntries(studentDataMap));
+
+        return;
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+const checkSubmission = async (req, res) => {
+    const { submissionId } = req.body;
+    try {
+        const submission = await models.Submission.findById({ _id: submissionId }).exec();
+        
+        if (!submission) {
+            res.status(404).json({ message: "Invalid submission id" });
+            return;
+        }
+
+        
+
+    }catch(error){
+        res.status(500).json(error);
+    }
+}
+
 
 module.exports = {
     home,
@@ -1747,5 +1833,7 @@ module.exports = {
     getStudentData,
     studentLogin,
     getQuestionForStudent,
-    showQuestionsToStudent
+    showQuestionsToStudent,
+    getStudentPerformance,
+    checkSubmission
 };
