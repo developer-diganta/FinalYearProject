@@ -1765,23 +1765,42 @@ const getStudentPerformance = async (req, res) => {
     }
 }
 
-const checkSubmission = async (req, res) => {
-    const { submissionId } = req.body;
-    try {
-        const submission = await models.Submission.findById({ _id: submissionId }).exec();
+// const checkSubmission = async (req, res) => {
+//     const { submissionId } = req.body;
+//     try {
+//         const submission = await models.Submission.findById({ _id: submissionId }).exec();
         
-        if (!submission) {
-            res.status(404).json({ message: "Invalid submission id" });
+//         if (!submission) {
+//             res.status(404).json({ message: "Invalid submission id" });
+//             return;
+//         }
+
+        
+
+//     }catch(error){
+//         res.status(500).json(error);
+//     }
+// }
+
+const getCourseByStudentId = async (req, res) => {
+    const { studentId } = req.body;
+    try {
+        const student = await models.Student.findById({ _id: studentId }).exec();
+        if (!student) {
+            res.status(404).json({ message: "Invalid student id" });
             return;
         }
-
-        
-
-    }catch(error){
+        const courseIds = [];
+        student.courses.forEach((course) => {
+            courseIds.push(course.course);
+        });
+        const courses = await models.Course.find({ _id: { $in: courseIds } }).exec();
+        res.status(200).json(courses);
+        return;
+    } catch (error) {
         res.status(500).json(error);
     }
 }
-
 
 module.exports = {
     home,
@@ -1835,5 +1854,5 @@ module.exports = {
     getQuestionForStudent,
     showQuestionsToStudent,
     getStudentPerformance,
-    checkSubmission
+    getCourseByStudentId
 };
