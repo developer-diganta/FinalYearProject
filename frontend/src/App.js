@@ -31,6 +31,7 @@ import StudentStatus from './Components/Student/Pages/StudentStatus';
 import StudentLogin from './Components/Student/StudentSignup/StudentLogin';
 import UniversityPendingStudents from './Components/University/UniversityPendingStudents';
 import QuestionDetail from './Components/Teacher/Courses/DifferentOptions/QuestionDetail';
+import StudentProfile from './Components/Student/StudentProfile/StudentProfile';
 
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
             <Route path='/student/dashboard' element={<StudentDashboard />} />
             <Route path='/student/status' element={<StudentStatus />} />
             <Route path='/student/login' element={<StudentLogin />} />
+            <Route path='/student/profile' element={<StudentProfile />} />
           </Routes>
     </div>
   );
