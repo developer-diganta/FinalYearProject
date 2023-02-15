@@ -144,7 +144,7 @@ function Dashboard() {
         <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <TeacherHeader />
             <div className='flex gap-2 mx-6 mt-10 '>
-                <div className="calender w-2/4 rounded-lg shadow-2xl p-4">
+                <div className="calender w-2/4 rounded-lg shadow-2xl p-4 bg-white">
                     <Calendar onChange={onChange} value={value} 
 
                         // activeStartDate={new Date()}

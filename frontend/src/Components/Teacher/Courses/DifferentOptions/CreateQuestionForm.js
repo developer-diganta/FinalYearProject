@@ -14,6 +14,8 @@ function CreateQuestionForm() {
     const[questionDifficulty, setQuestionDifficulty] = useState();
     const[inputFile, setInputFile] = useState();
     const[outputFile, setOutputFile] = useState();
+    const[sampleInput, setsampleInput] = useState();
+    const[sampleOutput, setsampleOutput] = useState();
     const[tags, setTags] = useState([]);
     const teacherToken = localStorage.getItem('teacher__token');
     const teacherId = localStorage.getItem('teacher__id');
@@ -50,6 +52,8 @@ function CreateQuestionForm() {
             question: questionDescription,
             input: base64In,
             output: base64Out,
+            sampleInput: sampleInput,
+            sampleOutput: sampleOutput,
             difficulty: questionDifficulty,
             category: 'coding',
             tags: tags,
@@ -81,7 +85,7 @@ function CreateQuestionForm() {
                         <option value="medium">Medium</option>
                         <option value="hard">Hard</option>
                     </select>
-                    <div className='flex justify-between'>
+                    <div className='inout flex justify-between'>
                         <div>
                             <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Input File</p>
                             <input className='input__file' type="file" onChange={(event) => {
@@ -101,6 +105,30 @@ function CreateQuestionForm() {
                                 reader2.readAsDataURL(event.target.files[0]);
                                 reader2.onload = () => {
                                     setBase64Out(reader2.result);
+                                };
+                            }} />
+                        </div>
+                    </div>
+                    <div className='sample__inout flex justify-between'>
+                        <div>
+                            <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Sample Input File</p>
+                            <input className='input__file' type="file" onChange={(event) => {
+                                // setInputFile(event.target.files[0])
+                                const reader3 = new FileReader();
+                                reader3.readAsDataURL(event.target.files[0]);
+                                reader3.onload = () => {
+                                    setsampleInput(reader3.result);
+                                };
+                            }} />
+                        </div>
+                        <div>
+                            <p className='pb-2 capitalize text-[rgb(68,77,92)] font-semibold pt-8'>Sample Output File</p>
+                            <input className='output__file' type="file" onChange={(event) => {
+                                // setOutputFile(event.target.files[0])
+                                const reader4 = new FileReader();
+                                reader4.readAsDataURL(event.target.files[0]);
+                                reader4.onload = () => {
+                                    setsampleOutput(reader4.result);
                                 };
                             }} />
                         </div>
@@ -126,7 +154,7 @@ function CreateQuestionForm() {
                         </div>
                         <div className='form_check'>
                             <input value='queue' type="checkbox" onChange={submitValue} />
-                            <label htmlFor="">Queue</label>                           
+                            <label htmlFor="">Queue</label>
                         </div>
                         <div className='form_check'>
                             <input value='tree' type="checkbox" onChange={submitValue} />

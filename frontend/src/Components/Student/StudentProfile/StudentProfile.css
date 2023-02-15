@@ -1,0 +1,23 @@
+.student__info{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.profile__pic{
+    background-color: #000000;
+    color: #FFF;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='200' height='200' preserveAspectRatio='none' viewBox='0 0 200 200'%3e%3cg mask='url(%26quot%3b%23SvgjsMask5037%26quot%3b)' fill='none'%3e%3cuse xlink:href='%23SvgjsPath5038' x='30' y='30' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='30' y='90' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5040' x='30' y='150' stroke='rgba(102%2c 255%2c 0%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5040' x='30' y='210' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5040' x='90' y='30' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='90' y='90' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='90' y='150' stroke='rgba(255%2c 0%2c 132%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='90' y='210' stroke='rgba(255%2c 0%2c 132%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5040' x='150' y='30' stroke='rgba(255%2c 0%2c 132%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5038' x='150' y='90' stroke='rgba(102%2c 255%2c 0%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='150' y='150' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='150' y='210' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='210' y='30' stroke='rgba(102%2c 255%2c 0%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5039' x='210' y='90' stroke='rgba(102%2c 255%2c 0%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5041' x='210' y='150' stroke='rgba(255%2c 0%2c 132%2c 1)' stroke-width='3'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath5042' x='210' y='210' stroke='rgba(160%2c 68%2c 255%2c 1)'%3e%3c/use%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask5037'%3e%3crect width='200' height='200' fill='white'%3e%3c/rect%3e%3c/mask%3e%3cpath d='M-1 0 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0z' id='SvgjsPath5038'%3e%3c/path%3e%3cpath d='M-3 0 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0z'%3e%3c/path%3e%3cpath d='M-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0z' id='SvgjsPath5039'%3e%3c/path%3e%3cpath d='M2 -2 L-2 2z' id='SvgjsPath5042'%3e%3c/path%3e%3cpath d='M6 -6 L-6 6z' id='SvgjsPath5040'%3e%3c/path%3e%3cpath d='M30 -30 L-30 30z' id='SvgjsPath5041'%3e%3c/path%3e%3c/defs%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+canvas{
+    width: 280px;
+    height: 280px;
+}
