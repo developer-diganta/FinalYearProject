@@ -108,6 +108,10 @@ router.post("/university/course/addStudent", controls.addStudentToCourse);
 router.post("/student/signin", controls.studentLogin);
 router.post("/student/data", controls.getStudentData);
 router.post("/student/question", controls.getQuestionForStudent);
+
+router.post("/student/performance", controls.getStudentPerformance)
+
+router.post("/teacher/checkSubmission/", controls.checkSubmission);
 // later
 // router.post("/teacher/course/question/edit", controls.editQuestion);
 
