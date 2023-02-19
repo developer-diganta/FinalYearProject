@@ -6,6 +6,8 @@
     /* margin: 0px 8px; */
 }
 
+
+
 abbr[title] {
     text-decoration: none;
     border-bottom: none;
@@ -18,7 +20,7 @@ abbr[title] {
     width: 2%;
     height: 4%;
     padding: 8px 0px;
-    border: 1px solid #fbfbfb;
+    border: 1px solid transparent;
 }
 
 .react-calendar__tile:hover{

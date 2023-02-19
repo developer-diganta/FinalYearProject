@@ -3,10 +3,14 @@ student = {
     age: Number,
     university: String,
     password: String,
+<<<<<<< HEAD
     status: String,
     registrationNumber: String,
     rollNumber: String,
     program: String,
+=======
+    gender: String,
+>>>>>>> 6fd0be5db1b6e8511878ca7c1393dc489f7252ac
     courses: [{
         course: String,
         courseScore: Number,
@@ -17,13 +21,12 @@ student = {
     }],
 
     address: {
-        street: String,
         city: String,
         state: String,
-        zip: String
+        country: String
     },
-    phone: String,
     email: String,
+<<<<<<< HEAD
     date_of_birth: Date,
     admission_date: Date,
     graduation_date: Date,
@@ -38,6 +41,8 @@ student = {
         start_date: Date,
     },
     submissions:Array
+=======
+>>>>>>> 6fd0be5db1b6e8511878ca7c1393dc489f7252ac
 }
 
 module.exports = student;

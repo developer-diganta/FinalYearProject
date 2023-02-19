@@ -444,20 +444,20 @@ const getUniversityStudentData = async (req, res) => {
     }
 }
 
-const getStudentsForUniversity = async (req, res) => {
-    const { universityId } = req.body;
-    try {
-        const university = await models.University.findById(universityId).exec();
-        if (!university) {
-            res.status(400).json({ message: "Invalid University Id" });
-            return;
-        }
+// const getStudentsForUniversity = async (req, res) => {
+//     const { universityId } = req.body;
+//     try {
+//         const university = await models.University.findById(universityId).exec();
+//         if (!university) {
+//             res.status(400).json({ message: "Invalid University Id" });
+//             return;
+//         }
 
-        const students = await models.Student.find({ university: universityId }).exec();
-        if (students.length === 0) {
-            res.status(200).json({ message: "No Students Found" });
-            return;
-        }
+//         const students = await models.Student.find({ university: universityId }).exec();
+//         if (students.length === 0) {
+//             res.status(200).json({ message: "No Students Found" });
+//             return;
+//         }
 
         
 
