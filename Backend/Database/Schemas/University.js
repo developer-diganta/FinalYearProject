@@ -1,28 +1,8 @@
 university = {
     name: String,
     password: String,
-    address: {
-        street: String,
-        city: String,
-        state: String,
-        zip: String,
-        country: String
-    },
     phone: String,
     email: String,
-    website: String,
-    point_of_contact: {
-        name: String,
-        phone: String,
-        email: String,
-        address: {
-            street: String,
-            city: String,
-            state: String,
-            zip: String,
-            country: String
-        },
-    },
     contract: {
         status: String,
         contract_id: String,

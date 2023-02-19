@@ -94,89 +94,6 @@ const submit = async (req, res) => {
 }
 
 
-
-const signupTeacher = async (req, res) => {
-    const { name, username, email, password, uniId } = req.body;
-    try {
-        const validate = await signUpSchema.validateAsync({ username, password, email });
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-
-                models.University.findById(uniId, (err, university) => {
-                    if (err) {
-                        res.status(500).json(err);
-                    } else if (!university) {
-                        res.status(400).json({ message: "Invalid University Id" });
-                    } else {
-                        models.Teacher.find({ $or: [{ username: username }, { email: email }] }, async (err, teacher) => {
-                            if (err) {
-                                res.status(500).json(err);
-                            } else if (teacher.length) {
-                                console.log(teacher);
-                                res.status(400).json({ message: "Teacher already exists" });
-                            } else {
-                                const newTeacher = new models.Teacher({
-                                    name: name,
-                                    username: username,
-                                    email: email,
-                                    password: hash,
-                                    status: 'waitlist',
-                                    university: uniId
-
-                                });
-                                console.log(newTeacher);
-                                newTeacher.save((err) => {
-                                    if (err)
-                                        res.status(500).json(err);
-                                    else {
-                                        const token = generateToken(username, email);
-                                        res.status(200).json({ auth: true, token: token, _id: newTeacher._id });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                })
-
-            }
-        });
-    } catch (error) {
-        res.status(422).json(error);
-    }
-}
-
-const adminSignIn = async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const validate = await signUpSchema.validateAsync({ username, password });
-        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-            const time = new Date.getTime() / 1000();
-            const token = generateToken(username, time);
-            adminLogin = {
-                token: token,
-                ip: req.ip
-            }
-            res.status(200).json({ auth: true, token: token });
-        }
-    }
-    catch (error) {
-        res.status(422).json(error);
-    }
-}
-
-const adminUniversityData = async (req, res) => {
-    await models.University.find({}, (err, universities) => {
-        if (err)
-            res.status(500).json(err);
-        else
-            res.status(200).json(universities);
-    });
-}
-
-
-
 const universitySignUp = async (req, res) => {
     console.log(req.body);
     const { name, email, password, phone } = req.body;
@@ -250,121 +167,722 @@ const universityLogin = async (req, res) => {
     }
 }
 
-const universityTeacherData = async (req, res) => {
-    console.log(req.body.universityId);
-    models.University.find({ _id: req.body.universityId }, (err, university) => {
-        if (err)
-            res.status(500).json(err);
-        else {
-            models.Teacher.find({ university: university[0]._id, status: "active" }, (err, teachers) => {
-                if (err)
-                    res.status(500).json(err);
-                else
-                    res.status(200).json(teachers);
-            });
+
+const universityAddSchool = async (req, res) => {
+    const { schoolName, universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
         }
-    })
+
+        const school = new models.School({
+            name: schoolName,
+            university: universityId
+        });
+
+        const savedSchool = await school.save();
+        university.schools.push(savedSchool._id);
+        await university.save();
+        res.status(200).json({ _id: savedSchool._id, message: "School added successfully" });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const universityAddDepartment = async (req, res) => {
+    const { departmentName, schoolId, universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const school = await models.Schools.findById(schoolId).exec();
+        if (!school) {
+            res.status(400).json({ message: "Invalid School Id" });
+            return;
+        }
+
+        const department = new models.Department({
+            name: departmentName,
+            school: schoolId,
+            university: universityId
+        });
+
+        const savedDepartment = await department.save();
+        res.status(200).json({ _id: savedDepartment._id, message: "Department added successfully" });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const addUniversityProgram = async (req, res) => {
+    const { programName, departmentId, universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const department = await models.Department.findById(departmentId).exec();
+        if (!department) {
+            res.status(400).json({ message: "Invalid Department Id" });
+            return;
+        }
+
+        const program = new models.Program({
+            name: programName,
+            department: departmentId,
+            university: universityId
+        });
+
+        const savedProgram = await program.save();
+        res.status(200).json({ _id: savedProgram._id, message: "Program added successfully" });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const universityVerifyCourse = async (req, res) => {
+    const { courseId, universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const course = await models.Course.findById(courseId).exec();
+        if (!course) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        course.approvalStatus = "verified";
+        await course.save();
+        res.status(200).json({ message: "Course verified successfully" });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+
+const universityRejectCourse = async (req, res) => {
+    const { courseId, universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const course = await models.Course.findById(courseId).exec();
+        if (!course) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        course.approvalStatus = "rejected";
+        await course.save();
+        res.status(200).json({ message: "Course rejected successfully" });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const getUniversityDetails = async (req, res) => {
+    const { universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const schools = await models.School.find({ university: universityId }).exec();
+        
+        const schoolArray = [];
+        for (let i = 0; i < schools.length; i++) {
+            const departments = await models.Department.find({ school: schools[i]._id }).exec();
+            const departmentArray = [];
+            for (let j = 0; j < departments.length; j++) {
+                const programs = await models.Program.find({ department: departments[j]._id }).exec();
+                const programArray = [];
+                for (let k = 0; k < programs.length; k++) {
+                    const courses = await models.Course.find({ program: programs[k]._id }).exec();
+                    const courseArray = [];
+                    for (let l = 0; l < courses.length; l++) {
+                        const course = {
+                            id: courses[l]._id,
+                            name: courses[l].name
+                        }
+                        courseArray.push(course);
+                    }
+                    const program = {
+                        id: programs[k]._id,
+                        name: programs[k].name,
+                        courses: courseArray
+                    }
+                    programArray.push(program);
+                }
+                const department = {
+                    id: departments[j]._id,
+                    name: departments[j].name,
+                    programs: programArray
+                }
+                departmentArray.push(department);
+            }
+            const school = {
+                id: schools[i]._id,
+                name: schools[i].name,
+                departments: departmentArray
+            }
+            schoolArray.push(school);
+        }
+
+        const universityDetails = {
+            ...university._doc,
+            schools: schoolArray
+        }
+
+        res.status(200).json(universityDetails);
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+
+const universityTeacherData = async (req, res) => {
+    const { universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const teachers = await models.Teacher.find({ university: universityId }).exec();
+        res.status(200).json(teachers);
+    } catch (error) {
+        res.status(422).json(error);
+    }
 }
 
 const universityTeacherCount = async (req, res) => {
-    models.University.find({ email: req.body.email }, (err, university) => {
-        if (err)
-            res.status(500).json(err);
-        else {
-            models.Teacher.find({ university: university[0]._id }, (err, teachers) => {
-                if (err)
-                    res.status(500).json(err);
-                else
-                    res.status(200).json({ count: teachers.length });
-            });
-        }
-    })
-}
-
-const universityEdit = async (req, res) => {
-    const universityId = req.body.universityId;
+    const { universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId);
-        if (req.body.phone) {
-            university.phone = req.body.phone;
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
         }
-        if (req.body.email) {
-            university.email = req.body.email;
-        }
-        if (req.body.password) {
-            university.password = req.body.password;
-        }
-        if (req.body.point_of_contact) {
-            university.point_of_contact = req.body.point_of_contact;
-        }
-        if (req.body.address) {
-            university.address = req.body.address;
-        }
-        if (req.body.website) {
-            university.website = req.body.website;
-        }
-        university.save((err) => {
-            if (err)
-                res.status(500).json(err);
 
-            else
-                res.status(200).json({ message: "University updated" });
-        });
-    }
-    catch (error) {
-        res.status(500).json(error);
+        const teachers = await models.Teacher.find({ university: universityId }).exec();
+        res.status(200).json({ count: teachers.length });
+    } catch (error) {
+        res.status(422).json(error);
     }
 }
 
 const getUniversityContract = async (req, res) => {
-    const universityId = req.body.universityId;
+    const { universityId } = req.body.universityId;
     try {
-        const university = await models.University.findById(universityId, (err, university) => {
-            if (err)
-                res.status(500).json(err);
-            else
-                res.status(200).json(university.contract);
-        });
-    }
-    catch (error) {
-        res.status(500).json(error);
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        res.status(200).json(university.contract);
+    }catch (error) {
+        res.status(422).json(error);
     }
 }
 
 const contractExpiryDetails = async (req, res) => {
-    const universityId = req.body.universityId;
+    const { universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId, (err, university) => {
-            if (err)
-                res.status(500).json(err);
-            else {
-                const contractExpiry = {
-                    contractExpiry: university.contract[0].contractExpiry,
-                    contractExpiryDate: university.contract[0].contractExpiryDate,
-                    contractExpiryTimeRemaining: new Date(university.contract[0].contractExpiryDate).getTime() - new Date().getTime()
-                }
-            }
-        });
-    }
-    catch (error) {
-        res.status(500).json(error);
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const contractExpiry = {
+            contractExpiry: university.contract[0].contractExpiry,
+            contractExpiryDate: university.contract[0].contractExpiryDate,
+            contractExpiryTimeRemaining: new Date(university.contract[0].contractExpiryDate).getTime() - new Date().getTime()
+        }
+
+        res.status(200).json(contractExpiry);
+    } catch (error) {
+        res.status(422).json(error);
     }
 }
 
 
 const getUniversityStudentData = async (req, res) => {
-    const universityId = req.body.universityId;
+    const {universityId} = req.body.universityId;
     try {
-        models.Student.find({ university: universityId }, (err, students) => {
-            if (err)
-                res.status(500).json(err);
-            else
-                res.status(200).json(students);
-        });
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const students = await models.Student.find({ university: universityId }).exec();
+        res.status(200).json(students);
     }
+    
     catch (error) {
         res.status(500).json(error);
     }
+}
+
+const getStudentsForUniversity = async (req, res) => {
+    const { universityId } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const students = await models.Student.find({ university: universityId }).exec();
+        if (students.length === 0) {
+            res.status(200).json({ message: "No Students Found" });
+            return;
+        }
+
+        
+
+// -------------------------------------------------------------------------------------------- Teacher Section --------------------------------------------------------------------------------------------
+
+
+const signupTeacher = async (req, res) => {
+    const { name, username, email, password, uniId, departmentId } = req.body;
+    try {
+        // const validate = await signUpSchema.validateAsync({ username, password, email });
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                const university = await models.University.findById(uniId).exec();
+                if (!university) {
+                    res.status(400).json({ message: "Invalid University Id" });
+                    return;
+                }
+
+                const teacherSearch = await models.Teacher.find({ $or: [{ username: username }, { email: email }] }).exec();
+                if (teacherSearch.length > 0) {
+                    res.status(400).json({ message: "Username or Email already exists" });
+                    return;
+                }
+
+
+                const department = await models.department.findById(departmentId).exec();
+                if (!department) {
+                    res.status(400).json({ message: "Invalid department Id" });
+                    return;
+                }
+
+                const teacher = new models.Teacher({
+                    name: name,
+                    username: username,
+                    email: email,
+                    password: hash,
+                    university: uniId,
+                    program: programId,
+                    status: 'waitlist',
+                });
+
+                const savedTeacher = await teacher.save();
+                res.status(200).json({
+                    _id: savedTeacher._id,
+                    email: savedTeacher.email,
+                    username: savedTeacher.username
+                });
+            }
+        });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const addCourse = async (req, res) => {
+    const {
+        universityId,
+        name,
+        description,
+        courseCode,
+        courseType,
+        expectedCourseDuration,
+        courseCompilers,
+        courseStartDate,
+        programId,
+        teacherId,
+    } = req.body;
+    try {
+        
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const program = await models.Program.findById(programId).exec();
+        if (!program) {
+            res.status(400).json({ message: "Invalid Program Id" });
+            return;
+        }
+
+        const teacher = await models.Teacher.findById(teacherId).exec();
+        if (!teacher) {
+            res.status(400).json({ message: "Invalid Teacher Id" });
+            return;
+        }
+
+
+        const course = new models.Course({
+            name: name,
+            description: description,
+            courseCode: courseCode,
+            courseType: courseType,
+            expectedCourseDuration: expectedCourseDuration,
+            courseCompilers: courseCompilers,
+            courseStartDate: courseStartDate,
+            program: programId,
+            university: universityId,
+            teacher: teacherId,
+            approvalStatus: "pending"
+        });
+
+        const savedCourse = await course.save();
+        res.status(200).json({ message: "Course added successfully" });
+    }catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+
+const addAssignment = async (req, res) => {
+    const {
+        universityId,
+        courseId,
+        name,
+        description
+    } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const course = await models.Course.findById(courseId).exec();
+        if (!course) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        const assignment = new models.Assignment({
+            name: name,
+            description: description,
+            course: courseId,
+            university: universityId,
+        });
+
+        const savedAssignment = await assignment.save();
+        res.status(200).json({ _id: savedAssignment._id });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const addQuestion = async (req, res) => {
+    const {
+        courseId,
+        universityId,
+        assignmentId,
+        title,
+        question,
+        input,
+        output,
+        sampleInput,
+        sampleOutput,
+        difficulty,
+        category,
+        tags,
+        score
+    } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const course = await models.Course.findById(courseId).exec();
+        if (!course) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        const assignment = await models.Assignment.findById(assignmentId).exec();
+        if (!assignment) {
+            res.status(400).json({ message: "Invalid Assignment Id" });
+            return;
+        }
+
+        const newQuestion = new models.Question({
+            title: title,
+            question: question,
+            input: input,
+            output: output,
+            sampleInput: sampleInput,
+            sampleOutput: sampleOutput,
+            difficulty: difficulty,
+            category: category,
+            tags: tags,
+            score: score,
+            assignment: assignmentId,
+            course: courseId,
+            university: universityId,
+            studentsAttempted: [],
+            studentsCorrect: [],
+            studentsIncorrect: [],
+            studentsUnattempted: [],
+            plagarismAnalysis: []
+        });
+
+        const savedQuestion = await newQuestion.save();
+        res.status(200).json({ _id: savedQuestion._id });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const addStudentToCourse = async (req, res) => {
+    const { courseId, studentId } = req.body;
+    try {
+        const course = await models.Course.findById(courseId).exec();
+        if (!course) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        const student = await models.Course.findById(studentId).exec();
+        if (!student) {
+            res.status(400).json({ message: "Invalid Student Id" });
+            return;
+        }
+
+        student.courses.push({
+            course: courseId,
+            courseScore: 0,
+            completed: false,
+            completedDate: null,
+            startDate: null,
+            progress: 0,
+        });
+
+        const savedStudent = await student.save();
+        res.status(200).json({ message: "Student added to course successfully" });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+
+// --------------------------------------------------------------------------------------------- End Teacher Controllers --------------------------------------------------------------------------------------------- //
+
+//  --------------------------------------------------------------------------------------------- Student Controllers --------------------------------------------------------------------------------------------- //
+
+
+
+
+
+
+
+
+
+
+//  --------------------------------------------------------------------------------------------- End Student Controllers --------------------------------------------------------------------------------------------- //
+
+const showCoursesToTeacher = async (req, res) => {
+    const { teacherId } = req.body;
+    try {
+        const teacher = await models.Teacher.findById(teacherId).exec();
+        if (!teacher) {
+            res.status(400).json({ message: "Invalid Teacher Id" });
+            return;
+        }
+
+        const courses = await models.Course.find({ teacher: teacherId }).exec();
+        const moocs = await models.Mooc.find({ teacher: teacherId }).exec();
+        res.status(200).json({ courses: courses, moocs: moocs });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+    // try {
+    //     models.University.find({ _id: universityId }, (err, university) => {
+    //         if (err) {
+    //             res.status(500).json(err);
+    //         } else {
+    //             if (university.length > 0) {
+    //                 models.Course.find({ _id: courseId }, (err, course) => {
+    //                     if (err)
+    //                         res.status(500).json(err);
+    //                     else {
+    //                         if (course.length > 0) {
+    //                             if (course[0].university !== universityId) {
+    //                                 res.status(200).json({ message: "Invalid course id" });
+    //                             }
+    //                             models.Teacher.find({ _id: teacherId }, (err, teacher) => {
+    //                                 if (err)
+    //                                     res.status(500).json(err);
+    //                                 else {
+    //                                     if (teacher.length > 0) {
+    //                                         if (teacher[0].university !== universityId) {
+    //                                             res.status(200).json({ message: "Invalid teacher id" });
+    //                                         }
+    //                                         if (!teacher[0].course === courseId) {
+    //                                             res.status(200).json({ message: "Invalid course id" });
+    //                                         }
+    //                                         const questionNew = new models.Question({
+    //                                             university: universityId,
+    //                                             course: courseId,
+    //                                             teacher: teacherId,
+    //                                             title: title,
+    //                                             question: question,
+    //                                             input: input,
+    //                                             output: output,
+    //                                             difficulty: difficulty,
+    //                                             category: category,
+    //                                             tags: tags,
+    //                                             dateCreated: new Date().toISOString(),
+    //                                             dateModified: new Date().toISOString(),
+    //                                             datePublished: datePublished,
+    //                                         });
+    //                                         questionNew.save((err) => {
+    //                                             if (err) {
+    //                                                 res.status(500).json(err);
+    //                                             } else {
+    //                                                 res.status(200).json({ message: "Question added successfully" });
+    //                                             }
+    //                                         });
+    //                                     } else {
+    //                                         res.status(200).json({ message: "Invalid teacher id" });
+    //                                     }
+    //                                 }
+    //                             });
+    //                         } else {
+    //                             res.status(200).json({ message: "Invalid course id" });
+    //                         }
+    //                     }
+    //                 });
+    //             } else {
+    //                 res.status(200).json({ message: "Invalid university id" });
+    //             }
+    //         }
+    //     })
+    // } catch (error) {
+    //     res.status(500).json(error);
+    // }
+
+
+
+
+
+
+// const signupTeacher = async (req, res) => {
+//     const { name, username, email, password, uniId } = req.body;
+//     try {
+//         const validate = await signUpSchema.validateAsync({ username, password, email });
+//         bcrypt.hash(password, saltRounds, async (err, hash) => {
+//             if (err) {
+//                 res.status(500).json(err);
+//             } else {
+
+//                 models.University.findById(uniId, (err, university) => {
+//                     if (err) {
+//                         res.status(500).json(err);
+//                     } else if (!university) {
+//                         res.status(400).json({ message: "Invalid University Id" });
+//                     } else {
+//                         models.Teacher.find({ $or: [{ username: username }, { email: email }] }, async (err, teacher) => {
+//                             if (err) {
+//                                 res.status(500).json(err);
+//                             } else if (teacher.length) {
+//                                 console.log(teacher);
+//                                 res.status(400).json({ message: "Teacher already exists" });
+//                             } else {
+//                                 const newTeacher = new models.Teacher({
+//                                     name: name,
+//                                     username: username,
+//                                     email: email,
+//                                     password: hash,
+//                                     status: 'waitlist',
+//                                     university: uniId
+
+//                                 });
+//                                 console.log(newTeacher);
+//                                 newTeacher.save((err) => {
+//                                     if (err)
+//                                         res.status(500).json(err);
+//                                     else {
+//                                         const token = generateToken(username, email);
+//                                         res.status(200).json({ auth: true, token: token, _id: newTeacher._id });
+//                                     }
+//                                 });
+//                             }
+//                         });
+//                     }
+//                 })
+
+//             }
+//         });
+//     } catch (error) {
+//         res.status(422).json(error);
+//     }
+// }
+
+//  
+
+// 
+
+const adminSignIn = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const validate = await signUpSchema.validateAsync({ username, password });
+        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+            const time = new Date.getTime() / 1000();
+            const token = generateToken(username, time);
+            adminLogin = {
+                token: token,
+                ip: req.ip
+            }
+            res.status(200).json({ auth: true, token: token });
+        }
+    }
+    catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const adminUniversityData = async (req, res) => {
+    await models.University.find({}, (err, universities) => {
+        if (err)
+            res.status(500).json(err);
+        else
+            res.status(200).json(universities);
+    });
 }
 
 
@@ -778,50 +1296,7 @@ const teacherLogin = async (req, res) => {
 
 
 
-const addCourse = async (req, res) => {
-    const {
-        universityId,
-        name,
-        description,
-        courseCode,
-        courseType,
-        expectedCourseDuration,
-        courseCompilers,
-        courseStartDate
-    } = req.body;
-    try {
-        models.University.find({ _id: universityId }, (err, university) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-                // add course
-                if (university.length > 0) {
-                    const course = new models.Course({
-                        university: universityId,
-                        name: name,
-                        description: description,
-                        courseCode: courseCode,
-                        courseType: courseType,
-                        expectedCourseDuration: expectedCourseDuration,
-                        courseCompilers: courseCompilers,
-                        courseStartDate: courseStartDate
-                    });
-                    course.save((err) => {
-                        if (err) {
-                            res.status(500).json(err);
-                        } else {
-                            res.status(200).json({ message: "Course added successfully" });
-                        }
-                    });
-                } else {
-                    res.status(200).json({ message: "Invalid university id" });
-                }
-            }
-        })
-    } catch (error) {
-        res.status(500).json(error);
-    }
-}
+
 
 const addCourseTeacher = async (req, res) => {
     const {
@@ -911,90 +1386,6 @@ const getCoursesForTeacher = async (req, res) => {
         res.status(500).json(error);
     }
 }
-
-const addQuestion = async (req, res) => {
-    const {
-        courseId,
-        universityId,
-        teacherId,
-        title,
-        question,
-        input,
-        output,
-        difficulty,
-        category,
-        tags,
-        datePublished
-    } = req.body;
-    console.log(req.body)
-    try {
-        models.University.find({ _id: universityId }, (err, university) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-                if (university.length > 0) {
-                    models.Course.find({ _id: courseId }, (err, course) => {
-                        if (err)
-                            res.status(500).json(err);
-                        else {
-                            if (course.length > 0) {
-                                if (course[0].university !== universityId) {
-                                    res.status(200).json({ message: "Invalid course id" });
-                                }
-                                models.Teacher.find({ _id: teacherId }, (err, teacher) => {
-                                    if (err)
-                                        res.status(500).json(err);
-                                    else {
-                                        if (teacher.length > 0) {
-                                            if (teacher[0].university !== universityId) {
-                                                res.status(200).json({ message: "Invalid teacher id" });
-                                            }
-                                            if (!teacher[0].course === courseId) {
-                                                res.status(200).json({ message: "Invalid course id" });
-                                            }
-                                            const questionNew = new models.Question({
-                                                university: universityId,
-                                                course: courseId,
-                                                teacher: teacherId,
-                                                title: title,
-                                                question: question,
-                                                input: input,
-                                                output: output,
-                                                difficulty: difficulty,
-                                                category: category,
-                                                tags: tags,
-                                                dateCreated: new Date().toISOString(),
-                                                dateModified: new Date().toISOString(),
-                                                datePublished: datePublished,
-                                            });
-                                            questionNew.save((err) => {
-                                                if (err) {
-                                                    res.status(500).json(err);
-                                                } else {
-                                                    res.status(200).json({ message: "Question added successfully" });
-                                                }
-                                            });
-                                        } else {
-                                            res.status(200).json({ message: "Invalid teacher id" });
-                                        }
-                                    }
-                                });
-                            } else {
-                                res.status(200).json({ message: "Invalid course id" });
-                            }
-                        }
-                    });
-                } else {
-                    res.status(200).json({ message: "Invalid university id" });
-                }
-            }
-        })
-    } catch (error) {
-        res.status(500).json(error);
-    }
-}
-
-
 
 
 
@@ -1423,54 +1814,7 @@ const getStudents = async (req, res) => {
     }
 }
 
-const addStudentToCourse = async (req, res) => {
-    const { courseId, studentId } = req.body;
-    try {
-        models.Course.findById(
-            { _id: courseId },
-            (err, course) => {
-                if (err)
-                    res.status(500).json(err);
-                else {
-                    if (course) {
-                        models.Student.findById(
-                            { _id: studentId },
-                            (err, student) => {
-                                if (err)
-                                    res.status(500).json(err);
-                                else {
-                                    if (student) {
-                                        models.Course.updateOne(
-                                            { _id: courseId },
-                                            {
-                                                $push: {
-                                                    students: studentId,
-                                                },
-                                            },
-                                            (err, course) => {
-                                                if (err) {
-                                                    res.status(500).json(err);
-                                                } else {
-                                                    res.status(200).json(course);
-                                                }
-                                            }
-                                        );
-                                    } else {
-                                        res.status(200).json({ message: "Invalid student id" });
-                                    }
-                                }
-                            }
-                        );
-                    } else {
-                        res.status(200).json({ message: "Invalid course id" });
-                    }
-                }
-            }
-        );
-    } catch (error) {
-        res.status(500).json(error);
-    }
-}
+
 
 
 
@@ -1812,7 +2156,7 @@ module.exports = {
     universitySignUp,
     universityTeacherData,
     universityTeacherCount,
-    universityEdit,
+    // universityEdit,
     getUniversityContract,
     contractExpiryDetails,
     getUniversityStudentData,
@@ -1854,5 +2198,11 @@ module.exports = {
     getQuestionForStudent,
     showQuestionsToStudent,
     getStudentPerformance,
-    getCourseByStudentId
+    getCourseByStudentId,
+    universityAddDepartment,
+    universityAddSchool,
+    universityVerifyCourse,
+    addUniversityProgram,
+    universityRejectCourse,
+    showCoursesToTeacher
 };

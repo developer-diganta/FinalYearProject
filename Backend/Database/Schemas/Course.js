@@ -1,5 +1,6 @@
 course = {
-    university:String,
+    university: String,
+    program:String,
     name: String,
     description: Array,
     courseCode: String,
@@ -7,7 +8,8 @@ course = {
     expectedCourseDuration: Number,
     courseCompilers: Array,
     courseStartDate: Date,
-    // courseMaterial: Array,
+    approvalStatus: String,
+    teacher: String,
 }
 
 module.exports = course;

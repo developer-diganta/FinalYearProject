@@ -4,14 +4,18 @@ student = {
     university: String,
     password: String,
     status: String,
+    registrationNumber: String,
+    rollNumber: String,
+    program: String,
     courses: [{
-        course_id: String,
-        course_grade: String,
+        course: String,
+        courseScore: Number,
         completed: Boolean,
         completed_date: Date,
         start_date: Date,
         progress: Number,
     }],
+
     address: {
         street: String,
         city: String,
@@ -21,7 +25,6 @@ student = {
     phone: String,
     email: String,
     date_of_birth: Date,
-    stream: String,
     admission_date: Date,
     graduation_date: Date,
     graduation_status: String,

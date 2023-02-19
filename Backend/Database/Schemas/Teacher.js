@@ -6,7 +6,7 @@ teacher = {
     password : String,
     university : String,
     phone : String,
-    stream: String,
+    department: String,
     status:String,
     dept : [
         {

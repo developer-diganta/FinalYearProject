@@ -24,9 +24,9 @@ router.post("/university/signup", controls.universitySignUp);
 
 router.post("/university/signin", controls.universityLogin);
 
-router.post("/university/teacher", authoriseUniversity, controls.universityTeacherData);
+router.post("/university/teacher", controls.universityTeacherData);
 
-router.post("/university/teacher/count", authoriseUniversity, controls.universityTeacherCount);
+router.post("/university/teacher/count", controls.universityTeacherCount);
 
 router.post("/university/contract", authoriseUniversity, controls.getUniversityContract);
 
@@ -111,7 +111,7 @@ router.post("/student/question", controls.getQuestionForStudent);
 
 router.post("/student/performance", controls.getStudentPerformance)
 
-router.post("/teacher/checkSubmission/", controls.checkSubmission);
+// router.post("/teacher/checkSubmission/", controls.checkSubmission);
 // later
 // router.post("/teacher/course/question/edit", controls.editQuestion);
 

@@ -5,7 +5,7 @@ const controls = require("../../controller/control");
 
 const router = express.Router();
 
-router.patch("/university/edit", authoriseUniversity, controls.universityEdit);
+// router.patch("/university/edit", authoriseUniversity, controls.universityEdit);
 
 // router.patch("/university/teacher/edit/:id", authoriseUniversity, controls.universityTeacherEdit);
 // 
