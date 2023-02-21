@@ -183,8 +183,6 @@ const universityAddSchool = async (req, res) => {
         });
 
         const savedSchool = await school.save();
-        university.schools.push(savedSchool._id);
-        await university.save();
         res.status(200).json({ _id: savedSchool._id, message: "School added successfully" });
     } catch (error) {
         res.status(422).json(error);
@@ -200,7 +198,7 @@ const universityAddDepartment = async (req, res) => {
             return;
         }
 
-        const school = await models.Schools.findById(schoolId).exec();
+        const school = await models.School.findById(schoolId).exec();
         if (!school) {
             res.status(400).json({ message: "Invalid School Id" });
             return;
