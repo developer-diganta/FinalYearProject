@@ -303,7 +303,7 @@ const getUniversityDetails = async (req, res) => {
         }
 
         const schools = await models.School.find({ university: universityId }).exec();
-        
+        console.log({schools})
         const schoolArray = [];
         for (let i = 0; i < schools.length; i++) {
             const departments = await models.Department.find({ school: schools[i]._id }).exec();
@@ -342,14 +342,15 @@ const getUniversityDetails = async (req, res) => {
             }
             schoolArray.push(school);
         }
-
         const universityDetails = {
             ...university._doc,
             schools: schoolArray
         }
+        console.log(universityDetails)
 
-        res.status(200).json(universityDetails);
+        res.status(200).json({universityDetails});
     } catch (error) {
+        console.log(error)
         res.status(422).json(error);
     }
 }

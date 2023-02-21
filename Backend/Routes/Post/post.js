@@ -33,7 +33,7 @@ router.post("/university/verifyCourse", authoriseUniversity, controls.university
 
 router.post("/university/rejectCourse", authoriseUniversity, controls.universityRejectCourse);
 
-router.post("/university/details", authoriseUniversity, controls.getUniversityDetails);
+router.post("/university/details", controls.getUniversityDetails);
 
 router.post("/university/teacher", controls.universityTeacherData);
 
