@@ -1486,7 +1486,7 @@ const submitStudent = async (req, res) => {
         };
 
         const submissionResponse = await axios.request(getSubmissionOptions);
-        console.log(submissionResponse)
+        // console.log(submissionResponse)
         console.log("3.Received submission response from compiler");
 
         addSubmissionLog(submissionResponse.data.token);
@@ -1517,17 +1517,18 @@ const submitStudent = async (req, res) => {
         console.log("5.Retrieved submission data from DB");
 
         const checker = new PlagiarismChecker(getSubmissionData, student_id);
-        const plagarismCheck = await checker.check();
+        const plagarismCheck = checker.check();
 
         question.plagarismAnalysis = plagarismCheck;
 
-        if (plagarismCheck[plagarismCheck.length - 1].isPlagarised) {
+        if (plagarismCheck[plagarismCheck.length - 1].isPlagiarized) {
             plagarized = true;
         }
 
         const questionSave = await question.save();
 
         console.log("6.Saved to Question DB");
+        
 
         if (plagarized) {
             const submissionByIdUpdate = await models.Submission.findByIdAndUpdate(submissionToDB._id, { plagarized: true }).exec();
@@ -2204,5 +2205,7 @@ module.exports = {
     universityVerifyCourse,
     addUniversityProgram,
     universityRejectCourse,
-    showCoursesToTeacher
+    showCoursesToTeacher,
+    getUniversityDetails,
+    addAssignment
 };
