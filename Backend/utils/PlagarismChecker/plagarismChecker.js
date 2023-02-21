@@ -10,11 +10,14 @@ class PlagiarismChecker {
   check() {
     for (const submission of this.submissions) {
       const scores = [];
+      // console.log({ submission })
       for (const compareSubmission of this.submissions) {
+        // console.log({check:compareSubmission.student.toString() === this.studentId.toString()})
         if (compareSubmission.student.toString() === this.studentId.toString()) {
           continue;
         }
         const similarityScore = stringSimilarity.compareTwoStrings(submission.code, compareSubmission.code);
+        // console.log({similarityScore})
         scores.push({
           studentId: compareSubmission.student.toString(),
           code: compareSubmission.code,
@@ -30,6 +33,7 @@ class PlagiarismChecker {
         isPlagiarized: scores.some(result => result.isPlagiarized)
       });
     }
+    console.log({ results: this.results });
     return this.results;
   }
 }

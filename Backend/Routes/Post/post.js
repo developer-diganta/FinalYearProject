@@ -17,12 +17,23 @@ router.post('/submit/student', controls.submitStudent);
 // Admin routes
 router.post("/admin/signin", controls.adminSignIn);
 
-router.post("/university/teacher/waitlist", controls.getUniversityTeacherWaitlist);
 
-
+//---------------------------------------- University Routes ----------------------------------------//
 router.post("/university/signup", controls.universitySignUp);
 
 router.post("/university/signin", controls.universityLogin);
+
+router.post("/university/addSchool", authoriseUniversity, controls.universityAddSchool);
+
+router.post("/university/addDepartment", authoriseUniversity, controls.universityAddDepartment);
+
+router.post("/university/addProgram", authoriseUniversity, controls.addUniversityProgram);
+
+router.post("/university/verifyCourse", authoriseUniversity, controls.universityVerifyCourse);
+
+router.post("/university/rejectCourse", authoriseUniversity, controls.universityRejectCourse);
+
+router.post("/university/details", authoriseUniversity, controls.getUniversityDetails);
 
 router.post("/university/teacher", controls.universityTeacherData);
 
@@ -33,6 +44,30 @@ router.post("/university/contract", authoriseUniversity, controls.getUniversityC
 router.post("/university/contract/expiry", authoriseUniversity, controls.contractExpiryDetails);
 
 router.post("/university/student", authoriseUniversity, controls.getUniversityStudentData);
+
+router.post("/university/teacher/waitlist", controls.getUniversityTeacherWaitlist);
+
+
+
+// ------------------------------------------- End of University Routes -------------------------------------------//
+
+
+// -------------------------------------------- Teacher Routes --------------------------------------------//
+
+router.post('/signup/teacher', controls.signupTeacher);
+
+router.post("/teacher/course/add", authorise, controls.addCourse);
+
+router.post("/teacher/assignment/add", authorise, controls.addAssignment);
+
+router.post("/teacher/assignment/addQuestion", controls.addQuestion);
+
+router.post("/teacher/course/addStudent", controls.addStudentToCourse);
+
+// -------------------------------------------- End of Teacher Routes --------------------------------------------//
+
+
+
 
 router.post("/university/course/remainingStudents",  controls.getRemainingStudents);
 
@@ -75,13 +110,12 @@ router.post("/university/course/add/student",  controls.addCourseStudent);
 router.post("/student/signup", controls.studentSignUp);
 
 // Teacher routes
-router.post('/signup/teacher', controls.signupTeacher);
 
 router.post("/teacher/signin", controls.teacherLogin);
 
 router.post("/teacher/course/getCourses", controls.getCoursesForTeacher);
 
-router.post("/teacher/course/addQuestion", controls.addQuestion);
+
 
 router.post("/teacher/data",controls.getTeacherData);
 
@@ -104,7 +138,7 @@ router.post("/teacher/course/question/analysis", controls.getQuestionAnalysis);
 
 router.post("/university/getStudents", controls.getStudents);
 
-router.post("/university/course/addStudent", controls.addStudentToCourse);
+
 router.post("/student/signin", controls.studentLogin);
 router.post("/student/data", controls.getStudentData);
 router.post("/student/question", controls.getQuestionForStudent);
