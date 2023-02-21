@@ -8,7 +8,6 @@ student = {
     rollNumber: String,
     program: String,
     gender: String,
-    
     courses: [{
         course: String,
         courseScore: Number,
@@ -17,14 +16,8 @@ student = {
         start_date: Date,
         progress: Number,
     }],
-
-    address: {
-        city: String,
-        state: String,
-        country: String
-    },
     email: String,
-    submission:Array
+    submissions:Array
 }
 
 module.exports = student;
