@@ -36,7 +36,9 @@ module.exports = {
       success: "#50D146",
       error: "#FA432E",
       lightGreen: "#A6F0A0",
-      lightRed: "#F0ADA0"
+      lightRed: "#F0ADA0",
+      divider: "#EFEFF0",
+      formBackground: "#F6F6F6"
     }
   },
   plugins: [],

@@ -1,0 +1,18 @@
+.solve__question{
+    border: 1px solid #9667e0;
+    color: #9667e0;
+}
+
+.solve__question:hover{
+    background-color: #9667e0;
+    color: #FFF;
+}
+
+.course__option{
+    font-family: sans-serif;
+    letter-spacing: 4px;
+}
+
+.course__option li{
+    border: 0.001rem solid #adb5bd;
+}
