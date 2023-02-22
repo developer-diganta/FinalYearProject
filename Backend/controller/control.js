@@ -484,7 +484,7 @@ const signupTeacher = async (req, res) => {
                 }
 
 
-                const department = await models.department.findById(departmentId).exec();
+                const department = await models.Department.findById(departmentId).exec();
                 if (!department) {
                     res.status(400).json({ message: "Invalid department Id" });
                     return;
@@ -496,7 +496,7 @@ const signupTeacher = async (req, res) => {
                     email: email,
                     password: hash,
                     university: uniId,
-                    program: programId,
+                    department: departmentId,
                     status: 'waitlist',
                 });
 
