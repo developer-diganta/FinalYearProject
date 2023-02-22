@@ -70,7 +70,7 @@ function Course() {
       console.log("jgfwjegfkw", backend_url);
       const res = await instance.post(backend_url + '/university/course/remainingStudents', {universityId: unv__id, courseId: courseId});
       console.log("72.", res);
-      setStudents(res.data.results.filter((item,index)=>{
+      setStudents(res.data.filter((item,index)=>{
           return item.status === 'active';
       }));
       // setStudents(res.data);

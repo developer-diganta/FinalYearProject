@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { backend_url } from '../../../BackendRoutes';
-import Sidebaruniversity from '../Sidebaruniversity/Sidebaruniversity';
+import SidebarTEacher from '../Sidebar/SidebarTEacher';
+import './Courses.css';
 
 function CourseCreateForm() {
     const { openClose, unvSign } = useSelector((state) => state.counter);
@@ -15,6 +16,9 @@ function CourseCreateForm() {
     const[startDate, setStartDate] = useState();
     const[endDate, setEndDate] = useState();
     const[compilers, setCompilers] = useState([]);
+    const[department, setDepartment] = useState();
+    const[school, setSchool] = useState();
+    const[Programme, setProgramme] = useState();
     const token = localStorage.getItem('signup_token');
     const unv__id = localStorage.getItem('university__id');
     const navigate = useNavigate();
@@ -62,16 +66,40 @@ function CourseCreateForm() {
   return (
     <div className='course__create__form flex'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
-            <Sidebaruniversity />
+            <SidebarTEacher />
         </div>
         <div className={`pt-4 pl-6 ml-1/5 flex justify-center bg-[#f3f4f6] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen`} style={{float: "right", overflow: "scroll"}}>
             <form className="course__form flex flex-col bg-white w-4/5 py-8 px-6 rounded-md shadow-lg" onSubmit={setNewCourse}>
-                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>name</p>
+                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course name</p>
                 <input className='course__name mb-8 shadow-sm' type="text" onChange={(event) => setName(event.target.value)} />
-                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>description</p>
+                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course description</p>
                 <textarea className='course__description mb-8 h-28 shadow-sm' type="text" onChange={(event) => setDescription(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>course type</p>
                 <input className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)} />
+                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Schools</p>
+                <select className='course__school mb-8 shadow-sm' type="text" onChange={(event) => setSchool(event.target.value)}>
+                    <option value="cse">CSE</option>
+                    <option value="ece">ECE</option>
+                    <option value="eee">EEE</option>
+                    <option value="mech">MECH</option>
+                    <option value="civil">CIVIL</option>
+                </select>
+                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Department</p>
+                <select className='course__department mb-8 shadow-sm' type="text" onChange={(event) => setDepartment(event.target.value)}>
+                    <option value="cse">CSE</option>
+                    <option value="ece">ECE</option>
+                    <option value="eee">EEE</option>
+                    <option value="mech">MECH</option>
+                    <option value="civil">CIVIL</option>
+                </select>
+                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Programme</p>
+                <select className='course__department mb-8 shadow-sm' type="text" onChange={(event) => setProgramme(event.target.value)}>
+                    <option value="cse">CSE</option>
+                    <option value="ece">ECE</option>
+                    <option value="eee">EEE</option>
+                    <option value="mech">MECH</option>
+                    <option value="civil">CIVIL</option>
+                </select>
                 <div className="date__ares flex mb-8 gap-10">
                     <div>
                         <p className='pb-2 capitalize text-[#444d5c] font-semibold'>start</p>

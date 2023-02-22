@@ -20,7 +20,8 @@ const Sidebaruniversity = () => {
       { name: "dashboard", link: "/university/dashboard", icon: MdOutlineDashboardCustomize },
       { name: "teachers", link: "/university/teachers", icon: TfiBlackboard },
       { name: "students", link: "/university/students", icon: FiUsers },
-      { name: "courses", link: "/university/courses", icon: VscBook },
+      { name: "schools", link: "/university/schools", icon: VscBook },
+      // {name: ""}
       { name: "edit", link: "/university/edit", icon: BiEditAlt, margin: true },
       { name: "Analyse", link: "/", icon: BsGraphUp },
       { name: "Setting", link: "/", icon: RiSettings4Line },
@@ -73,8 +74,9 @@ const Sidebaruniversity = () => {
                   <h2
                     style={{
                       transitionDelay: `${i + 3}00ms`,
+                      textTransform: "capitalize",
                     }}
-                    className={`whitespace-pre duration-500 text-lg ${
+                    className={`whitespace-pre duration-500 text-lg capitalized ${
                       !open && "opacity-0 translate-x-28 overflow-hidden"
                     }`}
                   >
@@ -83,7 +85,7 @@ const Sidebaruniversity = () => {
                   <h2
                     className={`${
                       open && "hidden"
-                    } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit text-[#000000]  `}
+                    } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit text-[#000000] capitalized`}
                   >
                     {menu?.name}
                   </h2>

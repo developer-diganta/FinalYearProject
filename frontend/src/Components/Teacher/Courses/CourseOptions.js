@@ -4,7 +4,7 @@ import './Courses.css'
 
 function CourseOptions({courseId}) {
   const navigate = useNavigate();
-  const url = '/teacher/previouscourse';
+  const url = '/teacher/courses';
   return (
     <div className='course__option flex gap-4 w-full'>
         <div className='bg-[#adb5bd]' style={{minWidth: "1px", maxWidth: "1px", minHeight: "70vh"}}></div>
