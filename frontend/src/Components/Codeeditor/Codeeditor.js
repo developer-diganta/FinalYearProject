@@ -12,6 +12,7 @@ import axios from 'axios';
 import QDescription from './Options/QDescription';
 import Solutions from './Options/Solutions';
 import Submission from './Options/Submission';
+import { useLocation } from 'react-router-dom';
 // import { ResizableBox } from 'react-resizable';
 var base64 = require('base-64');
 
@@ -24,10 +25,12 @@ function Codeeditor() {
     const[opScreen, setOpScreen] = useState(false);
     const[thin, setThin] = useState(false);
     const[slide, setSlide] = useState(false);
-    // const[loading, setLoading] = useState(false);
     const arr = [dracula, githubDark, sublime, xcodeDark];
     const themeName = ['Dracula', 'GithubDark', 'Sublime', 'XcodeDark'];
     const lang = ['C++', 'JavaScript', 'C', 'Java', 'HTML'];
+
+    const location = useLocation();
+    console.log(location);
 
     function chooseOptions(event, options) {
         event.preventDefault();
@@ -130,7 +133,7 @@ function Codeeditor() {
         <div className="divder tooltip_1 hover:bg-[#B8B8B8]" onClick={() => setSlide(!slide)}>
             <div className='tooltiptext_1 text-xs font-semibold'>Click to adjust size</div>
         </div>
-        <div className={`res pl-4 pr-4 pt-1 w-1/2`} id="right" onClick={() => checkSlider()} style={{minWidth: "40vw"}}>
+        <div className={`res pl-4 pr-4 pt-1 w-1/2`} id="right" onClick={() => checkSlider()} style={{minWidth: "40vw", maxHeight: "90vh"}}>
           <div className="res-header flex justify-between items-center py-2">
               {/* create three divs named question, submit, solution */}
                <div className="br question" onClick={(event) => chooseOptions(event, 'questions')}>
@@ -156,11 +159,9 @@ function Codeeditor() {
                </div> */}
           </div>
           <div className="options">
-            <div className='inner_op'>
-                {
-                  options === "questions" ? <QDescription /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
-                }
-            </div>
+            {
+              options === "questions" ? <QDescription question={location.state} /> : options === "solutions" ? <Solutions /> : options === "submission" ? <Submission /> : null
+            }
           </div>
         </div>
       </div>

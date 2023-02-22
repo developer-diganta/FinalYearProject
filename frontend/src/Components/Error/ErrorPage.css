@@ -1,0 +1,14 @@
+.error__message{
+    font-weight: 900;
+    font-size: 2.4rem;
+    text-align: center;
+    color: #333;
+    /* text-shadow: 1px 0px 0 #B3B6B7,
+                 1px 0px 0 #B3B6B7,
+                 3px 0px 0 #B3B6B7,
+                 4px 0px 0 #B3B6B7,
+                 5px 0px 0 #B3B6B7; */
+    color: #3f3d56ff;
+    letter-spacing: 2px;
+    font-family: 'Shantell Sans', cursive;
+}
