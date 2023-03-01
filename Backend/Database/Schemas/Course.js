@@ -2,7 +2,7 @@ course = {
     university: String,
     program:String,
     name: String,
-    description: Array,
+    description: String,
     courseCode: String,
     courseType: String,
     expectedCourseDuration: Number,

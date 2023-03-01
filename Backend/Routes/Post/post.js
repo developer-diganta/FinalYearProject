@@ -56,7 +56,7 @@ router.post("/university/teacher/waitlist", controls.getUniversityTeacherWaitlis
 
 router.post('/signup/teacher', controls.signupTeacher);
 
-router.post("/teacher/course/add", authorise, controls.addCourse);
+router.post("/teacher/course/add", controls.addCourse);
 
 router.post("/teacher/assignment/add", authorise, controls.addAssignment);
 
