@@ -20,7 +20,7 @@ import { backend_url } from '../../../BackendRoutes';
 
 
 function UniversitySchools() {
-    const[schools, setSchools] = useState([]);
+    const[schools, setSchools] = useState();
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const navigate = useNavigate();
     const unvToken = localStorage.getItem('signup_token');
@@ -33,8 +33,8 @@ function UniversitySchools() {
             },
         });
         const schoolResults = await instance.post(backend_url + '/university/details', {universityId: unvId});
-        console.log(schoolResults.data.schools);
-        setSchools(schoolResults.data.schools);
+        console.log(schoolResults);
+        setSchools(schoolResults.data.universityDetails.schools);
     }
 
     useEffect(() => {

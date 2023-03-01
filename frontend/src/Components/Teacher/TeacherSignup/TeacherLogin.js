@@ -24,8 +24,9 @@ function TeacherLogin() {
   async function getFormValue(event){
     event.preventDefault();
     const teacher__login = await axios.post(backend_url + '/teacher/signin', {email, password});
-    console.log("************************************", teacher__login);
+    // console.log("************************************", teacher__login);
     if(teacher__login.data.token && teacher__login.data._id){
+      console.log("************************************", teacher__login.data);
       localStorage.setItem('teacher__token', teacher__login.data.token);
       localStorage.setItem('teacher__id', teacher__login.data._id);
       localStorage.setItem('teacher__email', email);

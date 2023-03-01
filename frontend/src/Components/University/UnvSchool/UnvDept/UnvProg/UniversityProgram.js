@@ -4,22 +4,51 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebaruniversity from '../../../Sidebaruniversity/Sidebaruniversity';
 import { BiRightArrow } from 'react-icons/bi';
+import axios from 'axios';
+import { backend_url } from '../../../../../BackendRoutes';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-const programs = [
-    {
-        name: 'Bachelor of Technology',
-        _id: '90237402374982369842',
-    },
-    {
-        name: 'Master of Technology',
-        _id: '90237203702937092902',
-    }
-]
+// const programs = [
+//     {
+//         name: 'Bachelor of Technology',
+//         _id: '90237402374982369842',
+//     },
+//     {
+//         name: 'Master of Technology',
+//         _id: '90237203702937092902',
+//     }
+// ]
 
 function UniversityProgram() {
+    const[programs, setPrograms] = useState();
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const location = useLocation();
     const navigate = useNavigate();
+    const unvToken = localStorage.getItem('signup_token');
+    const unvId = localStorage.getItem('university__id');
+
+    async function getAllUniversityProgramme(){
+        const instance = axios.create({
+            headers: {
+                'x-auth-token': unvToken,
+            },
+        });
+        const schoolResults = await instance.post(backend_url + '/university/details', {universityId: unvId});
+        console.log(schoolResults.data.universityDetails.schools[0].departments, location);
+        schoolResults.data.universityDetails.schools[0].departments.map((dept) => {
+            if(dept.id === location.state.department.id){
+                setPrograms(dept.programs);
+            }
+        })
+
+        // setPrograms(schoolResults.data.universityDetails.schools[0].departments);
+    }
+
+    useEffect(() => {
+        getAllUniversityProgramme();
+        console.log(programs);
+    }, [])
 
   return (
     <div className='flex md:block university__program'>
@@ -44,7 +73,7 @@ function UniversityProgram() {
             <div>
                 <div className='flex justify-between mx-10 items-center'>
                     <h1 className='text-xl font-semibold my-4 uppercase'>Programs</h1>
-                    <button className='bg-[#03071e] px-4 rounded-3xl py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#03071e] hover:text-[#03071e] hover:bg-white border-2 border-[#03071e] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/university/addprogram', {state: location.state.department})}>Add Program <span className='text-lg pl-2'>+</span> </button>
+                    <button className='bg-[#03071e] px-4 rounded-3xl py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#03071e] hover:text-[#03071e] hover:bg-white border-2 border-[#03071e] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/university/addprogram', {state: location.state})}>Add Program <span className='text-lg pl-2'>+</span> </button>
                 </div>
                 {/* make a divider div */}
                 <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>

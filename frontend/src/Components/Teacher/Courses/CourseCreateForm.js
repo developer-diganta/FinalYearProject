@@ -12,6 +12,7 @@ function CourseCreateForm() {
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const[name, setName] = useState();
     const[description, setDescription] = useState();
+    const[courseCode, setCourseCode] = useState();
     const[courseType, setCourseType] = useState();
     const[startDate, setStartDate] = useState();
     const[endDate, setEndDate] = useState();
@@ -19,12 +20,20 @@ function CourseCreateForm() {
     const[department, setDepartment] = useState();
     const[school, setSchool] = useState();
     const[Programme, setProgramme] = useState();
-    const token = localStorage.getItem('signup_token');
-    const unv__id = localStorage.getItem('university__id');
+    const teacther__id = localStorage.getItem('teacher__id');
+    const teacher__token = localStorage.getItem('teacher__token');
+    const teacher__email = localStorage.getItem('teacher__email');
     const navigate = useNavigate();
 
     async function setNewCourse(event){
         event.preventDefault();
+
+        const teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id});
+        console.log(teacher__data);
+
+        const {university, department} = teacher__data.data;
+
+
         console.log(name, description, courseType, startDate, endDate, compilers);
         const date1 = new Date(startDate);
         const date2 = new Date(endDate);
@@ -33,26 +42,39 @@ function CourseCreateForm() {
         const course__duration = diffDays;
         const instance = axios.create({
             headers: {
-              'x-auth-token': token,
+              'x-auth-token': teacher__token,
             },
         });
-        const new__course = await instance.post(backend_url + '/university/course/add', {
-        universityId: unv__id,
-        name: name,
-        description: description,
-        courseCode: "abcd",
-        courseType: courseType,
-        expectedCourseDuration: course__duration,
-        courseCompilers: compilers,
-        courseStartDate: startDate,
-        });
-        console.log(new__course);
-        if(new__course.data.message === "Course added successfully"){
-            console.log("course added successfully");
-            navigate('/university/courses');
-        }
-        else{
-            alert("something went wrong");
+        try {
+            const new__course = await instance.post(backend_url + '/teacher/course/add', {
+            universityId: university,
+            name: name,
+            description: description,
+            courseCode: courseCode,
+            courseType: courseType,
+            expectedCourseDuration: course__duration,
+            courseCompilers: compilers,
+            courseStartDate: startDate,
+            programId: Programme,
+            teacherId: teacther__id,
+            email: teacher__email,
+            });
+            console.log(new__course);
+            if(new__course.data.message === "Course added successfully"){
+                console.log("course added successfully");
+                navigate('/university/courses');
+            }
+            else{
+                alert("something went wrong. please try again.");
+            }
+        
+        } catch (error) {
+            console.log(error.response.status);
+            if(error.response.status === 401){
+                alert("please login again");
+                localStorage.removeItem('teacher__token');
+                navigate('/teacher/login');
+            }
         }
     }
 
@@ -76,7 +98,9 @@ function CourseCreateForm() {
                 <textarea className='course__description mb-8 h-28 shadow-sm' type="text" onChange={(event) => setDescription(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>course type</p>
                 <input className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)} />
-                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Schools</p>
+                <p className='pb-2 capitalize text-[#444d5c] font-semibold'>course code</p>
+                <input className='course__code mb-8 shadow-sm' type="text" onChange={(event) => setCourseCode(event.target.value)} />
+                {/* <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Schools</p>
                 <select className='course__school mb-8 shadow-sm' type="text" onChange={(event) => setSchool(event.target.value)}>
                     <option value="cse">CSE</option>
                     <option value="ece">ECE</option>
@@ -91,13 +115,14 @@ function CourseCreateForm() {
                     <option value="eee">EEE</option>
                     <option value="mech">MECH</option>
                     <option value="civil">CIVIL</option>
-                </select>
+                </select> */}
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Programme</p>
                 <select className='course__department mb-8 shadow-sm' type="text" onChange={(event) => setProgramme(event.target.value)}>
                     <option value="cse">CSE</option>
                     <option value="ece">ECE</option>
                     <option value="eee">EEE</option>
                     <option value="mech">MECH</option>
+                    <option value="it">IT</option>
                     <option value="civil">CIVIL</option>
                 </select>
                 <div className="date__ares flex mb-8 gap-10">

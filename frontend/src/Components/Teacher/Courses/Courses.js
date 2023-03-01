@@ -97,36 +97,45 @@ function Courses() {
                 </div>
             </div>
             <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
-            <div className="courses grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mx-6">
-                {
-                    previousCourses.map((course) => (
-                        <div className="course mr-4 my-4 flex hover:scale-105 hover:shadow-lg text-[#515a61] duration-200" key={course._id} style={{}}>
-                            <div className='w-10/12 p-3' style={{
-                                    borderTop: "1px solid #9ea7ae",
-                                    borderLeft: "1px solid #9ea7ae",
-                                    borderBottom: "1px solid #9ea7ae",
-                                }}>
-                                <div className="course__title text-lg font-semibold pb-2">
-                                    <h3>{course.name}</h3>
+            {
+                previousCourses.length > 0 ? 
+                    <div className="courses grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mx-6">
+                        {
+                            previousCourses.map((course) => (
+                                <div className="course mr-4 my-4 flex hover:scale-105 hover:shadow-lg text-[#515a61] duration-200" key={course._id} style={{}}>
+                                    <div className='w-10/12 p-3' style={{
+                                            borderTop: "1px solid #9ea7ae",
+                                            borderLeft: "1px solid #9ea7ae",
+                                            borderBottom: "1px solid #9ea7ae",
+                                        }}>
+                                        <div className="course__title text-lg font-semibold pb-2">
+                                            <h3>{course.name}</h3>
+                                        </div>
+                                        <div className="course__description text-sm">
+                                            <p>{course.description}</p>
+                                        </div>
+                                    </div>
+                                    <div className='w-2/12 bg-[#bac0c5] p-3 flex justify-center items-center text-white font-bold text-xl cursor-pointer'
+                                        style={{
+                                            border: "1px solid #9ea7ae"
+                                        }}
+                                        onClick={() => navigate('/teacher/courses/' + course._id, {state: {course, coursestate: 'current'}})}
+                                    >
+                                        {/* <BsArrowReturnRight className='font-bold' /> */}
+                                        {/* <BsArrowBarRight /> */}
+                                        <MdOutlineArrowForwardIos />
+                                    </div>
                                 </div>
-                                <div className="course__description text-sm">
-                                    <p>{course.description}</p>
-                                </div>
-                            </div>
-                            <div className='w-2/12 bg-[#bac0c5] p-3 flex justify-center items-center text-white font-bold text-xl cursor-pointer'
-                                style={{
-                                    border: "1px solid #9ea7ae"
-                                }}
-                                onClick={() => navigate('/teacher/courses/' + course._id, {state: {course, coursestate: 'current'}})}
-                            >
-                                {/* <BsArrowReturnRight className='font-bold' /> */}
-                                {/* <BsArrowBarRight /> */}
-                                <MdOutlineArrowForwardIos />
-                            </div>
+                            ))
+                        }
+                    </div> :
+                    <div>
+                        <div className='flex justify-center items-center w-full flex-col'>
+                            <img src="/teacherrC.svg" className='w-48 h-48 mt-20 opacity-50' alt="" />
+                            <h2 className='py-4 font-semibold'>No Courses Found.</h2>
                         </div>
-                    ))
-                }
-            </div>
+                    </div>
+            }
         </div>
     </div>
   )
