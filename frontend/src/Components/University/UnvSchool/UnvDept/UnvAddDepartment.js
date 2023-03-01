@@ -7,7 +7,7 @@ import { backend_url } from '../../../../BackendRoutes';
 import Sidebaruniversity from '../../Sidebaruniversity/Sidebaruniversity';
 
 function UnvAddDepartment() {
-    const[unvDepartment, setUnvDepartment] = useState()
+    const[department, setDepartment] = useState()
     const unvId = localStorage.getItem('university__id');
     const unvToken = localStorage.getItem('signup_token');
     const navigate = useNavigate();
@@ -17,16 +17,20 @@ function UnvAddDepartment() {
 
     async function addDepartmentToSchool(event){
         event.preventDefault();
+        if(department === "" || department === undefined){
+            alert("Please enter a department name");
+            return;
+        }
         const instance = axios.create({
             headers: {
                 'x-auth-token': unvToken,
             },
         });
-        const getResponse = await instance.post(backend_url + '/university/addDepartment', {departmentName: unvDepartment, schoolId: location.state.id, universityId: unvId});
+        const getResponse = await instance.post(backend_url + '/university/addDepartment', {departmentName: department, schoolId: location.state.id, universityId: unvId});
         console.log(getResponse);
         alert(getResponse.data.message);
         if(getResponse.data.message === "Department added successfully"){
-            navigate('/university/school/departments');
+            navigate('/university/school/departments', {state: location.state});
         }
     }
 
@@ -47,10 +51,10 @@ function UnvAddDepartment() {
                 <h1 className='py-2 px-4 font-semibold'>{location.state.name}</h1>
                 <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-4'></div>
                 <h1 className='text-center text-lg py-6 font-bold uppercase'>Create Department</h1>
-                <form className='bg-formBackground w-3/4 mx-auto py-4 px-6 rounded-md shadow-md' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} action="" onSubmit={addDepartmentToSchool}>
+                <form className='bg-formBackground w-3/4 mx-auto py-4 px-6 rounded-md shadow-md' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onSubmit={addDepartmentToSchool}>
                     <div className='flex flex-col gap-2'>
                         <label className='pt-4' htmlFor="schoolName">Department Name</label>
-                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onClick={(event) => setUnvDepartment(event.target.value)} />
+                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onChange={(e) => setDepartment(e.target.value)} />
                     </div>
                     <div className='w-full flex justify-center'>
                         <button className='bg-[#BFC9CA] py-1 px-4 rounded-sm my-4' style={{letterSpacing: "2px"}}>Create</button>

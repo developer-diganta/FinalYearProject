@@ -15,6 +15,8 @@ const[email, setEmail] = useState();
 const[password, setPassword] = useState();
 const[university, setUniversity] = useState();
 const[unId, setUnId] = useState();
+const[UnvDept, setUnvDept] = useState();
+const[departments, setDepartments] = useState();
 
 const navigate = useNavigate();
 const teacher__token = localStorage.getItem('teacher__token');
@@ -23,7 +25,7 @@ const teacher__id = localStorage.getItem('teacher__id');
 async function getFormValue(event){
   event.preventDefault();
   console.log(name, username, email, password, unId);
-  const res = await axios.post(backend_url + '/signup/teacher', {name: name, username: username, email: email, password: password, uniId: unId});
+  const res = await axios.post(backend_url + '/signup/teacher', {name: name, username: username, email: email, password: password, uniId: unId, departmentId: UnvDept});
   console.log("hvjvjvjvjvj", res, res.data._id);
   localStorage.setItem('teacher__token', res.data.token);
   localStorage.setItem('teacher__id', res.data._id);
@@ -31,6 +33,16 @@ async function getFormValue(event){
   if(res.data.auth == true){
     navigate('/teacher/status');
   }
+}
+
+async function getUniversityDepartment(unId){
+  console.log("jgfwjegfkw", backend_url);
+  const res = await axios.post(backend_url + '/university/details', {universityId: unId});
+  console.log(res);
+  let deptArray = [];
+  res.data.universityDetails.schools.map((item) => item.departments.map((item) => deptArray.push(item)));
+  console.log(deptArray);
+  setDepartments(deptArray);
 }
 
   useEffect(() => {
@@ -89,7 +101,10 @@ async function getFormValue(event){
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
               </svg>
-              <select className='w-full' name="university" id="university" onChange={(ele) => setUnId(ele.target.value)}>
+              <select className='w-full' name="university" id="university" onChange={(ele) => {
+                setUnId(ele.target.value)
+                getUniversityDepartment(ele.target.value)
+              }}>
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your university</option>
                 {/* <option value="IIT Bombay">IIT Bombay</option>
                 <option value="IIT Delhi">IIT Delhi</option>
@@ -102,6 +117,29 @@ async function getFormValue(event){
                 {
                     university ? university.map((uni, index) => {
                         return <option key={index} value={uni._id}>{uni.name}</option>
+                    }) : null
+                }
+              </select>
+            </div>
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+              </svg>
+              <select className='w-full' name="university" id="university" onChange={(ele) => {
+                setUnvDept(ele.target.value)
+              }}>
+                <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your department</option>
+                {/* <option value="IIT Bombay">IIT Bombay</option>
+                <option value="IIT Delhi">IIT Delhi</option>
+                <option value="IIT Kanpur">IIT Kanpur</option>
+                <option value="IIT Kharagpur">IIT Kharagpur</option>
+                <option value="IIT Madras">IIT Madras</option>
+                <option value="IIT Roorkee">IIT Roorkee</option>
+                <option value="IIT Guwahati">IIT Guwahati</option>
+                <option value="IIT Hyderabad">IIT Hyderabad</option> */}
+                {
+                    departments ? departments.map((dept, index) => {
+                        return <option key={index} value={dept.id}>{dept.name}</option>
                     }) : null
                 }
               </select>

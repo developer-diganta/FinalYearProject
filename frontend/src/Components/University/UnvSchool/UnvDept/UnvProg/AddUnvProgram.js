@@ -7,7 +7,8 @@ import { backend_url } from '../../../../../BackendRoutes';
 import Sidebaruniversity from '../../../Sidebaruniversity/Sidebaruniversity';
 
 function AddUnvProgram() {
-    const[unvProgram, setUnvProgram] = useState()
+    const[unvProgram, setUnvProgram] = useState();
+    const unvToken = localStorage.getItem('signup_token');
     const unvId = localStorage.getItem('university__id');
     const navigate = useNavigate();
     const { openClose, unvSign } = useSelector((state) => state.counter);
@@ -16,11 +17,16 @@ function AddUnvProgram() {
 
     async function addDepartmentToSchool(event){
         event.preventDefault();
-        const getResponse = await axios.post(backend_url + '/university/addProgram', {programName: unvProgram, departmentId: location._id, universityId: unvId});
+        const instance = axios.create({
+            headers: {
+                'x-auth-token': unvToken,
+            },
+        });
+        const getResponse = await instance.post(backend_url + '/university/addProgram', {programName: unvProgram, departmentId: location.state.department.id, universityId: unvId});
         console.log(getResponse);
         alert(getResponse.data.message);
-        if(getResponse.data.status === 'success'){
-            navigate('/university/school/departments');
+        if(getResponse.data.message === "Program added successfully"){
+            navigate('/university/school/departments', {state: location.state});
         }
     }
   return (
@@ -45,7 +51,7 @@ function AddUnvProgram() {
                 <form className='bg-formBackground w-3/4 mx-auto py-4 px-6 rounded-md shadow-md' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} action="" onSubmit={addDepartmentToSchool}>
                     <div className='flex flex-col gap-2'>
                         <label className='pt-4' htmlFor="schoolName">Program Name</label>
-                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onClick={(event) => setUnvProgram(event.target.value)} />
+                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onChange={(event) => setUnvProgram(event.target.value)} />
                     </div>
                     <div className='w-full flex justify-center'>
                         <button className='bg-[#BFC9CA] py-1 px-4 rounded-sm my-4' style={{letterSpacing: "2px"}}>Create</button>
