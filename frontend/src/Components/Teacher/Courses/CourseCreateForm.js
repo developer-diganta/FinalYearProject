@@ -20,6 +20,7 @@ function CourseCreateForm() {
     const[department, setDepartment] = useState();
     const[school, setSchool] = useState();
     const[Programme, setProgramme] = useState();
+    const[universityId, setUniversityId] = useState();
     const teacther__id = localStorage.getItem('teacher__id');
     const teacher__token = localStorage.getItem('teacher__token');
     const teacher__email = localStorage.getItem('teacher__email');
@@ -27,11 +28,8 @@ function CourseCreateForm() {
 
     async function setNewCourse(event){
         event.preventDefault();
+        
 
-        const teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id});
-        console.log(teacher__data);
-
-        const {university, department} = teacher__data.data;
 
 
         console.log(name, description, courseType, startDate, endDate, compilers);
@@ -45,16 +43,19 @@ function CourseCreateForm() {
               'x-auth-token': teacher__token,
             },
         });
+        console.log(date1.toISOString(date1));
+        // make the date1 in this format 2021-05-01T00:00:00.000Z
+        
         try {
             const new__course = await instance.post(backend_url + '/teacher/course/add', {
-            universityId: university,
+            universityId: universityId,
             name: name,
             description: description,
             courseCode: courseCode,
             courseType: courseType,
             expectedCourseDuration: course__duration,
             courseCompilers: compilers,
-            courseStartDate: startDate,
+            courseStartDate: date1.toISOString(),
             programId: Programme,
             teacherId: teacther__id,
             email: teacher__email,
@@ -62,18 +63,22 @@ function CourseCreateForm() {
             console.log(new__course);
             if(new__course.data.message === "Course added successfully"){
                 console.log("course added successfully");
-                navigate('/university/courses');
+                navigate('/teacher/courses');
             }
             else{
                 alert("something went wrong. please try again.");
             }
         
         } catch (error) {
-            console.log(error.response.status);
+            console.log(error);
             if(error.response.status === 401){
                 alert("please login again");
                 localStorage.removeItem('teacher__token');
                 navigate('/teacher/login');
+            }
+            else{
+                alert(error.response.data.message + ". please try again");
+                navigate('/teacher/cretatecourse');
             }
         }
     }
@@ -84,6 +89,33 @@ function CourseCreateForm() {
             setCompilers([...compilers, comp]);
         }
     }
+
+    async function setAllDetails(){
+        let teacher__data;
+        try {
+            teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id});
+            console.log(teacher__data);
+        } catch (error) {
+            console.log(error);
+        }
+        let university__detail;
+        const {university} = teacher__data.data;
+        setUniversityId(university);
+        try {
+            university__detail = await axios.post(backend_url + '/university/details', {universityId: university});
+            console.log(university__detail);
+            let programArray = [];
+            university__detail.data.universityDetails.schools.map((item) => item.departments.map((item) => item.programs.map((item) => programArray.push(item))));
+            setDepartment(programArray);
+            console.log(programArray);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        setAllDetails();
+    }, [])
 
   return (
     <div className='course__create__form flex'>
@@ -119,11 +151,11 @@ function CourseCreateForm() {
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Programme</p>
                 <select className='course__department mb-8 shadow-sm' type="text" onChange={(event) => setProgramme(event.target.value)}>
                     <option value="cse">CSE</option>
-                    <option value="ece">ECE</option>
-                    <option value="eee">EEE</option>
-                    <option value="mech">MECH</option>
-                    <option value="it">IT</option>
-                    <option value="civil">CIVIL</option>
+                    {
+                        department?.map((dept) => (
+                            <option key={dept.id} value={dept.id}>{dept.name}</option>
+                        ))
+                    }
                 </select>
                 <div className="date__ares flex mb-8 gap-10">
                     <div>
