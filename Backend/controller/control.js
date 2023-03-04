@@ -697,6 +697,21 @@ const addStudentToCourse = async (req, res) => {
     }
 }
 
+const getCoursesOfTeacher = async (req, res) => {
+    const { teacherId } = req.body;
+    try {        
+        const teacher = await models.Teacher.findById(teacherId).exec();
+        if (!teacher) {
+            res.status(400).json({ message: "Invalid Teacher Id" });
+            return;
+        }
+        const courses = await models.Course.find({ teacher: teacherId }).exec();
+        res.status(200).json({courses})
+    } catch (err) {
+    res.status(500).json({message:"ERROR"});
+    }
+
+}
 
 // --------------------------------------------------------------------------------------------- End Teacher Controllers --------------------------------------------------------------------------------------------- //
 
@@ -2207,5 +2222,6 @@ module.exports = {
     universityRejectCourse,
     showCoursesToTeacher,
     getUniversityDetails,
-    addAssignment
+    addAssignment,
+    getCoursesOfTeacher
 };

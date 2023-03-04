@@ -64,6 +64,7 @@ router.post("/teacher/assignment/addQuestion", controls.addQuestion);
 
 router.post("/teacher/course/addStudent", controls.addStudentToCourse);
 
+router.post("/teacher/courses/getAll", controls.getCoursesOfTeacher);
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
 
