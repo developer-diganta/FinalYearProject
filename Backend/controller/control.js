@@ -41,6 +41,7 @@ const languages = async (req, res) => {
     }
 }
 
+
 // for running a code from the client
 const submit = async (req, res) => {
     console.log(req.body.sourceCode)
@@ -443,22 +444,6 @@ const getUniversityStudentData = async (req, res) => {
     }
 }
 
-// const getStudentsForUniversity = async (req, res) => {
-//     const { universityId } = req.body;
-//     try {
-//         const university = await models.University.findById(universityId).exec();
-//         if (!university) {
-//             res.status(400).json({ message: "Invalid University Id" });
-//             return;
-//         }
-
-//         const students = await models.Student.find({ university: universityId }).exec();
-//         if (students.length === 0) {
-//             res.status(200).json({ message: "No Students Found" });
-//             return;
-//         }
-
-        
 
 // -------------------------------------------------------------------------------------------- Teacher Section --------------------------------------------------------------------------------------------
 
@@ -764,8 +749,6 @@ const getQuestionsInAssignment = async (req, res) => {
     }
 }
 
-
-
 const getCourseDetails = async (req, res) => {
     const { universityId, courseId } = req.body;
     try {
@@ -797,6 +780,45 @@ const getCourseDetails = async (req, res) => {
     }
 
 }
+
+
+const showCoursesToTeacher = async (req, res) => {
+    const { teacherId } = req.body;
+    try {
+        const teacher = await models.Teacher.findById(teacherId).exec();
+        if (!teacher) {
+            res.status(400).json({ message: "Invalid Teacher Id" });
+            return;
+        }
+        const courses = await models.Course.find({ teacher: teacherId }).exec();
+        // const moocs = await models.Mooc.find({ teacher: teacherId }).exec();
+        moocs: "EMPTY";
+        res.status(200).json({ courses: courses, moocs: moocs });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const getStudentDetails = async (req, res) => {
+    const { courseId } = req.body;
+    try {        
+        const student = await models.Student.find().exec();
+        const result = [];
+        for (let i = 0; i < student.length; i++){
+            for (let j = 0; j < student[i].courses.length; j++){
+                if (JSON.stringify(student[i].courses[j].course) === JSON.stringify(courseId)) {
+                    result.push(student[i]);
+                    break;
+                }
+            }
+        }
+        res.status(200).json({ result });
+    } catch (err) {
+        res.status(500).json({"message":"error"})
+    }
+}
+
+
 // --------------------------------------------------------------------------------------------- End Teacher Controllers --------------------------------------------------------------------------------------------- //
 
 //  --------------------------------------------------------------------------------------------- Student Controllers --------------------------------------------------------------------------------------------- //
@@ -812,22 +834,6 @@ const getCourseDetails = async (req, res) => {
 
 //  --------------------------------------------------------------------------------------------- End Student Controllers --------------------------------------------------------------------------------------------- //
 
-const showCoursesToTeacher = async (req, res) => {
-    const { teacherId } = req.body;
-    try {
-        const teacher = await models.Teacher.findById(teacherId).exec();
-        if (!teacher) {
-            res.status(400).json({ message: "Invalid Teacher Id" });
-            return;
-        }
-
-        const courses = await models.Course.find({ teacher: teacherId }).exec();
-        const moocs = await models.Mooc.find({ teacher: teacherId }).exec();
-        res.status(200).json({ courses: courses, moocs: moocs });
-    } catch (error) {
-        res.status(422).json(error);
-    }
-}
 
 
 const adminSignIn = async (req, res) => {
@@ -1648,26 +1654,6 @@ const getMultiCourses = async (req, res) => {
 
 
 
-const getQuestionByCourseId = async (req, res) => {
-    const { courseId } = req.body;
-    const questions = [];
-    try {
-        models.Question.find({ courseId: courseId }, (err, question) => {
-            if (err) {
-                res.status(500).json(err);
-            } else {
-                if (question.length > 0) {
-                    res.status(200).json(question);
-                } else {
-                    res.status(200).json({ message: "Invalid course id" });
-                }
-            }
-        });
-    } catch (error) {
-        res.status(500).json(error);
-    }
-}
-
 
 
 const getQuestionAnalysis = async (req, res) => {
@@ -2104,7 +2090,6 @@ module.exports = {
     getTeacherData,
     getMultiCourses,
     getCourseDetails,
-    getQuestionByCourseId,
     getQuestionById,
     getQuestionAnalysis,
     getStudents,
@@ -2126,6 +2111,6 @@ module.exports = {
     addAssignment,
     getCoursesOfTeacher,
     getAssignmentsFromCourse,
-    getQuestionsInAssignment
-
+    getQuestionsInAssignment,
+    getStudentDetails
 };

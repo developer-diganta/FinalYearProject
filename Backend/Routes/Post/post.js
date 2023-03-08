@@ -71,6 +71,8 @@ router.post("/teacher/courses/assignment", controls.getAssignmentsFromCourse);
 router.post("/teacher/courses/questionById", controls.getQuestionById);
 
 router.post("/teacher/courses/getQuestionsInAssignment", controls.getQuestionsInAssignment);
+
+router.post("/teacher/course/students", controls.getStudentDetails);
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
 
