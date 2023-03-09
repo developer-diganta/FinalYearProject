@@ -825,6 +825,63 @@ const getStudentDetails = async (req, res) => {
 
 
 
+const studentSignUp = async (req, res) => {
+    const { name, email, password, uniId, programId } = req.body;
+    console.log(uniId)
+    try {
+        bcrypt.hash(password, 10, (err, hash) => {
+            if (err)
+                res.status(500).json(err);
+            else {
+                // check if valid uniId
+                models.University.find({ _id: uniId }, (err, university) => {
+                    if (err)
+                        res.status(500).json(err);
+                    else {
+                        if (university.length > 0) {
+                            //    check if student exists
+                            models.Student.find({ email: email }, (err, student) => {
+                                if (err)
+                                    res.status(500).json(err);
+                                else {
+                                    if (student.length > 0) {
+                                        res.status(200).json({ message: "Student already exists" });
+                                    }
+                                    else {
+                                        const student = new models.Student({
+                                            name: name,
+                                            email: email,
+                                            password: hash,
+                                            university: uniId,
+                                            status: "waitlist",
+                                            program:programId
+                                        });
+                                        student.save((err) => {
+                                            if (err)
+                                                res.status(500).json(err);
+                                            else {
+                                                const token = generateToken(email);
+                                                res.status(200).json({ auth: true, token: token, _id: student._id });
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            console.log("here")
+                            res.status(200).json({ message: "Invalid university id" });
+
+                        }
+                    }
+                });
+            }
+        });
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
 
 
 
@@ -1168,62 +1225,6 @@ const getUniversityCourseByTeacherId = async (req, res) => {
 }
 // POST route
 
-const studentSignUp = async (req, res) => {
-    const { name, email, password, uniId } = req.body;
-    console.log(uniId)
-    try {
-        bcrypt.hash(password, 10, (err, hash) => {
-            if (err)
-                res.status(500).json(err);
-            else {
-                // check if valid uniId
-                models.University.find({ _id: uniId }, (err, university) => {
-                    if (err)
-                        res.status(500).json(err);
-                    else {
-                        if (university.length > 0) {
-                            //    check if student exists
-                            models.Student.find({ email: email }, (err, student) => {
-                                if (err)
-                                    res.status(500).json(err);
-                                else {
-                                    if (student.length > 0) {
-                                        res.status(200).json({ message: "Student already exists" });
-                                    }
-                                    else {
-                                        const student = new models.Student({
-                                            name: name,
-                                            email: email,
-                                            password: hash,
-                                            university: uniId,
-                                            status: "waitlist"
-                                        });
-                                        student.save((err) => {
-                                            if (err)
-                                                res.status(500).json(err);
-                                            else {
-                                                const token = generateToken(email);
-                                                res.status(200).json({ auth: true, token: token, _id: student._id });
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }
-                        else {
-                            console.log("here")
-                            res.status(200).json({ message: "Invalid university id" });
-
-                        }
-                    }
-                });
-            }
-        });
-    }
-    catch (error) {
-        res.status(500).json(error);
-    }
-}
 
 const getAllUniversities = async (req, res) => {
     try {
@@ -1271,8 +1272,6 @@ const teacherLogin = async (req, res) => {
         res.status(500).json(error);
     }
 }
-
-
 
 
 
