@@ -78,9 +78,15 @@ router.post("/teacher/university/student", controls.getUniversityStudentData);
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
 
+// -------------------------------------------- Student Routes --------------------------------------------//
+router.post("/student/courses", controls.getCoursesOfStudent)
+router.post("/student/assignments", controls.getAssignmentsOfStudent)
+router.post("/student/questions", controls.getQuestionsFromAssignmentForStudent)
+
+// -------------------------------------------- End of Student Routes --------------------------------------------//
 
 
-router.post("/university/course/remainingStudents",  controls.getRemainingStudents);
+router.post("/university/course/remainingStudents", controls.getRemainingStudents);
 
 router.post("/university/student/count", authoriseUniversity, controls.getUniversityStudentCount);
 
@@ -113,10 +119,10 @@ router.post("/university/course/teacher/:id", authoriseUniversity, controls.getU
 
 router.post("/university/course/add", authoriseUniversity, controls.addCourse);
 
-router.post("/university/course/add/teacher",  controls.addCourseTeacher);
+router.post("/university/course/add/teacher", controls.addCourseTeacher);
 
 
-router.post("/university/course/add/student",  controls.addCourseStudent);
+router.post("/university/course/add/student", controls.addCourseStudent);
 // Student routes
 router.post("/student/signup", controls.studentSignUp);
 
@@ -128,7 +134,7 @@ router.post("/teacher/course/getCourses", controls.getCoursesForTeacher);
 
 
 
-router.post("/teacher/data",controls.getTeacherData);
+router.post("/teacher/data", controls.getTeacherData);
 
 router.post("/university/getMultiCourses", controls.getMultiCourses);
 // router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);

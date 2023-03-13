@@ -2154,5 +2154,8 @@ module.exports = {
     getCoursesOfTeacher,
     getAssignmentsFromCourse,
     getQuestionsInAssignment,
-    getStudentDetails
+    getStudentDetails,
+    getCoursesOfStudent,
+    getAssignmentsOfStudent,
+    getQuestionsFromAssignmentForStudent
 };
