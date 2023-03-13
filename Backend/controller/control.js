@@ -222,7 +222,7 @@ const addUniversityProgram = async (req, res) => {
     const { programName, departmentId, universityId } = req.body;
     try {
         const university = await models.University.findById(universityId).exec();
-        
+
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -304,7 +304,7 @@ const getUniversityDetails = async (req, res) => {
         }
 
         const schools = await models.School.find({ university: universityId }).exec();
-        console.log({schools})
+        console.log({ schools })
         const schoolArray = [];
         for (let i = 0; i < schools.length; i++) {
             const departments = await models.Department.find({ school: schools[i]._id }).exec();
@@ -349,7 +349,7 @@ const getUniversityDetails = async (req, res) => {
         }
         console.log(universityDetails)
 
-        res.status(200).json({universityDetails});
+        res.status(200).json({ universityDetails });
     } catch (error) {
         console.log(error)
         res.status(422).json(error);
@@ -399,7 +399,7 @@ const getUniversityContract = async (req, res) => {
         }
 
         res.status(200).json(university.contract);
-    }catch (error) {
+    } catch (error) {
         res.status(422).json(error);
     }
 }
@@ -427,7 +427,7 @@ const contractExpiryDetails = async (req, res) => {
 
 
 const getUniversityStudentData = async (req, res) => {
-    const {universityId} = req.body.universityId;
+    const { universityId } = req.body.universityId;
     try {
         const university = await models.University.findById(universityId).exec();
         if (!university) {
@@ -438,7 +438,7 @@ const getUniversityStudentData = async (req, res) => {
         const students = await models.Student.find({ university: universityId }).exec();
         res.status(200).json(students);
     }
-    
+
     catch (error) {
         res.status(500).json(error);
     }
@@ -512,7 +512,7 @@ const addCourse = async (req, res) => {
         teacherId,
     } = req.body;
     try {
-        
+
         const university = await models.University.findById(universityId).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
@@ -548,7 +548,7 @@ const addCourse = async (req, res) => {
 
         const savedCourse = await course.save();
         res.status(200).json({ message: "Course added successfully" });
-    }catch (error) {
+    } catch (error) {
         res.status(422).json(error);
     }
 }
@@ -684,16 +684,16 @@ const addStudentToCourse = async (req, res) => {
 
 const getCoursesOfTeacher = async (req, res) => {
     const { teacherId } = req.body;
-    try {        
+    try {
         const teacher = await models.Teacher.findById(teacherId).exec();
         if (!teacher) {
             res.status(400).json({ message: "Invalid Teacher Id" });
             return;
         }
         const courses = await models.Course.find({ teacher: teacherId }).exec();
-        res.status(200).json({courses})
+        res.status(200).json({ courses })
     } catch (err) {
-    res.status(500).json({message:"ERROR"});
+        res.status(500).json({ message: "ERROR" });
     }
 
 }
@@ -702,10 +702,10 @@ const getAssignmentsFromCourse = async (req, res) => {
     const { courseId } = req.body;
     try {
         const assignments = await models.Assignment.find({ course: courseId }).exec();
-        res.status(200).json({assignments})
+        res.status(200).json({ assignments })
     }
     catch (err) {
-        res.status(500).json({message:"error"})
+        res.status(500).json({ message: "error" })
     }
 }
 
@@ -743,9 +743,9 @@ const getQuestionsInAssignment = async (req, res) => {
     const { assignmentId } = req.body;
     try {
         const questions = await models.Question.find({ assignment: assignmentId }).exec();
-        res.status(200).json({questions})
+        res.status(200).json({ questions })
     } catch (err) {
-        res.status(500).json({message:"ERROR"})
+        res.status(500).json({ message: "ERROR" })
     }
 }
 
@@ -801,11 +801,11 @@ const showCoursesToTeacher = async (req, res) => {
 
 const getStudentDetails = async (req, res) => {
     const { courseId } = req.body;
-    try {        
+    try {
         const student = await models.Student.find().exec();
         const result = [];
-        for (let i = 0; i < student.length; i++){
-            for (let j = 0; j < student[i].courses.length; j++){
+        for (let i = 0; i < student.length; i++) {
+            for (let j = 0; j < student[i].courses.length; j++) {
                 if (JSON.stringify(student[i].courses[j].course) === JSON.stringify(courseId)) {
                     result.push(student[i]);
                     break;
@@ -814,7 +814,7 @@ const getStudentDetails = async (req, res) => {
         }
         res.status(200).json({ result });
     } catch (err) {
-        res.status(500).json({"message":"error"})
+        res.status(500).json({ "message": "error" })
     }
 }
 
@@ -854,7 +854,7 @@ const studentSignUp = async (req, res) => {
                                             password: hash,
                                             university: uniId,
                                             status: "waitlist",
-                                            program:programId
+                                            program: programId
                                         });
                                         student.save((err) => {
                                             if (err)
@@ -883,9 +883,52 @@ const studentSignUp = async (req, res) => {
     }
 }
 
+const getCoursesOfStudent = async (req, res) => {
+    const { studentId } = req.body;
+    try {
+        const student = await models.Student.findById(studentId).exec();
+        res.status(200).json(student);
+    } catch (error) {
+        res.status(500).json(err);
+    }
+}
 
+const getAssignmentsOfStudent = async (req, res) => {
+    const { studentId } = req.body;
+    try {
 
+        const student = await models.Student.findById(studentId).exec();
+        const courses = [];
+        for (var i = 0; i < student.courses.length; i++) {
+            courses.push(student.courses[i].courseId);
+        }
 
+        const assignments = [];
+
+        for (var i = 0; i < courses.length; i++) {
+            const assignmentCurrent = await models.Assignment.find({ course: courses[i] }).exec();
+            const currentCourse = courses[i];
+            assignments.push({ currentCourse: assignmentCurrent })
+        }
+
+        res.status(200).json({
+            assignments
+        })
+
+    } catch (err) {
+        res.status(500).json(err)
+    }
+}
+
+const getQuestionsFromAssignmentForStudent = async (req, res) => {
+    const { studentId, assignmentId } = req.body;
+    try {
+        const questions = await model.Question.find({ assignment: assignmentId }).exec();
+        res.status(200).json(questions);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
 
 
 
@@ -1138,7 +1181,7 @@ const rejectStudentWaitlist = async (req, res) => {
         });
     }
     catch (error) {
-        
+
         res.status(500).json(error);
     }
 }
@@ -1507,7 +1550,7 @@ const submitStudent = async (req, res) => {
         const questionSave = await question.save();
 
         console.log("6.Saved to Question DB");
-        
+
 
         if (plagarized) {
             const submissionByIdUpdate = await models.Submission.findByIdAndUpdate(submissionToDB._id, { plagarized: true }).exec();
@@ -1925,7 +1968,7 @@ const showQuestionsToStudent = async (req, res) => {
 }
 
 const getStudentPerformance = async (req, res) => {
-            let studentDataMap = new Map();
+    let studentDataMap = new Map();
     const { studentId } = req.body;
     try {
         const student = await models.Student.findById({ _id: studentId }).exec();
@@ -2000,7 +2043,7 @@ const getStudentPerformance = async (req, res) => {
                         break;
                 }
             }
-            
+
         });
         studentDataMap.set("total", studentDataMap.get("easy") + studentDataMap.get("medium") + studentDataMap.get("hard"));
         res.status(200).json(Object.fromEntries(studentDataMap));
@@ -2015,13 +2058,13 @@ const getStudentPerformance = async (req, res) => {
 //     const { submissionId } = req.body;
 //     try {
 //         const submission = await models.Submission.findById({ _id: submissionId }).exec();
-        
+
 //         if (!submission) {
 //             res.status(404).json({ message: "Invalid submission id" });
 //             return;
 //         }
 
-        
+
 
 //     }catch(error){
 //         res.status(500).json(error);
