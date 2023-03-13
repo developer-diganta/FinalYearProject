@@ -23,7 +23,6 @@ import Dashboard from './Components/Teacher/Pages/Dashboard';
 import PreviouCourse from './Components/Teacher/Courses/PreviouCourse';
 import CurrentCourse from './Components/Teacher/Courses/CurrentCourse';
 import CourseOfTeacher from './Components/Teacher/Courses/CourseOfTeacher';
-import CreateQuestionForm from './Components/Teacher/Courses/DifferentOptions/CreateQuestionForm';
 import StudentDashboard from './Components/Student/StudentProfile/StudentDashboard';
 import StudentStatus from './Components/Student/Pages/StudentStatus';
 import StudentLogin from './Components/Student/StudentSignup/StudentLogin';
@@ -43,15 +42,19 @@ import Courses from './Components/Teacher/Courses/Courses';
 import CourseCreateForm from './Components/Teacher/Courses/CourseCreateForm';
 import ErrorPage from './Components/Error/ErrorPage';
 import IndividualCourse from './Components/Teacher/Courses/IndividualCourse';
+import CreateAssignmentForm from './Components/Teacher/Courses/IndividualCourse/CreateAssignmentForm';
+import CreateQuestionForm from './Components/Teacher/Courses/IndividualCourse/CreateQuestionForm';
+import Question from './Components/Teacher/Courses/IndividualCourse/Question';
 
 function App() {
   return (
     <div className="App">
           <Routes>
-            {/* Landing page */}
+            {/* ******************** Common routes ***************************************************************/}
             <Route path='/' element={<LandingPage />} />
             <Route path='/signupoptions' element={<SignupOption />} />
-            {/* Purchase product university */}
+
+            {/* ******************** University routes ***************************************************************/}
             <Route path='/university' element={<UniversityLanding />} />
             <Route path='/university/signup' element={<UniversitySignup />} />
             <Route path='/university/login' element={<UniversityLogin />} />
@@ -69,7 +72,7 @@ function App() {
             <Route path='/university/course/:courseId' element={<Course />} />
             {/* <Route path='/university/addcourse' element={<CourseCreateForm />} /> */}
             
-            {/* Teacher routes */}
+            {/* ******************** Teacher routes ***************************************************************/}
             <Route path='/teacher/signup' element={<TeacherSignup />} />
             <Route path='/teacher/login' element={<TeacherLogin />} />
             <Route path='/teacher/status' element={<Status />} />
@@ -82,10 +85,11 @@ function App() {
             <Route path='/teacher/createquestion' element={<CreateQuestionForm />} />
             <Route path='/teacher/question/questiondetail' element={<QuestionDetail />} />
             <Route path='/teacher/cretatecourse' element={<CourseCreateForm />} />
-
+            <Route path='/teacher/courses/createassignment' element={<CreateAssignmentForm />} />
+            <Route path='/teacher/courses/assignment/:assignment' element={<Question />} />
             <Route path='/mailverification/:message' element={<Verificatin />} />
 
-            {/* Signup, signin and mail-verification */}
+            {/* ******************** Student routes ***************************************************************/}
             <Route path='/student/signup' element={<StudentSignup />} />
             {/* <Route path='/student/path' element={<Path />} /> */}
             <Route path='/student/dashboard' element={<StudentDashboard />} />
@@ -97,7 +101,7 @@ function App() {
             <Route path='/student/currentcourse/questions' element={<StudentCourse />} />
             <Route path='/student/question/solve' element={<Codeeditor />} />
             
-            {/* for error page */}
+            {/* ******************** Error routes ***************************************************************/}
             <Route path='*' element={<ErrorPage />} />
           </Routes>
     </div>

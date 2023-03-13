@@ -47,24 +47,42 @@ function Courses() {
     //     },
     // ]
 
+    async function formateDate(){
+        
+        return '3 Mar, 2023';
+    }
+
+    const options = {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+    };
+
     async function getPreviousCourses(){
-        const instance = axios.create({
-            headers: {
-                'x-auth-token': teacherToken,
-            },
-        });
-        const all__courses = await instance.post(backend_url + `/teacher/course/getCourses`, {teacherId: teacherId, email: teacher__email});
-        console.log(all__courses);
-        // const previous__courses = all__courses.data.filter((course) => {
-        //     const today = new Date();
-        //     const course__date = new Date(course.courseStartDate);
-        //     console.log(today, course__date);
-        //     const diffTime = Math.abs(today - course__date);
-        //     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        //     console.log(diffDays); 
-        //     return course.expectedCourseDuration >= diffDays;
-        // });
-        setPreviousCourses(all__courses.data);
+        try {
+            const instance = axios.create({
+                headers: {
+                    'x-auth-token': teacherToken,
+                },
+            });
+            const all__courses = await instance.post(backend_url + `/teacher/courses/getAll`, {teacherId: teacherId, email: teacher__email});
+            console.log(all__courses.data.courses);
+            // const previous__courses = all__courses.data.filter((course) => {
+            //     const today = new Date();
+            //     const course__date = new Date(course.courseStartDate);
+            //     console.log(today, course__date);
+            //     const diffTime = Math.abs(today - course__date);
+            //     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            //     console.log(diffDays); 
+            //     return course.expectedCourseDuration >= diffDays;
+            // });
+            const dateObj = new Date(all__courses);
+
+            setPreviousCourses(all__courses.data.courses);
+        } catch (error) {
+            console.log(error);
+            alert('Something went wrong');
+        }
     }
     useState(() => {
         getPreviousCourses();
@@ -90,7 +108,7 @@ function Courses() {
                         <div className={`option__div bg-[#6b7780ff] text-white absolute -left-4 mt-1 z-50 ${!dropDown ? 'hidden' : 'block'}`} >
                             <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Active Courses</div>
                             <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Completed Courses</div>
-                            <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Submission Date</div>
+                            <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Pending Courses</div>
                         </div>
                     </div>
                     <div className='bg-[#6b7780] px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>Create Course <span className='text-lg pl-2'>+</span> </div>
@@ -108,11 +126,13 @@ function Courses() {
                                             borderLeft: "1px solid #9ea7ae",
                                             borderBottom: "1px solid #9ea7ae",
                                         }}>
-                                        <div className="course__title text-lg font-semibold pb-2">
-                                            <h3>{course.name}</h3>
+                                        <div className="course__title flex justify-between items-center text-lg font-semibold pb-2">
+                                            <h3 className='capitalize'>{course.name}</h3>
+                                            <p className='text-xs'>{new Date(course.courseStartDate).toLocaleDateString("en-US", options)}</p>
                                         </div>
-                                        <div className="course__description text-sm">
-                                            <p>{course.description}</p>
+                                        <div className="course__description text-sm flex justify-between gap-4 items-center">
+                                            <p className='capitalize course__description__p'>{course.description}</p>
+                                            <p className='course__status'>{Math.ceil(new Date() - new Date(course.courseStartDate))/(1000 * 3600 * 24) > course.expectedCourseDuration ? 'Completed' : 'Ongoing'}</p>
                                         </div>
                                     </div>
                                     <div className='w-2/12 bg-[#bac0c5] p-3 flex justify-center items-center text-white font-bold text-xl cursor-pointer'

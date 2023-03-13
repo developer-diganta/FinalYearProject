@@ -12,23 +12,33 @@ function UniversityStudents() {
     const[students, setStudents] = useState();
     const university__id = localStorage.getItem('university__id');
     const university__token = localStorage.getItem('signup_token');
+    const university__email = localStorage.getItem('university__email');
     const navigate = useNavigate();
   
-    useEffect(() => {
-        async function getAllStudents(){
-          const instance = axios.create({
-            headers: {
-              'x-auth-token': university__token
-            }
-          });
-    
-          console.log("jgfwjegfkw", backend_url);
-          const res = await instance.post(backend_url + '/university/student', {universityId: university__id});
-          console.log(res);
-          setStudents(res.data.filter((item,index)=>{
-              return item.status === 'active';
-          }));
+    async function getAllStudents(){
+      try {
+        const instance = axios.create({
+          headers: {
+            'x-auth-token': university__token
+          }
+        });
+  
+        console.log("jgfwjegfkw", backend_url);
+        const res = await instance.post(backend_url + '/university/student', {universityId: university__id, email: university__email});
+        console.log(res);
+        setStudents(res.data.filter((item,index)=>{
+            return item.status === 'active';
+        }));
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong");
+        if(error.response.status === 401){
+          // navigate('/university/login');
         }
+      }
+    }
+
+    useEffect(() => {
         getAllStudents();
       }, []);
 

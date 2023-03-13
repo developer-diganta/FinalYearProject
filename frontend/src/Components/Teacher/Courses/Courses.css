@@ -100,7 +100,7 @@
     display: flex;
     align-items: center;
     justify-content: start;
-    margin: 10px 20px;
+    margin: 10px 36px 10px 0px;
 }
 
 canvas{
@@ -160,4 +160,19 @@ textarea{
 
 .compilers:active{
     background-color: #9900ff;
+}
+
+.course__description__p{
+    white-space: nowrap; /* prevent line breaks */
+    overflow: hidden; /* hide overflowing content */
+    text-overflow: ellipsis; /* add ellipsis at the end */
+    max-width: 200px; /* set the maximum width */
+}
+
+.course__status{
+    font-family: sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #39B7F5;
+    letter-spacing: 1px;
 }

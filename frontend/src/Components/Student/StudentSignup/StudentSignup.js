@@ -15,7 +15,11 @@ function StudentSignup() {
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
   const[university, setUniversity] = useState();
+  const[department, setDepartment] = useState();
+  const[program, setProgram] = useState();
   const[allUniversity, setAllUniversity] = useState([]);
+  const[allDepartments, setAllDepartments] = useState([]);
+  const[allprograms, setAllPrograms] = useState([]);
 
   const navigate = useNavigate();
 
@@ -32,6 +36,28 @@ function StudentSignup() {
     }
   }
 
+  async function getUniversityDepartment(unId){
+    console.log("jgfwjegfkw", backend_url);
+    const res = await axios.post(backend_url + '/university/details', {universityId: unId});
+    console.log(res);
+    let deptArray = [];
+    res.data.universityDetails.schools.map((item) => item.departments.map((item) => deptArray.push(item)));
+    console.log(deptArray);
+    setAllDepartments(deptArray);
+  }
+
+  async function getUniversityProgram(programId){
+    // console.log("jgfwjegfkw", backend_url);
+    // const res = await axios.post(backend_url + '/university/details', {universityId: unId});
+    // console.log(res);
+    // let deptArray = [];
+    // // res.data.universityDetails.schools.map((item) => item.departments.map((item) => item.));
+    // console.log(deptArray);
+    console.log(allDepartments);
+    allDepartments.map((item) => item.id === programId ? setAllPrograms(item.programs) : null);
+    // setAllPrograms(program.departments);
+  }
+
   useEffect(() => {
     async function getAllUniversity(){
       console.log("jgfwjegfkw", backend_url);
@@ -43,7 +69,7 @@ function StudentSignup() {
   }, []);
 
   return (
-    <div className="signup">
+    <div className="signup" style={{minHeight: "110vh"}}>
       <LandingHeader />
         <div className="signup flex justify-center">
         <div className="student_signup_left w-1/2 lg:w-0 flex items-center justify-center">
@@ -77,7 +103,10 @@ function StudentSignup() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
               </svg>
-              <select className='w-full' name="university" id="university" onChange={(ele) => setUniversity(ele.target.value)}>
+              <select className='w-full' name="university" id="university" onChange={(ele) => {
+                setUniversity(ele.target.value)
+                getUniversityDepartment(ele.target.value)
+              }}>
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your university</option>
                 {/* <option value="IIT Bombay">IIT Bombay</option>
                 <option value="IIT Delhi">IIT Delhi</option>
@@ -94,6 +123,33 @@ function StudentSignup() {
                 }
               </select>
             </div>
+
+
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
+              <select className='w-full' name="university" id="university" onChange={(ele) => {
+                setDepartment(ele.target.value)
+                getUniversityProgram(ele.target.value)
+              }}>
+                <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your Department</option>
+                {
+                    allDepartments ? allDepartments.map((uni, index) => {
+                        return <option key={index} value={uni.id}>{uni.name}</option>
+                    }) : null
+                }
+              </select>
+            </div>
+
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
+              <select className='w-full' name="university" id="university" onChange={(ele) => setProgram(ele.target.value)}>
+                <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your Program</option>
+                {
+                    allprograms ? allprograms.map((uni, index) => {
+                        return <option key={index} value={uni.id}>{uni.name}</option>
+                    }) : null
+                }
+              </select>
+            </div>
+
               <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
               <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/student/login')}>login</span> </h1></div>
           </form>

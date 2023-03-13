@@ -22,8 +22,6 @@ function Signup() {
           <span><img src="tan.png" alt="" /></span>
           </ResizableBox>
         </div>
-
-
     </div>
   )
 }

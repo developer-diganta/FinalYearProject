@@ -17,12 +17,14 @@ function CreateQuestionForm() {
     const[sampleInput, setsampleInput] = useState();
     const[sampleOutput, setsampleOutput] = useState();
     const[tags, setTags] = useState([]);
+    const[score, setScore] = useState();
     const teacherToken = localStorage.getItem('teacher__token');
     const teacherId = localStorage.getItem('teacher__id');
     const location = useLocation();
     const navigate = useNavigate();
     const[base64In, setBase64In] = useState(null);
     const[base64Out, setBase64Out] = useState(null);
+    console.log(location);
 
     function submitValue(e){
         const value = e.target.value;
@@ -38,32 +40,38 @@ function CreateQuestionForm() {
         console.log(inputFile, base64In);
         console.log(outputFile, base64Out);
         // console.log(questionTitle, questionDescription, questionDifficulty, inputFile, outputFile, tags);
-
-        const instance = axios.create({
-            headers: {
-                'x-auth-token': teacherToken,
-            },
-        });
-        const question__create__response = await instance.post(backend_url + '/teacher/course/addQuestion', {
-            courseId: location.state._id,
-            universityId: location.state.university,
-            teacherId: teacherId,
-            title: questionTitle,
-            question: questionDescription,
-            input: base64In,
-            output: base64Out,
-            sampleInput: sampleInput,
-            sampleOutput: sampleOutput,
-            difficulty: questionDifficulty,
-            category: 'coding',
-            tags: tags,
-            datePublished: new Date(),
-        });
-        console.log(question__create__response);
-        if(question__create__response.data.message === 'Question added successfully'){
-            // alert('Question added successfully');
-            alert('Question added successfully');
-            navigate('/teacher/dashboard');
+        try {
+            const instance = axios.create({
+                headers: {
+                    'x-auth-token': teacherToken,
+                },
+            });
+            const question__create__response = await instance.post(backend_url + '/teacher/assignment/addQuestion', {
+                courseId: location.state.course._id,
+                universityId: location.state.course.university,
+                assignmentId: location.state.assignment._id,
+                teacherId: teacherId,
+                title: questionTitle,
+                question: questionDescription,
+                input: base64In,
+                output: base64Out,
+                sampleInput: sampleInput,
+                sampleOutput: sampleOutput,
+                difficulty: questionDifficulty,
+                category: 'coding',
+                tags: tags,
+                datePublished: new Date(),
+                score: score
+            });
+            console.log(question__create__response);
+            if(question__create__response.status === 200){
+                // alert('Question added successfully');
+                alert('Question added successfully');
+                navigate('/teacher/courses/assignment/' + location.state.assignment.name, {state: location.state});
+            }
+        } catch (error) {
+            console.log(error);
+            alert('Something went wrong. Please try again.');
         }
     }
 
@@ -73,6 +81,21 @@ function CreateQuestionForm() {
                 <SidebarTEacher />
             </div>
             <div className={`dashboard_1 bg-[#F6F6F6] px-4 ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
+            <div className="question__secondary__navbar flex items-center max-w-[95%] mx-auto my-4">
+              <div className='flex items-center cursor-pointer' style={{color: "#6b7780"}} onClick={() => navigate('/teacher/courses/assignment/' + location.state.assignment.name, {state: location.state})}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
+                </svg>
+                <p className='course__name__in__question pl-2' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>
+                  back
+                </p>
+              </div>
+              <div className='mx-auto text-lg font-bold text-[#6b7780]'>Create Question</div>
+              {/* <div className='bg-[#6b7780] px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} 
+              >Add Question <span className='text-lg pl-2'>+</span> </div> */}
+            </div>
+            <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
+
                 <form className='flex flex-col bg-white w-4/5 py-8 px-6 rounded-md shadow-lg mt-4 mb-10 mx-auto' action="" onSubmit={getFormDetail}>
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Question Title</p>
                     <input className='question__title' type="text" onChange={(event) => setQuestionTitle(event.target.value)} />
@@ -133,6 +156,8 @@ function CreateQuestionForm() {
                             }} />
                         </div>
                     </div>
+                    <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Score</p>
+                    <input className='question__title' type="text" onChange={(event) => setScore(event.target.value)} />
                     {/* checkbox for tags of question */}
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Tags</p>
                     <div className='tags__checkbox grid grid-cols-3'>
@@ -161,7 +186,7 @@ function CreateQuestionForm() {
                             <label htmlFor="">Tree</label>
                         </div>
                     </div>
-                    <button type='submit'>Submit</button>
+                    <button type='submit' className='bg-[#6b7780] rounded-lg w-32 py-1 text-base text-white font-semibold mt-4 mx-auto' style={{letterSpacing: "1px"}}>Submit</button>
                 </form>
             </div>
         </div>

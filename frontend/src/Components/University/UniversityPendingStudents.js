@@ -13,19 +13,30 @@ function UniversityPendingStudents() {
   const[students, setStudents] = useState();
   const university__id = localStorage.getItem('university__id');
   const university__token = localStorage.getItem('signup_token');
+  const university__email = localStorage.getItem('university__email');
   const navigate = useNavigate();
 
   async function acceptStudent(studentId){
-    
-    const instance = axios.create({
-      headers: {
-        'x-auth-token': university__token
+    try {
+      const instance = axios.create({
+        headers: {
+          'x-auth-token': university__token
+        }
+      });
+      console.log("*******************************.", studentId)
+      const res = await instance.post(backend_url + '/university/student/waitlist/accept/byId', {studentId: studentId, universityId: university__id, email: university__email});
+      console.log(res);
+      alert(res.data.message);
+      if(res.status === 200){
+        navigate('/university/students')
+      } 
+    } catch (error) {
+      console.log(error);
+      alert('something went wrong');
+      if(error.response.status === 401){
+        // navigate('/university/login');
       }
-    });
-    console.log("*******************************.", studentId)
-    const res = await instance.post(backend_url + '/university/student/waitlist/accept/' + studentId, {studentId: studentId, universityId: university__id});
-    console.log(res);
-    alert(res.data.message);
+    }
   }
 
   async function rejectStudent(studentId){
@@ -40,8 +51,8 @@ function UniversityPendingStudents() {
     alert(res.data.message);
   }
 
-  useEffect(() => {
-    async function getAllStudents(){
+  async function getAllStudents(){
+    try {
       const instance = axios.create({
         headers: {
           'x-auth-token': university__token
@@ -49,10 +60,21 @@ function UniversityPendingStudents() {
       });
 
       console.log("jgfwjegfkw", backend_url);
-      const res = await instance.post(backend_url + '/university/student/waitlist', {universityId: university__id});
+      const res = await instance.post(backend_url + '/university/student', {universityId: university__id, email: university__email});
       console.log(res);
-      setStudents(res.data);
+      setStudents(res.data.filter((item,index)=>{
+          return item.status === 'waitlist'
+      }));
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong");
+      if(error.response.status === 401){
+        // navigate('/university/login');
+      }
     }
+  }
+
+  useEffect(() => {
     getAllStudents();
   }, []);
 
