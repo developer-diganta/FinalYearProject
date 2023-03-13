@@ -37,7 +37,7 @@ module.exports = {
       error: "#FA432E",
       lightGreen: "#A6F0A0",
       lightRed: "#F0ADA0",
-      divider: "#EFEFF0",
+      divider: "#e1e4e6",
       formBackground: "#F6F6F6"
     }
   },

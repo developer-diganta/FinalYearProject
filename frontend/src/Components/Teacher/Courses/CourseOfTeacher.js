@@ -4,7 +4,6 @@ import SidebarTEacher from '../Sidebar/SidebarTEacher';
 import { MdDoubleArrow } from 'react-icons/md';
 import CourseOptions from './CourseOptions';
 import { useParams, useLocation } from 'react-router-dom';
-import Question from './DifferentOptions/Question';
 import Student from './DifferentOptions/Student';
 import Syllabus from './DifferentOptions/Syllabus';
 import axios from 'axios';
@@ -48,8 +47,8 @@ function Course() {
               {
                 (() => {
                   switch (options) {
-                    case 'questions':
-                      return <Question coursestate={location.state.coursestate} courseDetail={location.state.course} />;
+                    // case 'questions':
+                      // return <Question coursestate={location.state.coursestate} courseDetail={location.state.course} />;
                     case 'students':
                       return <Student />;
                     case 'syllabus':
