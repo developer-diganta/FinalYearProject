@@ -21,14 +21,17 @@ function UniversityLogin() {
 
   async function getFormValue(event){
     event.preventDefault();
-    console.log("782372532593529");
-    const unv_signup_res = await axios.post(backend_url + '/university/signin', {email, password});
-    console.log("************************************", unv_signup_res);
-    if(unv_signup_res.data.token && unv_signup_res.data._id){
-      localStorage.setItem('signup_token', unv_signup_res.data.token);
-      localStorage.setItem('university__id', unv_signup_res.data._id);
-      // dispatch(universitySignup(true));
-      navigate('/university/dashboard');
+    try {
+      const unv_signup_res = await axios.post(backend_url + '/university/signin', {email, password});
+      console.log("************************************", unv_signup_res);
+      if(unv_signup_res.data.token && unv_signup_res.data._id){
+        localStorage.setItem('signup_token', unv_signup_res.data.token);
+        localStorage.setItem('university__id', unv_signup_res.data._id);
+        // dispatch(universitySignup(true));
+        navigate('/university/dashboard');
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

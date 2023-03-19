@@ -12,8 +12,8 @@ import './Courses.css';
 import { MdOutlineArrowForwardIos } from 'react-icons/md';
 
 function Courses() {
-  const[previousCourses, setPreviousCourses] = useState([]);
-  const[dropDown, setDropDown] = useState(false);
+    const[previousCourses, setPreviousCourses] = useState([]);
+    const[dropDown, setDropDown] = useState(false);
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const teacherId = localStorage.getItem('teacher__id');
     const teacherToken = localStorage.getItem('teacher__token');
@@ -46,11 +46,6 @@ function Courses() {
     //         status: 'pending'
     //     },
     // ]
-
-    async function formateDate(){
-        
-        return '3 Mar, 2023';
-    }
 
     const options = {
     day: "numeric",

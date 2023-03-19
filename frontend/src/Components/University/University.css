@@ -72,3 +72,8 @@ details[open]{
     }
 }
 
+.active__btn{
+    background-image: linear-gradient(to right top, #7633b7, #7739c7, #7640d9, #7347ea, #6e4ffc);
+    color: #FFF;
+    border: none;
+}

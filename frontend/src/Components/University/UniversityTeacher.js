@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { backend_url } from '../../BackendRoutes';
 import Sidebaruniversity from './Sidebaruniversity/Sidebaruniversity';
+import './University.css';
 
 function UniversityTeacher() {
+  const[btnActive, setBtnActive] = useState(1);
   const[op, setOP] = useState("teacher");
   const[pending, setPending] = useState([]);
   const[teacher, setTeacher] = useState([]);
@@ -78,30 +80,32 @@ function UniversityTeacher() {
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <Sidebaruniversity />
         </div>
-        <div className={`pt-4 pl-6 bg-[#f8f9fa] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen`} style={{float: "right"}}>
-          <div className='flex gap-4'>
-            <h1 className='bg-[#9900ff] w-60 py-2 text-center text-white font-semibold uppercase tracking-wider rounded-full shadow-lg mb-8 md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center' onClick={() => {
+        <div className={`bg-white ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
+          <div className='flex gap-4 bg-[#f7f7f7] items-center justify-center'>
+            <h1 className={`${btnActive === 1 ? 'active__btn' : ''} border-[1px] border-[#6b7780ff] bg-[#dcdcdc] px-4 cursor-pointer py-2 my-4 text-sm text-center text-[#6b7780] font-semibold uppercase tracking-wider rounded-full shadow-xl md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center`} onClick={() => {
               setOP('teacher')
               getAllAcceptedTeachers()
+              setBtnActive(1)
               }}>University Teachers</h1>
-            <h1 className='bg-[#9900ff] w-60 py-2 text-center text-white font-semibold uppercase tracking-wider rounded-full shadow-lg mb-8 md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center md:px-2' onClick={() => {
+            <h1 className={`${btnActive === 2 ? 'active__btn' : ''} border-[1px] border-[#6b7780ff] bg-[#dcdcdc] px-4 cursor-pointer py-2 my-4 text-sm text-center text-[#6b7780] font-semibold uppercase tracking-wider rounded-full shadow-xl md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center md:px-2`} onClick={() => {
               setOP('pending')
               getPendingTeachers()
+              setBtnActive(2)
               }}>Pending Requests</h1>
           </div>
-          <div>
+          <div className='py-4 px-4'>
             {
               (op === 'teacher' ? teacher : pending).map((item, index) => {
                 return (
-                  <div className='flex items-center mb-4 justify-center'>
-                    <div className="index w-10 h-10 bg-[#8e9aaf] flex justify-center items-center text-lg font-semibold rounded-full mr-2 md:hidden">{index+1}</div>
-                    <div className='flex items-center gap-2 bg-[#e9ecef] w-4/5 justify-between pl-2 pr-4 md:flex-col md:pb-2 md:shadow-sm'>
-                      <div className='font-semibold'>
-                        <h4 className='py-2 px-2 cursor-pointer md:text-sm'>{item.name} <span className='pl-2 text-xs text-[#6c757d] md:text-xxs' style={{letterSpacing: "1px"}}>{'@'+item.username}</span></h4>
-                        {/* <h5>{}</h5> */}
+                  <div className='flex items-center mb-4 pl-1 py-1 border-[1px] border-[#6b7780ff] rounded-full shadow-sm'>
+                    <div className="index w-10 h-10 bg-[#8e9aaf] flex justify-center items-center text-lg font-semibold rounded-full md:hidden text-white">{index+1}</div>
+                    <div className='flex items-center gap-2 w-full justify-between pl-2 pr-2 md:flex-col md:pb-2 md:shadow-sm'>
+                      <div className='font-semibold w-1/4'>
+                        <h4 className='py-2 px-2 cursor-pointer md:text-sm'>{item.name}</h4>
                       </div>
-                      <p className='md:text-xs'>{item.email}</p>
-                      <button className='w-2/12 bg-[#9900ff] h-10 text-white' style={{display: op === 'pending' ? "block" : "none"}}
+                      <div className='pl-4 w-1/4 text-xs text-[#6c757d] md:text-xxs font-semibold' style={{letterSpacing: "1px"}}>{'@'+item.username}</div>
+                      <div className='w-1/4'><p className='md:text-xs text-sm font-bold'>{item.email}</p></div>
+                      <button className='w-2/12 bg-[#6b7780] rounded-full h-10 text-white' style={{display: op === 'pending' ? "block" : "none"}}
                         onClick={() => {
                           acceptTeacher(item._id)
                         }}

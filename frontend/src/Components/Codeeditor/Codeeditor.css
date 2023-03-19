@@ -2,10 +2,6 @@
   background-color: #1F1F28;
 }
 
-.editorHead{
-    background-color: #f2f2f2;
-}
-
 .themeSelector:focus{
     outline: none;
 }
@@ -22,10 +18,6 @@
 .submit{
   background-color: #27393b;
   color: #FFF;
-}
-
-.footer{
-  background-color: #f2f2f2;
 }
 
 .box{
@@ -59,22 +51,14 @@
 }
 
 .br{
-  background-color: #f2f2f2;
-  border: 2px solid #d1d5db;
-  padding: 5px 10px;
+  /* background-color: #f2f2f2; */
+  /* border: 2px solid #d1d5db; */
+  /* padding: 5px 10px; */
   cursor: pointer;
 }
 
 .res-header{
   border-bottom: 1px solid #d1d5db;
-}
-
-.divder{
-  max-width: 10px;
-  min-width: 10px;
-  min-height: 100vh;
-  max-height: 102vh;
-  background-color: #d1d5db;
 }
 
 
@@ -111,15 +95,15 @@
   /* height: 100%; */
   /* overflow: hidden; */
   overflow-y: scroll;
-  padding: 22px 20px 80px 20px;
+  padding: 10px 20px 80px 20px;
   background-color: #FFF;
 }
 
 .inner_op{
-  padding: 2px;
+  /* padding: 2px; */
   overflow-y: scroll;
-  max-height: 100vh;
-  width: 100%;
+  max-height: 89vh;
+  /* width: 100%; */
 }
 
 @keyframes slide-down {
@@ -140,26 +124,6 @@
   }
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 .dw{
   background-color: #293462;

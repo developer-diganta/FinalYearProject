@@ -28,7 +28,7 @@ const SidebarTEacher = () => {
     ];
     const [open, setOpen] = useState(true);
     const[smallOpen, setSmallOpen] = useState(false);
-    const[courseOpen, setCourseOpen] = useState(false);
+    // const[courseOpen, setCourseOpen] = useState(false);
     const dispatch = useDispatch();
     const { openClose } = useSelector((state) => state.counter);
     const navigate = useNavigate();

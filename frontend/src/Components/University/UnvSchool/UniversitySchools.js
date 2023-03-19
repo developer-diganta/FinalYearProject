@@ -64,7 +64,7 @@ function UniversitySchools() {
             <div className="schools">
                 {
                     schools?.map((school, i) => (
-                        <div key={i} className='individual__school w-11/12 my-6 mx-auto cursor-pointer flex flex-col gap-2 p-4 shadow-md bg-[#FBFBFB] hover:scale-105 duration-200 hover:bg-[#9667e0] rounded-sm hover:shadow-lg hover:text-white' onClick={() => navigate('/university/school/departments', {state: school})}>
+                        <div key={i} className='individual__school w-11/12 my-6 mx-auto cursor-pointer flex flex-col gap-2 p-4 shadow-md bg-[#FBFBFB] hover:scale-105 duration-200 hover:border-[1px] hover:border-[#6b7780ff] rounded-sm hover:shadow-lg hover: text-[#6b7780ff]' onClick={() => navigate('/university/school/departments', {state: school})}>
                             <h1 className='text-lg font-semibold'>{school?.name}</h1>
                         </div>
                     ))

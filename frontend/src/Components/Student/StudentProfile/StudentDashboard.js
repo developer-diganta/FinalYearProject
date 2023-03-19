@@ -1,12 +1,15 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import StudentHeader from '../Pages/StudentHeader';
 import SidebarStudent from '../Sidebar/SidebarStudent';
 import Calendar from 'react-calendar'
 
 import { AiOutlineClose } from "react-icons/ai";
+import { setUniversityDetail } from '../../../Redux/Counter';
+import axios from 'axios';
+import { backend_url } from '../../../BackendRoutes';
 
 var activity = [
   {
@@ -106,6 +109,12 @@ function StudentDashboard() {
     const[date, setDate] = useState('')
     const[dateClick, setDateClick] = useState(false)
     const { openClose, unvSign } = useSelector((state) => state.counter);
+    const dispatch = useDispatch();
+
+    
+    const student__id = localStorage.getItem('student__id');
+    const student__token = localStorage.getItem('student__token');
+    const student__email = localStorage.getItem('student__email');
 
     function getDayActivity(date) {
         // format date in yyyy-mm-dd format
@@ -122,6 +131,12 @@ function StudentDashboard() {
         setDate([year, month, day].join('-'));
     }
 
+    async function getUniversityDetail() {
+        const student__data = await axios.post(backend_url + '/student/data', {studentId: student__id, email: student__email});
+        localStorage.setItem('university', student__data.data.university);
+    }
+
+
     useEffect(() => {
         var d = new Date();
         var month = '' + (d.getMonth() + 1);
@@ -134,6 +149,7 @@ function StudentDashboard() {
         console.log(activity.filter(item => item.date == [year, month, day].join('-')));
         // console.log(tasks);
         setDate([year, month, day].join('-'));
+        getUniversityDetail()
     }, [])
   return (
     <div className='student__dashboard flex md:block'>
