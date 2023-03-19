@@ -20,8 +20,6 @@ import UniversityStudents from './Components/University/UniversityStudents';
 // import UniversitySchools from './Components/University/UniversitySchools';
 import TeacherLogin from './Components/Teacher/TeacherSignup/TeacherLogin';
 import Dashboard from './Components/Teacher/Pages/Dashboard';
-import PreviouCourse from './Components/Teacher/Courses/PreviouCourse';
-import CurrentCourse from './Components/Teacher/Courses/CurrentCourse';
 import CourseOfTeacher from './Components/Teacher/Courses/CourseOfTeacher';
 import StudentDashboard from './Components/Student/StudentProfile/StudentDashboard';
 import StudentStatus from './Components/Student/Pages/StudentStatus';
@@ -29,8 +27,6 @@ import StudentLogin from './Components/Student/StudentSignup/StudentLogin';
 import UniversityPendingStudents from './Components/University/UniversityPendingStudents';
 import QuestionDetail from './Components/Teacher/Courses/DifferentOptions/QuestionDetail';
 import StudentProfile from './Components/Student/StudentProfile/StudentProfile';
-import StudentPreviousCourse from './Components/Student/Courses/StudentPreviousCourse';
-import StudentCurrentCourse from './Components/Student/Courses/StudentCurrentCourse';
 import StudentCourse from './Components/Student/Courses/StudentCourse';
 import UniversitySchools from './Components/University/UnvSchool/UniversitySchools';
 import UnvAddSchoolForm from './Components/University/UnvSchool/UnvAddSchoolForm';
@@ -45,6 +41,8 @@ import IndividualCourse from './Components/Teacher/Courses/IndividualCourse';
 import CreateAssignmentForm from './Components/Teacher/Courses/IndividualCourse/CreateAssignmentForm';
 import CreateQuestionForm from './Components/Teacher/Courses/IndividualCourse/CreateQuestionForm';
 import Question from './Components/Teacher/Courses/IndividualCourse/Question';
+import StudentIndividualCourse from './Components/Student/Courses/IndividualStudentCourse/StudentIndividualCourse';
+import StudentAssignment from './Components/Student/Courses/IndividualStudentCourse/StudentAssignment';
 
 function App() {
   return (
@@ -91,14 +89,13 @@ function App() {
 
             {/* ******************** Student routes ***************************************************************/}
             <Route path='/student/signup' element={<StudentSignup />} />
-            {/* <Route path='/student/path' element={<Path />} /> */}
             <Route path='/student/dashboard' element={<StudentDashboard />} />
             <Route path='/student/status' element={<StudentStatus />} />
             <Route path='/student/login' element={<StudentLogin />} />
             <Route path='/student/profile' element={<StudentProfile />} />
-            <Route path='/student/previouscourse' element={<StudentPreviousCourse />} />
-            <Route path='/student/currentcourse' element={<StudentCurrentCourse />} />
-            <Route path='/student/currentcourse/questions' element={<StudentCourse />} />
+            <Route path='/student/courses' element={<StudentCourse />} />
+            <Route path='/student/courses/:courseid' element={<StudentIndividualCourse /> } />
+            <Route path='/student/course/assignment' element={<StudentAssignment />} />
             <Route path='/student/question/solve' element={<Codeeditor />} />
             
             {/* ******************** Error routes ***************************************************************/}

@@ -50,11 +50,11 @@ function QDescription({question}) {
         question ?
           <div>
             <div>
-              <h1 className='text-2xl py-2 font-semibold'>{question.title}</h1>
+              <h1 className='text-2xl pb-2 font-semibold'>{question.title}</h1>
             </div>
             <div className='question__difficulty flex items-center gap-2'>
               <p className='text-xs text-[#969898]' style={{letterSpacing: "2px"}}>Diffeculty: </p>
-              <p className={`text-xs ${question.difficulty === 'Easy' ? 'text-[#97D01E]' : question.difficulty === 'Medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} font-semibold`} style={{letterSpacing: "2px"}}>{question.difficulty}</p>
+              <p className={`text-xs uppercase font-bold ${question.difficulty === 'easy' ? 'text-[#97D01E]' : question.difficulty === 'medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} `} style={{letterSpacing: "2px", fontWeight: "800"}}>{question.difficulty}</p>
             </div>
             <div className='divider min-w-[100%] min-h-[1px] bg-[#D1D2D2] my-2'></div>
             <div>

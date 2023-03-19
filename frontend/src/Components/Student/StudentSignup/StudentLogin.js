@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { backend_url } from '../../../BackendRoutes';
+import { setUniversityDetail } from '../../../Redux/Counter';
 import LandingHeader from '../../Landing/LandingHeader'
 
 function StudentLogin() {
@@ -17,7 +18,11 @@ function StudentLogin() {
   async function getFormValue(event){
     event.preventDefault();
     const student__login = await axios.post(backend_url + '/student/signin', {email, password});
-    console.log("************************************", student__login);
+    // console.log("************************************", student__login);
+    const student__data = await axios.post(backend_url + '/student/data', {studentId: student__login.data._id, email: student__login.data.email});
+    console.log("************************************", student__data);
+    dispatch(setUniversityDetail(student__data.data.university));
+    
     if(student__login.data.token && student__login.data._id){
       localStorage.setItem('student__token', student__login.data.token);
       localStorage.setItem('student__id', student__login.data._id);

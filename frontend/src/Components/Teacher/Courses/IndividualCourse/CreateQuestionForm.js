@@ -38,7 +38,7 @@ function CreateQuestionForm() {
     async function getFormDetail(e){
         e.preventDefault();
         console.log(inputFile, base64In);
-        console.log(outputFile, base64Out);
+        console.log(outputFile, base64Out, questionDifficulty);
         // console.log(questionTitle, questionDescription, questionDifficulty, inputFile, outputFile, tags);
         try {
             const instance = axios.create({
@@ -103,7 +103,11 @@ function CreateQuestionForm() {
                     <textarea className='question__description' type="text" onChange={(event) => setQuestionDescription(event.target.value)} />
                     {/* create select for easy, medium and hard */}
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Question Difficulty</p>
-                    <select name="" id="" onChange={(event) => setQuestionDifficulty(event.target.value)}>
+                    <select name="" id="" onChange={(event) => {
+                        console.log(event.target.value);
+                        setQuestionDifficulty(event.target.value)
+                    }}>
+                        <option>Choose diffeculty</option>
                         <option value="easy">Easy</option>
                         <option value="medium">Medium</option>
                         <option value="hard">Hard</option>
@@ -116,6 +120,7 @@ function CreateQuestionForm() {
                                 const reader = new FileReader();
                                 reader.readAsDataURL(event.target.files[0]);
                                 reader.onload = () => {
+                                    console.log(reader.result);
                                     setBase64In(reader.result);
                                 };
                             }} />
