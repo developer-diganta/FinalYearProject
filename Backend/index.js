@@ -33,7 +33,7 @@ app.use(helmet());
 mongoose.connect(url, { useNewUrlParser: true });
 testConnection(url);
 
-app.use(limiter(1, 1));
+//app.use(limiter(1, 1));
 
 // console.log(getRoutes)
 app.use("/", getRoutes);

@@ -56,12 +56,12 @@ const submit = async (req, res) => {
             'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
             'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
         },
-        data: `{
-            "language_id":63,
-            "source_code":"${encoded}",
-            "stdin":"${req.body.sampleInput}",
-            "expected_output":"${req.body.sampleOutput}",
-        }`
+        data: {
+            "source_code": encoded,
+            "language_id": req.body.languageId,
+            "stdin": req.body.sampleInput,
+            "expected_output": req.body.sampleOutput
+        }
     };
 
     axios.request(options).then(function (response) {
@@ -427,7 +427,7 @@ const contractExpiryDetails = async (req, res) => {
 
 
 const getUniversityStudentData = async (req, res) => {
-    const { universityId } = req.body.universityId;
+    const { universityId } = req.body;
     try {
         const university = await models.University.findById(universityId).exec();
         if (!university) {
@@ -660,11 +660,14 @@ const addStudentToCourse = async (req, res) => {
             return;
         }
 
-        const student = await models.Course.findById(studentId).exec();
+        const student = await models.Student.findById(studentId).exec();
         if (!student) {
             res.status(400).json({ message: "Invalid Student Id" });
             return;
         }
+
+
+
 
         student.courses.push({
             course: courseId,
@@ -900,15 +903,22 @@ const getAssignmentsOfStudent = async (req, res) => {
         const student = await models.Student.findById(studentId).exec();
         const courses = [];
         for (var i = 0; i < student.courses.length; i++) {
-            courses.push(student.courses[i].courseId);
+            courses.push(student.courses[i].course);
         }
 
         const assignments = [];
 
         for (var i = 0; i < courses.length; i++) {
             const assignmentCurrent = await models.Assignment.find({ course: courses[i] }).exec();
-            const currentCourse = courses[i];
-            assignments.push({ currentCourse: assignmentCurrent })
+            const currentCourse = courses[i].stringify();
+
+            const obj = {
+
+                course: courses[i],
+                assignment: assignmentCurrent
+            }
+            assignments.push(obj)
+
         }
 
         res.status(200).json({
@@ -923,7 +933,7 @@ const getAssignmentsOfStudent = async (req, res) => {
 const getQuestionsFromAssignmentForStudent = async (req, res) => {
     const { studentId, assignmentId } = req.body;
     try {
-        const questions = await model.Question.find({ assignment: assignmentId }).exec();
+        const questions = await models.Question.find({ assignment: assignmentId }).exec();
         res.status(200).json(questions);
     } catch (err) {
         res.status(500).json(err);
@@ -935,6 +945,113 @@ const getQuestionsFromAssignmentForStudent = async (req, res) => {
 //  --------------------------------------------------------------------------------------------- End Student Controllers --------------------------------------------------------------------------------------------- //
 
 
+
+
+
+// ---------------------------------------------------------------------------------------------Moocs Controllers --------------------------------------------------------------------------------------------- //
+
+const addMoocs = async (req, res) => {
+    const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus } = req.body;
+    try {
+        const university = await models.University.findById(universityId).exec();
+        if (!university) {
+            res.status(400).json({ message: "Invalid University Id" });
+            return;
+        }
+
+        const program = await models.Program.findById(programId).exec();
+        if (!program) {
+            res.status(400).json({ message: "Invalid Program Id" });
+            return;
+        }
+
+        const teacher = await models.Teacher.findById(teacherId).exec();
+        if (!teacher) {
+            res.status(400).json({ message: "Invalid Teacher Id" });
+            return;
+        }
+
+
+        const moocs = new models.Moocs({
+            name: name,
+            description: description,
+            courseCode: courseCode,
+            courseType: courseType,
+            expectedCourseDuration: expectedCourseDuration,
+            courseCompilers: courseCompilers,
+            courseStartDate: courseStartDate,
+            program: programId,
+            university: universityId,
+            teacher: teacherId,
+            approvalStatus: "pending"
+        });
+
+        const savedMoocs = await moocs.save();
+        res.status(200).json({ message: "Public Lab added successfully" });
+
+    } catch (err) {
+        res.status(500).json({ "message": "internal server error" })
+    }
+}
+
+
+const approveMoocs = async (req, res) => {
+    const { moocsId } = req.body;
+    try {
+        const moocs = await models.Moocs.findById(moocsId).exec();
+        if (!moocs.length) {
+            res.status(404).json({ "message": "No Moocs Found" })
+        }
+
+        moocs.approvalStatus = "verified";
+        await moocs.save();
+        res.status(200).json({ message: "Public Lab verified successfully" });
+
+    } catch (error) {
+        res.status(422).json(error);
+    }
+
+}
+
+
+const rejectMoocs = async (req, res) => {
+    const { moocsId } = req.body;
+    try {
+        const moocs = await models.Moocs.findById(moocsId).exec();
+        if (!moocs.length) {
+            res.status(404).json({ "message": "No Moocs Found" })
+        }
+
+        moocs.approvalStatus = "rejected";
+        await moocs.save();
+        res.status(200).json({ message: "Public Lab rejected successfully" });
+
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const getMoocs = async (req, res) => {
+    try {
+        const moocs = await models.Moocs.find({}).exec();
+        res.status(200).json({ moocs });
+    } catch (err) {
+        res.status(500).json({ err });
+    }
+}
+
+const getMoocsById = async (req, res) => {
+    try {
+        const moocs = await models.Moocs.findById(req.body.moocsId).exec();
+        res.status(200).json({ moocs });
+    } catch (err) {
+        res.status(500).json({ err });
+    }
+}
+
+
+
+// -------------------------------------------------------------------------------------------
 
 const adminSignIn = async (req, res) => {
     const { username, password } = req.body;
@@ -1523,6 +1640,7 @@ const submitStudent = async (req, res) => {
             plagarized: false
         });
 
+
         const submissionToDB = await newSubmission.save();
         console.log("4.Saved to Submission DB");
 
@@ -1535,7 +1653,7 @@ const submitStudent = async (req, res) => {
         }
 
         const getSubmissionData = await models.Submission.find({ question: question_id }).exec();
-
+        console.log(getSubmissionData)
         console.log("5.Retrieved submission data from DB");
 
         const checker = new PlagiarismChecker(getSubmissionData, student_id);
@@ -2157,5 +2275,11 @@ module.exports = {
     getStudentDetails,
     getCoursesOfStudent,
     getAssignmentsOfStudent,
-    getQuestionsFromAssignmentForStudent
+    getQuestionsFromAssignmentForStudent,
+    //moocs 
+    addMoocs,
+    approveMoocs,
+    rejectMoocs,
+    getMoocs,
+    getMoocsById
 };

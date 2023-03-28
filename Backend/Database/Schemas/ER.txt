@@ -1,0 +1,80 @@
+    +---------------+               +---------------+
+    |   University  |               |    Question   |
+    +---------------+               +---------------+
+    |  _id          |               |  _id          |
+    |  name         |1--------1..*  |  title        |
+    |  password     |               |  question     |
+    |  phone        |               |  course       |
+    |  email        |               |  solution     |
+    |  contract     |               |  solutionDesc |
+    +---------------+               |  input        |
+                                     |  output       |
+                                     |  sampleInput  |
+                                     |  sampleOutput |
+                                     |  difficulty   |
+                                     |  category     |
+                                     |  tags         |
+                                     |  dateCreated  |
+                                     |  dateModified |
+                                     |  datePublished|
+                                     |  studentsAttempted |
+                                     |  studentsCorrect   |
+                                     |  studentsIncorrect |
+                                     |  studentsUnattempted |
+                                     |  plagiarismAnalysis |
+                                     |  assignment   |
+                                     |  score        |
+                                     +---------------+
+
+    +---------------+               +---------------+
+    |    Teacher    |1--------1..*  |     Course    |
+    +---------------+               +---------------+
+    |  _id          |               |  _id          |
+    |  name         |1--------1..*  |  university   |
+    |  username     |               |  program      |
+    |  teacher_id   |               |  name         |
+    |  email        |               |  description  |
+    |  password     |               |  courseCode   |
+    |  university   |               |  courseType   |
+    |  phone        |               |  expectedCourseDuration |
+    |  department   |               |  courseCompilers |
+    |  status       |               |  courseStartDate |
+    |  dept         |               |  approvalStatus |
+    |  courses      |               |  teacher      |
+    +---------------+               +---------------+
+
+    +---------------+               +---------------+
+    |    Student    |1--------1..*  |  Submission   |
+    +---------------+               +---------------+
+    |  _id          |               |  _id          |
+    |  name         |1--------1..*  |  student      |
+    |  age          |               |  question     |
+    |  university   |               |  code         |
+    |  password     |               |  language     |
+    |  status       |               |  status       |
+    |  registrationNumber |         |  dateCreated  |
+    |  rollNumber   |               |  plagiarism   |
+    |  program      |               +---------------+
+    |  gender       |
+    |  courses      |
+    |  email        |
+    |  submissions  |
+    +---------------+
+
+    +---------------+               +---------------+
+    |   Department   |1--------1..*  |     School    |
+    +---------------+               +---------------+
+    |  _id          |               |  _id          |
+    |  name         |1--------1..*  |  name         |
+    |  school       |               |  university   |
+    |  university   |               +---------------+
+    +---------------+
+
+    +---------------+
+    |    Program    |
+    +---------------+
+    |  _id          |
+    |  name         |
+    |  department   |
+    |  university   |
+    +---------------+

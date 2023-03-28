@@ -12,6 +12,8 @@ class PlagiarismChecker {
       const scores = [];
       // console.log({ submission })
       for (const compareSubmission of this.submissions) {
+        console.log(compareSubmission)
+        console.log(compareSubmission.student.toString())
         // console.log({check:compareSubmission.student.toString() === this.studentId.toString()})
         if (compareSubmission.student.toString() === this.studentId.toString()) {
           continue;
