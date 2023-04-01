@@ -29,6 +29,7 @@ function UniversityTeacher() {
   // ]
   const token = localStorage.getItem('signup_token');
   const unv__id = localStorage.getItem('university__id');
+  const unv__email = localStorage.getItem('university__email');
   // const pending = [{
   //     name: "John Doe",
   //     email: "Jhon@gmail.com",
@@ -56,8 +57,9 @@ function UniversityTeacher() {
     });
     const unv__id = localStorage.getItem('university__id');
     console.log(teacher__id, unv__id);
-    const teacher__acceptance = await instance.post(backend_url + '/university/teacher/waitlist/accept/' + teacher__id, {teacherId: teacher__id, universityId: unv__id});
+    const teacher__acceptance = await instance.post(backend_url + '/university/teacher/waitlist/accept/' + teacher__id, {teacherId: teacher__id, universityId: unv__id, email: unv__email});
     console.log("teacher__acceptance", teacher__acceptance);
+    alert(teacher__acceptance.data.message);
     getPendingTeachers();
   }
 

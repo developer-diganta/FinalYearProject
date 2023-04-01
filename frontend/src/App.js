@@ -43,6 +43,7 @@ import CreateQuestionForm from './Components/Teacher/Courses/IndividualCourse/Cr
 import Question from './Components/Teacher/Courses/IndividualCourse/Question';
 import StudentIndividualCourse from './Components/Student/Courses/IndividualStudentCourse/StudentIndividualCourse';
 import StudentAssignment from './Components/Student/Courses/IndividualStudentCourse/StudentAssignment';
+import PublicCourses from './Components/PublicCourses/PublicCourses';
 
 function App() {
   return (
@@ -97,7 +98,10 @@ function App() {
             <Route path='/student/courses/:courseid' element={<StudentIndividualCourse /> } />
             <Route path='/student/course/assignment' element={<StudentAssignment />} />
             <Route path='/student/question/solve' element={<Codeeditor />} />
-            
+
+            {/* ******************** Public courses routes ***************************************************************/}
+            <Route path='/publiccourses' element={<PublicCourses />} />
+
             {/* ******************** Error routes ***************************************************************/}
             <Route path='*' element={<ErrorPage />} />
           </Routes>
