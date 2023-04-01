@@ -28,10 +28,6 @@ function CourseCreateForm() {
 
     async function setNewCourse(event){
         event.preventDefault();
-        
-
-
-
         console.log(name, description, courseType, startDate, endDate, compilers);
         const date1 = new Date(startDate);
         const date2 = new Date(endDate);
@@ -129,7 +125,12 @@ function CourseCreateForm() {
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course description</p>
                 <textarea className='course__description mb-8 h-28 shadow-sm' type="text" onChange={(event) => setDescription(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>course type</p>
-                <input className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)} />
+                {/* <input className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)} /> */}
+                <select className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)}>
+                    <option>Choose course type</option>
+                    <option value="public">Public Course</option>
+                    <option value="private">Private Course</option>
+                </select>
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>course code</p>
                 <input className='course__code mb-8 shadow-sm' type="text" onChange={(event) => setCourseCode(event.target.value)} />
                 {/* <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Schools</p>
@@ -150,7 +151,7 @@ function CourseCreateForm() {
                 </select> */}
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Programme</p>
                 <select className='course__department mb-8 shadow-sm' type="text" onChange={(event) => setProgramme(event.target.value)}>
-                    <option value="cse">CSE</option>
+                    <option value="">Choose programme</option>
                     {
                         department?.map((dept) => (
                             <option key={dept.id} value={dept.id}>{dept.name}</option>

@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { backend_url } from '../../../../BackendRoutes';
 import SidebarStudent from '../../Sidebar/SidebarStudent';
+import { BiCheck } from 'react-icons/bi';
+import '../StudentCourse.css';
 
 function StudentAssignment() {
     const[questions, setQuestions] = useState([]);
@@ -22,20 +24,34 @@ function StudentAssignment() {
     const navigate = useNavigate();
 
     async function getQuestions(){
-        try {
-            const instance = axios.create({
-                headers: {
-                    'x-auth-token': student__token,
-                },
-            });
-            const all__courses = await instance.post(backend_url + `/student/questions`, {studentId: student__id, assignmentId: location.state.assignment._id});
-            console.log(all__courses);
-            setQuestions(all__courses.data);
-          } catch (error) {
-              console.log(error);
-              alert('Something went wrong');
-          }
+      try {
+          const instance = axios.create({
+              headers: {
+                  'x-auth-token': student__token,
+              },
+          });
+          const all__courses = await instance.post(backend_url + `/student/questions`, {studentId: student__id, assignmentId: location.state.assignment._id});
+          console.log(all__courses);
+          setQuestions(all__courses.data);
+        } catch (error) {
+            console.log(error);
+            alert('Something went wrong');
       }
+    }
+
+    function getQuestionStatus(arr){
+      let val = '';
+      console.log(arr);
+      console.log(student__id);
+      for(let i=0; i<arr.length; i++){
+        console.log(arr[i]);
+        if(arr[i] === student__id){
+          return <BiCheck style={{color: "#06cf9c", fontWeight: "600", fontSize: "16px"}}/>;
+        }
+      }
+      return val;
+    }
+
       useState(() => {
           getQuestions();
       }, [])
@@ -68,12 +84,12 @@ function StudentAssignment() {
                 {
                   questions ? questions.map((question, index) => {
                     return (
-                        <div className='question bg-white my-6 py-3 px-4 flex justify-between items-end rounded-sm shadow-md cursor-pointer border-[1px] border-[#97a0a6] hover:bg-[#f0f1f2] duration-150' 
+                        <div className='question bg-white my-6 gap-8 py-3 px-4 flex justify-between items-center rounded-sm shadow-md cursor-pointer border-[1px] border-[#97a0a6] hover:bg-[#f0f1f2] duration-150' 
                         onClick={() => navigate('/student/question/solve', {state: {question, courseDetail: location.state.course, assignmentDetail: location.state.assignment}})}
                         >
-                        <div className='flex items-center gap-4'>
+                        <div className='flex items-center gap-4 w-5/6'>
                           <div className='question__title'>
-                            <h3 className='text-base text-[#606b73] font-semibold pb-1' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.question}</h3>
+                            <h3 className='question__p text-base text-[#606b73] font-semibold pb-1' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.question}</h3>
                           </div>
                           <div className='question__difficulty flex items-center'>
                             <p className='text-sm font-bold' style={{fontSize: "16px", color: "#97a0a6"}}>&#91;</p>
@@ -81,6 +97,7 @@ function StudentAssignment() {
                             <p className='text-sm font-bold' style={{fontSize: "16px", color: "#97a0a6"}}>&#93;</p>
                           </div>
                         </div>
+                        <div className='w-1/6 flex justify-end'>{getQuestionStatus(question.studentsAttempted)}</div>
                       </div>
                     )
                   })
