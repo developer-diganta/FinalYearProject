@@ -1043,9 +1043,132 @@ const getMoocs = async (req, res) => {
 const getMoocsById = async (req, res) => {
     try {
         const moocs = await models.Moocs.findById(req.body.moocsId).exec();
-        res.status(200).json({ moocs });
+        const moocsResponse = moocs.filter((mooc) => mooc.approvalStatus === 'verified');
+        res.status(200).json({ moocsResponse });
     } catch (err) {
         res.status(500).json({ err });
+    }
+}
+
+const getMoocsOfStudent = async (req, res) => {
+    try {
+
+        const { studentId } = req.body;
+        const student = await models.Student.findById(studentId).exec();
+        const moocsList = student.moocs;
+        res.status(200).json({ moocsList });
+
+    } catch (err) {
+        res.status(500).json({ err });
+    }
+}
+
+const enrollStudentToMooc = async (req, res) => {
+    try {
+        const { studentId, moocId } = req.body;
+
+        const student = await models.Student.findById(studentId).exec();
+
+        student.moocs.push({
+            mooc: moocId,
+            moocScore: 0,
+            completed: false,
+            completedDate: null,
+            startDate: null,
+            progress: 0,
+        });
+
+        const savedStudent = await student.save();
+        res.status(200).json({ message: "Saved!" })
+
+    } catch (err) {
+        res.status(500).json({ err });
+    }
+}
+
+const addAssignmentToMooc = async (req, res) => {
+    const {
+
+        moocId,
+        name,
+        description
+    } = req.body;
+    try {
+
+        const moocCourse = await models.Moocs.findById(moocId).exec();
+        if (!moocCourse) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        const assignment = new models.MoocsAssignment({
+            name: name,
+            description: description,
+            mooc: moocId,
+        });
+
+        const savedAssignment = await assignment.save();
+        res.status(200).json({ _id: savedAssignment._id });
+    } catch (error) {
+        res.status(422).json(error);
+    }
+}
+
+const addQuestionToMoocs = async (req, res) => {
+    const {
+        moocId,
+        moocAssignmentId,
+        title,
+        question,
+        input,
+        output,
+        sampleInput,
+        sampleOutput,
+        difficulty,
+        category,
+        tags,
+        score
+    } = req.body;
+    try {
+
+
+        const mooc = await models.Moocs.findById(moocId).exec();
+        if (!course) {
+            res.status(400).json({ message: "Invalid Course Id" });
+            return;
+        }
+
+        const assignment = await models.MoocsAssignment.findById(moocAssignmentId).exec();
+        if (!assignment) {
+            res.status(400).json({ message: "Invalid Assignment Id" });
+            return;
+        }
+
+        const newQuestion = new models.MoocsQuestion({
+            title: title,
+            question: question,
+            input: input,
+            output: output,
+            sampleInput: sampleInput,
+            sampleOutput: sampleOutput,
+            difficulty: difficulty,
+            category: category,
+            tags: tags,
+            score: score,
+            moocassignment: moocAssignmentId,
+            mooc: moocId,
+            university: universityId,
+            studentsAttempted: [],
+            studentsCorrect: [],
+            studentsIncorrect: [],
+            studentsUnattempted: [],
+            plagarismAnalysis: []
+        });
+
+        const savedQuestion = await newQuestion.save();
+        res.status(200).json({ _id: savedQuestion._id });
+    } catch (error) {
+        res.status(422).json(error);
     }
 }
 
@@ -2281,5 +2404,9 @@ module.exports = {
     approveMoocs,
     rejectMoocs,
     getMoocs,
-    getMoocsById
+    getMoocsById,
+    getMoocsOfStudent,
+    enrollStudentToMooc,
+    addAssignmentToMooc,
+    addQuestionToMoocs
 };

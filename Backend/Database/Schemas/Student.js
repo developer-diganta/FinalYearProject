@@ -16,8 +16,16 @@ student = {
         start_date: Date,
         progress: Number,
     }],
+    moocs: [{
+        mooc: String,
+        moocScore: Number,
+        completed: Boolean,
+        completed_date: Date,
+        start_date: Date,
+        progress: Number,
+    }],
     email: String,
-    submissions:Array
+    submissions: Array
 }
 
 module.exports = student;

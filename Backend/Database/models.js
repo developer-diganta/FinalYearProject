@@ -16,7 +16,8 @@ const department = require("./Schemas/Department");
 const program = require("./Schemas/Program");
 const assignment = require("./Schemas/Assignment");
 const moocs = require("./Schemas/Moocs");
-
+const moocsassignment = require("./Schemas/MoocsAssignment");
+const moocquestion = require("./Schemas/MoocsQuestion");
 
 const adminSchema = new mongoose.Schema(admin);
 const courseSchema = new mongoose.Schema(course);
@@ -30,6 +31,8 @@ const departmentSchema = new mongoose.Schema(department);
 const programSchema = new mongoose.Schema(program);
 const assignmentSchema = new mongoose.Schema(assignment);
 const moocsSchema = new mongoose.Schema(moocs);
+const moocsassignmentSchema = new mongoose.Schema(moocsassignment);
+const moocsquestionSchema = new mongoose.Schema(moocsquestion);
 // teacherSchema.plugin(passportLocalMongoose);
 
 
@@ -47,6 +50,8 @@ const Department = mongoose.model("Department", departmentSchema);
 const Program = mongoose.model("Program", programSchema);
 const Assignment = mongoose.model("Assignment", assignmentSchema)
 const Moocs = mongoose.model("Moocs", moocsSchema);
+const MoocsAssignment = mongoose.model("Moocs", moocsassignmentSchema);
+const MoocsQuestion = mongoose.model("Moocs", moocsquestionSchema);
 // passport.use(Teacher.createStrategy());
 // passport.serializeUser(Teacher.serializeUser());
 // passport.deserializeUser(Teacher.deserializeUser());
@@ -64,5 +69,7 @@ module.exports = {
     Department,
     Program,
     Assignment,
-    Moocs
+    Moocs,
+    MoocsAssignment,
+    MoocsQuestion
 };
