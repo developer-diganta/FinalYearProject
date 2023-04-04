@@ -16,3 +16,9 @@
 .course__option li{
     border: 0.001rem solid #adb5bd;
 }
+
+.question__p{
+    white-space: nowrap; /* prevent text from wrapping */
+    overflow: hidden; /* hide any overflowing text */
+    text-overflow: ellipsis;
+}

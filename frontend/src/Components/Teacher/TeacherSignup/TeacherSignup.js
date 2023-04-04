@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { backend_url } from '../../../BackendRoutes';
 import Header from '../../AppHeader/Header';
@@ -17,6 +18,7 @@ const[university, setUniversity] = useState();
 const[unId, setUnId] = useState();
 const[UnvDept, setUnvDept] = useState();
 const[departments, setDepartments] = useState();
+const[passwordVisibility, setPasswordVisibility] = useState(false);
 
 const navigate = useNavigate();
 const teacher__token = localStorage.getItem('teacher__token');
@@ -90,18 +92,25 @@ async function getUniversityDepartment(unId){
               </svg>
               <input type="email" placeholder="Enter your email" onChange={(ele) => setEmail(ele.target.value)} />
             </div>
-            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
-              <input type="password" placeholder="Enter your password" onChange={(ele) => setPassword(ele.target.value)} />
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center justify-between border-2 p-2 mx-10 my-2 gap-2' >
+              <div className='flex items-center gap-2'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <input required type={`${passwordVisibility ? 'text' : 'password'}`} placeholder="Enter your password" onChange={(ele) => setPassword(ele.target.value)} />
+              </div>
+              <div className='password_visibility text-2xl' onClick={() => setPasswordVisibility(!passwordVisibility)}>
+              {
+                passwordVisibility ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
+              }
+              </div>
             </div>
             {/* create an input dropdown field for choosing university names */}
             <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
               </svg>
-              <select className='w-full' name="university" id="university" onChange={(ele) => {
+              <select className='w-full' name="university" onChange={(ele) => {
                 setUnId(ele.target.value)
                 getUniversityDepartment(ele.target.value)
               }}>
@@ -125,7 +134,7 @@ async function getUniversityDepartment(unId){
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
               </svg>
-              <select className='w-full' name="university" id="university" onChange={(ele) => {
+              <select className='w-full' name="university" onChange={(ele) => {
                 setUnvDept(ele.target.value)
               }}>
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your department</option>

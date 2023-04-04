@@ -1,0 +1,54 @@
+input:focus{
+    outline: none;
+}
+
+.abcd:focus-within{
+    border: 1px solid #6e4ffcff;
+}
+
+/* when I click inside input box the border of the form should be red */
+
+.public__course__title{
+    overflow: hidden;
+}
+
+.enroll__button{
+    position: absolute;
+    right: 0;
+    top: 10px;
+    background-color: #FFEA20;
+    text-shadow: 1px 0px 3px rgba(0, 0, 0, 0.4);
+    /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); */
+    color: #6b7780ff;
+}
+
+.enroll__button::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: -1px;
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    border-right: 20px solid #FFEA20;
+    /* box-shadow: 6px 6px 4px rgba(0, 0, 0, 0.4); */
+    /* clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); */
+  }
+
+.course__card__title{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.public__course__description{
+    overflow: hidden;
+  /* Add these properties to show ellipsis after two lines */
+  max-height: calc(2em * 2); /* Two lines of text */
+  line-height: 1.5em; /* Line height of the text */
+  /* overflow: hidden; Hide the overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis for the overflow */
+  white-space: nowrap; /* Prevent wrapping of text */
+}

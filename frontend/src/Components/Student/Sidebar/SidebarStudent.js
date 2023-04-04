@@ -15,13 +15,13 @@ import { VscBook } from "react-icons/vsc";
 import { BiEditAlt } from "react-icons/bi";
 import { BsGraphUp } from "react-icons/bs";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
-import { MdKeyboardArrowRight } from "react-icons/md";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { SlGlobe } from "react-icons/sl";
 
 function SidebarStudent() {
     const menus = [
         { name: "dashboard", link: "/student/dashboard", icon: MdOutlineDashboardCustomize },
-        { name: "courses", link: "/student/courses", icon: VscBook },
+        { name: "university courses", link: "/student/courses", icon: VscBook },
+        { name: "public courses", link: "/publiccourses", icon: SlGlobe },
         { name: "edit", link: "/student/edit", icon: BiEditAlt, margin: true },
         { name: "Analyse", link: "/", icon: BsGraphUp },
         { name: "Setting", link: "/", icon: RiSettings4Line },
@@ -73,7 +73,7 @@ function SidebarStudent() {
                 key={i}
                 className={` ${
                   menu?.margin && "mt-5"
-                } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+                } group flex items-center text-sm overflow-hidden gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
               >
                 <div>{React.createElement(menu?.icon, { size: "20" })}</div>
                 <h2
@@ -81,7 +81,7 @@ function SidebarStudent() {
                     transitionDelay: `${i + 3}00ms`,
                     textTransform: "capitalize",
                   }}
-                  className={`whitespace-pre duration-500 text-lg capitalized ${
+                  className={`w-full break-words duration-500 text-lg capitalized ${
                     !open && "opacity-0 translate-x-28 overflow-hidden"
                   }`}
                 >
