@@ -910,7 +910,6 @@ const getAssignmentsOfStudent = async (req, res) => {
 
         for (var i = 0; i < courses.length; i++) {
             const assignmentCurrent = await models.Assignment.find({ course: courses[i] }).exec();
-            const currentCourse = courses[i].stringify();
 
             const obj = {
 
