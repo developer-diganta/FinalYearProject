@@ -40,25 +40,25 @@ function IndividualCourse() {
               <p>{location.state.course.name}</p>
           </div>
           <div className="individual__course__secondary__navbar bg-[#6b7780] py-2 mx-auto">
-            <div className="individual__course__secondary__navbar__item flex gap-4 justify-center items-center">
+            <div className="individual__course__secondary__navbar__item flex gap-2 xs:text-sm xxs:text-xs xxs:gap-1 justify-center items-center">
               <div className='flex items-center gap-2 text-white hover:border-[1px] hover:border-[#FFF] border-[1px] border-[transparent] px-2 py-1 rounded-sm cursor-pointer duration-200'
                 onClick={() => setShowOption('home')}
               >
-                <BiHome />
+                <BiHome className='xs:hidden' />
                 <p>Home</p>
               </div>
               <div className="vertical__divider min-h-[20px] max-h-[20px] min-w-[1px] bg-white"></div>
               <div className='flex items-center gap-2 text-white hover:border-[1px] hover:border-[#FFF] border-[1px] border-[transparent] px-2 py-1 rounded-sm cursor-pointer duration-200'
                 onClick={() => setShowOption('assignments')}
               >
-                <FiEdit />
+                <FiEdit className='xs:hidden' />
                 <p>Assignments</p>
               </div>              
               <div className="vertical__divider min-h-[20px] max-h-[20px] min-w-[1px] bg-white"></div>
               <div className='flex items-center gap-2 text-white hover:border-[1px] hover:border-[#FFF] border-[1px] border-[transparent] px-2 py-1 rounded-sm cursor-pointer duration-200'
                 onClick={() => setShowOption('students')}
               >
-                <HiOutlineUserGroup />
+                <HiOutlineUserGroup className='xs:hidden' />
                 <p>Students</p>
               </div>
             </div>

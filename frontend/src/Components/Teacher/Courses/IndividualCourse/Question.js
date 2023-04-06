@@ -81,11 +81,11 @@ function Question() {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
                 </svg>
-                <p className='course__name__in__question pl-2' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>
+                <p className='course__name__in__question pl-2 sm:text-sm xs:text-xs' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>
                   {location ? location.state.course.name : null}
                 </p>
               </div>
-              <div className='bg-[#6b7780] px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/createquestion', {state: location.state})}>Add Question <span className='text-lg pl-2'>+</span> </div>
+              <div className='bg-[#6b7780] px-4 xs:text-xs xxs:text-center rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/createquestion', {state: location.state})}>Add Question <span className='text-lg pl-2 xs:hidden'>+</span> </div>
             </div>
             <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
             {
@@ -99,12 +99,12 @@ function Question() {
                         >
                         <div className='flex items-center gap-4'>
                           <div className='question__title'>
-                            <h3 className='text-base text-[#606b73] font-semibold pb-1' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.question}</h3>
+                            <h3 className='text-base text-[#606b73] font-semibold pb-1 xxs:text-xs' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.question}</h3>
                           </div>
-                          <div className='question__difficulty flex items-center'>
-                            <p className='text-sm font-bold' style={{fontSize: "16px", color: "#97a0a6"}}>&#91;</p>
-                            <p className={`text-xs ${question.difficulty === 'easy' ? 'text-[#97D01E]' : question.difficulty === 'medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} font-semibold`}>{question.difficulty}</p>
-                            <p className='text-sm font-bold' style={{fontSize: "16px", color: "#97a0a6"}}>&#93;</p>
+                          <div className='question__difficulty flex items-center xxs:text-xs'>
+                            <p className='text-sm font-bold xxs:text-xs' style={{fontSize: "16px", color: "#97a0a6"}}>&#91;</p>
+                            <p className={`text-xs xxs:text-2xs ${question.difficulty === 'easy' ? 'text-[#97D01E]' : question.difficulty === 'medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} font-semibold`}>{question.difficulty}</p>
+                            <p className='text-sm font-bold xxs:text-xs' style={{fontSize: "16px", color: "#97a0a6"}}>&#93;</p>
                           </div>
                         </div>
                       </div>

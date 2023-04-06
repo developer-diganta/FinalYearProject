@@ -39,7 +39,7 @@ function TeacherLogin() {
 
 
   return (
-    <div>
+    <div className='min-h-[110vh]'>
         <LandingHeader />
         <div className="signup flex justify-center">
         <div className="student_signup_left w-1/2 lg:w-0 flex items-center justify-center">

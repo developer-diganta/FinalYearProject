@@ -78,14 +78,15 @@ function AddStudentToCourse({currentCourse}) {
             addStudentsList?.map((item,index)=>(
                 <div key={index} className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3 border-[1px] border-[#6b7780]'>
                     <div className='flex items-center px-2 py-2'>
-                        <div className='w-5 h-5 text-sm font-sans rounded-full flex justify-center items-center text-white mr-4 font-bold' style={{backgroundImage: "linear-gradient(to right top, #7633b7, #7739c7, #7640d9, #7347ea, #6e4ffc)"}}>{index+1}</div>
+                        <div className='w-5 h-5 text-sm font-sans rounded-full flex justify-center items-center text-white mr-4 font-bold sm:text-xs' style={{backgroundImage: "linear-gradient(to right top, #7633b7, #7739c7, #7640d9, #7347ea, #6e4ffc)"}}>{index+1}</div>
                         <div className='flex items-center gap-8'>
-                            <p className='text-lg font-semibold'>{item.name}</p>
+                            <p className='text-lg font-semibold sm:text-sm'>{item.name}</p>
                             <p className='text-sm text-gray-500'>{item.email}</p>
                         </div>
                     </div>
                     <div className='pr-2'>
-                        <button className='bg-[#FFF44F] px-2 py-1 rounded-sm font-semibold' onClick={() => AddStudent(item._id)}>Add</button>
+                        <button className='bg-[#FFF44F] px-2 py-1 rounded-sm font-semibold sm:hidden' onClick={() => AddStudent(item._id)}>Add</button>
+                        <button className='bg-[#FFF44F] px-2 py-1 rounded-sm font-semibold hidden sm:block w-8 h-8 rounded-full' onClick={() => AddStudent(item._id)}>+</button>
                     </div>
                 </div>
             ))
