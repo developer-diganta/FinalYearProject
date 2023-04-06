@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SidebarStudent from '../Student/Sidebar/SidebarStudent';
 import { BsSearch } from 'react-icons/bs';
 import "./PublicCourses.css";
 import Fuse from 'fuse.js';
+import axios from 'axios';
+import { backend_url } from '../../BackendRoutes';
+import { HiOutlineStar } from 'react-icons/hi';
+import { HiStar } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 
 const dummy__courses = [
   {
@@ -65,17 +70,23 @@ function getRandomColor() {
 
 function PublicCourses() {
   const { openClose } = useSelector((state) => state.counter);
-  const [courses, setCourses] = useState(dummy__courses);
+  const [courses, setCourses] = useState([]);
+  const [storeAllCourses, setStoreAllCourses] = useState([]);
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const navigate = useNavigate();
+
+  const student__token = localStorage.getItem('student__token');
+  const student__id = localStorage.getItem('student__id');
+  const student__email = localStorage.getItem('student__email');
 
   const options = {
-    keys: ['title', 'description'],
+    keys: ['courseCode', 'name', 'description'],
     threshold: 0.3
   }
 
-  const fuse = new Fuse(dummy__courses, options);
+  const fuse = new Fuse(courses, options);
 
   function handleSearchChange(e) {
     console.log(e.target.value);
@@ -86,6 +97,47 @@ function PublicCourses() {
     // setSuggestions(suggestions);
   }
 
+  function searchedCourses(event){
+    event.preventDefault();
+    const array = [];
+    suggestions.map((item)=>{
+      array.push(item.item);
+    })
+    setCourses(array);
+    setQuery('');
+    setSuggestions([]);
+  }
+
+  function sortCourses(id){
+    console.log(suggestions);
+    const array = [];
+    const filteredItem = suggestions.filter((item)=>{
+        return item.item._id === id;
+    })
+    console.log(filteredItem);
+    array.push(filteredItem[0].item);
+    setCourses(array);
+    setQuery('');
+    setSuggestions([]);
+  }
+
+  async function getPublicAllCourses(){
+    const instance = axios.create({
+      headers: {
+        'x-auth-token': student__token
+      }
+    });
+
+    const response = await instance.post(backend_url + '/moocs/get', {email: student__email, id: student__id});
+    console.log(response.data);
+    setCourses(response.data.moocs);
+    setStoreAllCourses(response.data.moocs);
+  }
+
+  useEffect(() => {
+    getPublicAllCourses();
+  }, [])
+
   return (
     <div className='individual__course flex md:block'>
       <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
@@ -93,7 +145,7 @@ function PublicCourses() {
       </div>
       <div className={`dashboard_1 bg-white ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
         <div className="nav__bar bg-[#f0f1f2ff] py-2 flex justify-between items-center px-4">
-          <div className='public__left__nav'>All courses</div>
+          <div className='public__left__nav' onClick={(event) => setCourses(storeAllCourses)}>All courses</div>
           <div className='public__right__nav relative'>
             <form className="abcd flex shadow-md items-center border-[1px] border-[#6b7780ff] rounded-full px-2 py-1 bg-white">
               <input
@@ -103,15 +155,15 @@ function PublicCourses() {
                 placeholder="Search for a course"
                 className='placeholder-normal font-normal text-xs py-1 px-2 h-6'
               />
-              <button type="submit" className='h-6 w-6 flex items-center justify-center'>
+              <button type="submit" className='h-6 w-6 flex items-center justify-center' onClick={(event) => searchedCourses(event)}>
                 <BsSearch className='text-[#6b7780ff] text-lg' />
               </button>
             </form>
-            <div className={`absolute text-xs bg-[#f0f1f2ff] mt-1 shadow-md ${search === false || query === '' ? null : 'border-[1px]'} ${search ? 'border-[#6b7780ff]' : null} w-full`} style={{zIndex: "999"}}>
-              <ul>
+            <div className={`absolute text-xs bg-[#f0f1f2ff] mt-1 ${search === false || query === '' ? null : 'border-[1px]'} ${search ? 'border-[#6b7780ff]' : null} w-full`} style={{zIndex: "999"}}>
+              <ul className='shadow-lg'>
                 {
                 suggestions?.map((item) => (
-                  <li className='py-1 hover:bg-[#f7f7f7ff] cursor-pointer px-4 py-2 text-[#6b7780ff]' style={{fontFamily: "sans-serif"}} key={item.id}>{item.item.title}</li>
+                  <li className='py-2 hover:bg-[#f7f7f7ff] cursor-pointer px-4 text-[#6b7780ff] bg-white' style={{fontFamily: "sans-serif"}} key={item.item._id}  onClick={(event) => sortCourses(item.item._id)}>{item.item.name}</li>
                 ))
                 // console.log(suggestions)
                 }
@@ -121,13 +173,19 @@ function PublicCourses() {
         </div>
         <div className='public__courses__container grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8 my-4 mx-4'>
           {
-            courses.map((course) => (
-              <div className='public__course__card my-2 rounded-lg shadow-md' key={course.id}>
+            courses?.map((course) => (
+              <div className='public__course__card my-2 rounded-lg shadow-md cursor-pointer' key={course._id} onClick={(event) => navigate('/publiccourses/' + course._id, {state: {course, color: getRandomColor()}})}>
                 <div className='public__course__info relative'>
-                  <div className='public__course__title text-7xl font-semibold py-4 rounded-t-lg px-4 h-40' style={{backgroundColor: `${getRandomColor()}`, fontFamily: "sans-serif", color: 'rgba(255, 255, 255, 0.5)'}}>{course.title}</div>
-                  <div className='bg-[#9900ff] text-white px-4 py-1 enroll__button cursor-pointer'>Enroll</div>
-                  <div className='course__card__title font-bold pl-4 pt-4 pb-2'>{course.title}</div>
-                  <div className='public__course__description text-sm pl-4 pb-4 pr-4 font-normal text-[#6b7780ff]'>{course.description}</div>
+                  <div className='public__course__title text-7xl font-semibold py-4 rounded-t-lg px-4 h-40' style={{backgroundColor: `${getRandomColor()}`, fontFamily: "sans-serif", color: 'rgba(255, 255, 255, 0.4)', letterSpacing: "3px"}}>{course.name}</div>
+                  <div className='bg-[#9900ff] text-white px-4 py-1 enroll__button cursor-pointer'>Enroll Now</div>
+                  <div className='course__card__title font-bold pl-4 pt-4 pb-2'>{course.name}</div>
+                  <div className='public__course__description text-sm pl-4 pr-4 font-normal text-[#6b7780ff]'>{course.description}</div>
+                  <div className='pl-4 mb-4 mt-2'>
+                    <div className="star flex items-center gap-1 border-[1px] border-[#6b7780ff] w-14 justify-center rounded-sm">
+                      <HiStar className='text-[#FFD93D] font-bold font-serif' />
+                      <p className='text-sm'>4.5</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))

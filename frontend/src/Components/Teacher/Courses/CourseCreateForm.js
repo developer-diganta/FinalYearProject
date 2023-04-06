@@ -41,40 +41,72 @@ function CourseCreateForm() {
         });
         console.log(date1.toISOString(date1));
         // make the date1 in this format 2021-05-01T00:00:00.000Z
-        
-        try {
-            const new__course = await instance.post(backend_url + '/teacher/course/add', {
-            universityId: universityId,
-            name: name,
-            description: description,
-            courseCode: courseCode,
-            courseType: courseType,
-            expectedCourseDuration: course__duration,
-            courseCompilers: compilers,
-            courseStartDate: date1.toISOString(),
-            programId: Programme,
-            teacherId: teacther__id,
-            email: teacher__email,
-            });
-            console.log(new__course);
-            if(new__course.data.message === "Course added successfully"){
-                console.log("course added successfully");
-                navigate('/teacher/courses');
+
+        if(courseType === "public"){
+            try {
+                const response = await instance.post(backend_url + '/moocs/add', {
+                    universityId: universityId,
+                    teacherId: teacther__id,
+                    programId: Programme,
+                    name: name,
+                    description: description,
+                    courseCode: courseCode,
+                    courseType: courseType,
+                    expectedCourseDuration: course__duration,
+                    courseCompilers: compilers,
+                    courseStartDate: date1.toISOString(),
+                    approvalStatus: true
+                });
+                console.log(response);
+                alert(response.data.message);
+            } catch (error) {
+                console.log(error);
+                if(error.response.status === 401){
+                    alert("please login again");
+                    localStorage.removeItem('teacher__token');
+                    navigate('/teacher/login');
+                }
+                else{
+                    alert(error.response.data.message + ". please try again");
+                    navigate('/teacher/cretatecourse');
+                }
             }
-            else{
-                alert("something went wrong. please try again.");
-            }
-        
-        } catch (error) {
-            console.log(error);
-            if(error.response.status === 401){
-                alert("please login again");
-                localStorage.removeItem('teacher__token');
-                navigate('/teacher/login');
-            }
-            else{
-                alert(error.response.data.message + ". please try again");
-                navigate('/teacher/cretatecourse');
+        }
+        else{
+            try {
+                const new__course = await instance.post(backend_url + '/teacher/course/add', {
+                universityId: universityId,
+                name: name,
+                description: description,
+                courseCode: courseCode,
+                courseType: courseType,
+                expectedCourseDuration: course__duration,
+                courseCompilers: compilers,
+                courseStartDate: date1.toISOString(),
+                programId: Programme,
+                teacherId: teacther__id,
+                email: teacher__email,
+                });
+                console.log(new__course);
+                if(new__course.data.message === "Course added successfully"){
+                    console.log("course added successfully");
+                    navigate('/teacher/courses');
+                }
+                else{
+                    alert("something went wrong. please try again.");
+                }
+            
+            } catch (error) {
+                console.log(error);
+                if(error.response.status === 401){
+                    alert("please login again");
+                    localStorage.removeItem('teacher__token');
+                    navigate('/teacher/login');
+                }
+                else{
+                    alert(error.response.data.message + ". please try again");
+                    navigate('/teacher/cretatecourse');
+                }
             }
         }
     }
@@ -114,12 +146,13 @@ function CourseCreateForm() {
     }, [])
 
   return (
-    <div className='course__create__form flex'>
+    <div className='course__create__form flex md:block'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <SidebarTEacher />
         </div>
-        <div className={`pt-4 pl-6 ml-1/5 flex justify-center bg-[#f3f4f6] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen`} style={{float: "right", overflow: "scroll"}}>
-            <form className="course__form flex flex-col bg-white w-4/5 py-8 px-6 rounded-md shadow-lg" onSubmit={setNewCourse}>
+        <div className={`pt-4 pl-6 ml-1/5 flex justify-center sm:py-0 bg-[#f3f4f6] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen sm:px-0 sm:w-full sm:mx-0`} style={{float: "right"}}>
+            <form className="course__form flex flex-col bg-white w-4/5 px-6 rounded-md shadow-lg sm:w-full sm:rounded-[0px] sm:text-sm" onSubmit={setNewCourse}>
+                <h1 className='text-center py-4 text-lg font-bold'>Cerate new course</h1>
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course name</p>
                 <input className='course__name mb-8 shadow-sm' type="text" onChange={(event) => setName(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course description</p>
@@ -158,7 +191,7 @@ function CourseCreateForm() {
                         ))
                     }
                 </select>
-                <div className="date__ares flex mb-8 gap-10">
+                <div className="date__ares flex mb-8 gap-10 sm:flex-col">
                     <div>
                         <p className='pb-2 capitalize text-[#444d5c] font-semibold'>start</p>
                         <input className='start__date shadow-sm' type="date" onChange={(event) => setStartDate(event.target.value)} />
@@ -169,29 +202,29 @@ function CourseCreateForm() {
                     </div>
                 </div>
                 <p className='compiler__option pb-2 capitalize text[#444d5c] font-semibold'>compilers</p>
-                <div className="course__compiler flex gap-8">
-                    <div className="compilers cpp font-semibold text-[#444d5c]" id='cpp' onClick={() => {
+                <div className="course__compiler flex gap-8 sm:grid sm:grid-cols-2 sm:gap-x-14">
+                    <div className="compilers cpp font-semibold text-[#444d5c] sm:text-center" id='cpp' onClick={() => {
                         addCompilers('cpp')
                         document.getElementById('cpp').style.backgroundColor = '#9900ff';
                         document.getElementById('cpp').style.color = '#FFF';
                         }}>cpp</div>
-                    <div className="compilers python font-semibold text-[#444d5c]" id='python' onClick={() => {
+                    <div className="compilers python font-semibold text-[#444d5c] sm:text-center" id='python' onClick={() => {
                         addCompilers('python')
                         document.getElementById('python').style.backgroundColor = '#9900ff';
                         document.getElementById('python').style.color = '#FFF';
                         }}>python</div>
-                    <div className="compilers java font-semibold text-[#444d5c]" id='java' onClick={() => {
+                    <div className="compilers java font-semibold text-[#444d5c] sm:text-center" id='java' onClick={() => {
                         addCompilers('java')
                         document.getElementById('java').style.backgroundColor = '#9900ff';
                         document.getElementById('java').style.color = '#FFF';
                         }}>java</div>
-                    <div className="compilers javascript font-semibold text-[#444d5c]" id='javascript' onClick={() => {
+                    <div className="compilers javascript font-semibold text-[#444d5c] sm:text-center" id='javascript' onClick={() => {
                         addCompilers('javascript')
                         document.getElementById('javascript').style.backgroundColor = '#9900ff';
                         document.getElementById('javascript').style.color = '#FFF';
                         }}>javascript</div>
                 </div>
-                <button type='submit' className='bg-[#2d3142] text-white py-2 px-8 mt-16 text-lg font-semibold w-32 mx-auto'>Submit</button>
+                <button type='submit' className='bg-[#2d3142] text-white py-2 px-8 mt-16 text-lg font-semibold w-32 mx-auto mb-4'>Submit</button>
             </form>
         </div>
     </div>

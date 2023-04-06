@@ -93,11 +93,12 @@ function Courses() {
                 <CgChevronDoubleRight />
                 <p>Courses</p>
             </div>
-            <div className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3'>
-                <h1 className='text-xl font-bold'>All Courses</h1>
-                <div className="flex items-center gap-4">
+            <div className='flex sm:flex-col justify-between w-11/12 sm:w-full mx-auto items-center mt-4 mb-3 sm:mt-0'>
+                <h1 className='text-xl font-bold sm:py-4 sm:uppercase'>All Courses</h1>
+                <div className='divider bg-divider min-h-[1px] min-w-[95%] max-w-[95%] mx-auto hidden sm:block'></div>
+                <div className="flex items-center gap-4 sm:pt-4 sm:pb-1">
                     <div className='relative'>
-                        <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setDropDown(!dropDown)}>Sort By 
+                        <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm xxs:text-xs text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setDropDown(!dropDown)}>Sort By 
                             <IoIosArrowDown className='text-lg ml-2' /> 
                         </div>
                         <div className={`option__div bg-[#6b7780ff] text-white absolute -left-4 mt-1 z-50 ${!dropDown ? 'hidden' : 'block'}`} >
@@ -106,23 +107,24 @@ function Courses() {
                             <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Pending Courses</div>
                         </div>
                     </div>
-                    <div className='bg-[#6b7780] px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>Create Course <span className='text-lg pl-2'>+</span> </div>
+                    <div className='bg-[#6b7780] px-4 xxs:hidden rounded-3xl cursor-pointer py-1 text-sm xxs:text-xs text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>Create Course <span className='text-lg pl-2'>+</span> </div>
+                    <div className='bg-[#6b7780] hidden xxs:flex items-center justify-center h-8 w-8 cursor-pointer py-1 text-sm xxs:text-xl rounded-full text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>+</div>
                 </div>
             </div>
             <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
             {
                 previousCourses.length > 0 ? 
-                    <div className="courses grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mx-6">
+                    <div className="courses grid grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 mx-6">
                         {
                             previousCourses.map((course) => (
-                                <div className="course mr-4 my-4 flex hover:scale-105 hover:shadow-lg text-[#515a61] duration-200" key={course._id} style={{}}>
+                                <div className="course mr-4 my-4 sm:mx-2 flex hover:scale-105 hover:shadow-lg text-[#515a61] duration-200" key={course._id} style={{}}>
                                     <div className='w-10/12 p-3' style={{
                                             borderTop: "1px solid #9ea7ae",
                                             borderLeft: "1px solid #9ea7ae",
                                             borderBottom: "1px solid #9ea7ae",
                                         }}>
                                         <div className="course__title flex justify-between items-center text-lg font-semibold pb-2">
-                                            <h3 className='capitalize'>{course.name}</h3>
+                                            <h3 className='course__title__h capitalize'>{course.name}</h3>
                                             <p className='text-xs'>{new Date(course.courseStartDate).toLocaleDateString("en-US", options)}</p>
                                         </div>
                                         <div className="course__description text-sm flex justify-between gap-4 items-center">

@@ -12,6 +12,15 @@
     max-width: 60vw;
 }
 
+@media (max-width: 400px) {
+    .question__title{
+        white-space: nowrap; /* prevent line breaks */
+        overflow: hidden; /* hide overflowing content */
+        text-overflow: ellipsis; /* add ellipsis at the end */
+        max-width: 50vw;
+    }
+}
+
 .course__name__in__question{
     white-space: nowrap; /* prevent line breaks */
     overflow: hidden; /* hide overflowing content */
