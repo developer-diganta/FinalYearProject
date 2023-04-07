@@ -179,4 +179,5 @@ router.post("/moocs/teacher/add/question", controls.addQuestionToMoocs);
 router.post("/moocs/assignment/get", controls.getAssignmentsFromMoocs);
 router.post("/moocs/question", controls.getQuestionsInMooc);
 router.post("/moocs/question/id", controls.getMoocQuestionById);
+router.post("/moocs/question/code/submit", controls.submitCodeToMoocs);
 module.exports = router; 

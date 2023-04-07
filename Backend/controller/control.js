@@ -1216,6 +1216,107 @@ const getMoocQuestionById = async (req, res) => {
     }
 }
 
+const submitCodeToMoocs = async (req, res) => {
+    const { student_id, code, question_id, language_id } = req.body;
+    let plagarized = false;
+    try {
+
+        const question = await models.MoocsQuestion.findById(question_id).exec();
+        console.log("1.Retrieved question");
+        let encoded = base64encode(code);
+        const options = {
+            method: 'POST',
+            url: 'https://judge0-ce.p.rapidapi.com/submissions',
+            params: { base64_encoded: 'true', fields: '*' },
+            headers: {
+                'content-type': 'application/json',
+                'Content-Type': 'application/json',
+                'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+            },
+            data: {
+                "source_code": encoded,
+                "language_id": language_id,
+                "stdin": base64encode(question.input),
+                "expected_output": base64encode(question.output)
+            }
+        };
+
+        const response = await axios.request(options);
+        console.log("2.Received response from compiler");
+        const { token } = response.data;
+        const getSubmissionOptions = {
+            method: 'GET',
+            url: `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
+            params: { base64_encoded: 'true', fields: '*' },
+            headers: {
+                'X-RapidAPI-Key': `122${process.env.COMPILER_API_KEY}`,
+                'X-RapidAPI-Host': `${process.env.COMPILER_API_HOST}`
+            }
+        };
+
+        const submissionResponse = await axios.request(getSubmissionOptions);
+        // console.log(submissionResponse)
+        console.log("3.Received submission response from compiler");
+
+        addSubmissionLog(submissionResponse.data.token);
+
+        const newSubmission = new models.Submission({
+            student: student_id,
+            question: question_id,
+            code: code,
+            language: language_id,
+            status: submissionResponse.data.status.id,
+            dateCreated: new Date().toISOString(),
+            plagarized: false
+        });
+
+
+        const submissionToDB = await newSubmission.save();
+        console.log("4.Saved to Submission DB");
+
+        question.studentsAttempted.push(student_id);
+
+        if (submissionResponse.data.status.id === 3) {
+            question.studentsCorrect.push(student_id);
+        } else {
+            question.studentsIncorrect.push(student_id);
+        }
+
+        const getSubmissionData = await models.Submission.find({ question: question_id }).exec();
+        console.log(getSubmissionData)
+        console.log("5.Retrieved submission data from DB");
+
+        const checker = new PlagiarismChecker(getSubmissionData, student_id);
+        const plagarismCheck = checker.check();
+
+        question.plagarismAnalysis = plagarismCheck;
+
+        if (plagarismCheck[plagarismCheck.length - 1].isPlagiarized) {
+            plagarized = true;
+        }
+
+        const questionSave = await question.save();
+
+        console.log("6.Saved to Question DB");
+
+
+        if (plagarized) {
+            const submissionByIdUpdate = await models.Submission.findByIdAndUpdate(submissionToDB._id, { plagarized: true }).exec();
+            console.log("Plagarism Detected");
+            if (!submissionByIdUpdate) {
+                res.status(500).json({ message: "Error updating submission" });
+            }
+        }
+        console.log("7.Updated submission DB");
+        res.status(200).json(submissionResponse.data);
+    }
+    catch (error) {
+        console.log(error)
+        res.status(500).json(error);
+    }
+
+}
 
 // ---------------------------------------------------------------------------------------------End Of Moocs Controllers --------------------------------------------------------------------------------------------- //
 
@@ -2454,5 +2555,6 @@ module.exports = {
     addQuestionToMoocs,
     getAssignmentsFromMoocs,
     getQuestionsInMooc,
-    getMoocQuestionById
+    getMoocQuestionById,
+    submitCodeToMoocs
 };
