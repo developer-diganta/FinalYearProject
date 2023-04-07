@@ -1152,7 +1152,6 @@ const addQuestionToMoocs = async (req, res) => {
             score: score,
             moocassignment: moocAssignmentId,
             mooc: moocId,
-            university: universityId,
             studentsAttempted: [],
             studentsCorrect: [],
             studentsIncorrect: [],
