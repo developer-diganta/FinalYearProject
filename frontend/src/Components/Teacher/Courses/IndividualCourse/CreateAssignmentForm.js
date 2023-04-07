@@ -74,17 +74,17 @@ function CreateAssignmentForm() {
     }, [])
 
   return (
-    <div className='course__create__form flex'>
+    <div className='assignment__create__form flex md:block'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <SidebarTEacher />
         </div>
-        <div className={`${openClose ? 'w-4/5' : 'w-full'} mx-auto`} style={{float: "right"}}>
+        <div className={`dashboard_1 bg-white ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <div className='st__map font-sans flex py-2 pl-4 bg-[#F6F7F7] items-center gap-2 text-sm'>
                 <p className='cursor-pointer hover:text-[#763dfe] hover:underline'>Courses</p>
                 <CgChevronDoubleRight />
                 <p>{location.state.course.name}</p>
             </div>
-            <form className="course__form mt-8 flex flex-col bg-white h-auto w-4/5 py-8 px-6 rounded-md shadow-xl mx-auto my-auto" onSubmit={setNewCourse}>
+            <form className="course__form mt-8 flex flex-col bg-white h-auto w-4/5 sm:w-11/12 py-8 px-6 rounded-md shadow-xl mx-auto my-auto" onSubmit={setNewCourse}>
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Assignment name</p>
                 <input className='course__name mb-8 shadow-sm' type="text" onChange={(event) => setName(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Assignment description</p>

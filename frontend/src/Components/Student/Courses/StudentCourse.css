@@ -22,3 +22,10 @@
     overflow: hidden; /* hide any overflowing text */
     text-overflow: ellipsis;
 }
+
+.course__title__h{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}

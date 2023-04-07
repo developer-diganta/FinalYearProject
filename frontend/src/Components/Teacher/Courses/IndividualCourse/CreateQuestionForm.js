@@ -80,7 +80,7 @@ function CreateQuestionForm() {
             <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
                 <SidebarTEacher />
             </div>
-            <div className={`dashboard_1 bg-[#F6F6F6] px-4 ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
+            <div className={`dashboard_1 bg-[#F6F6F6] px-4 ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen sm:px-0`} style={{float: "right"}}>
             <div className="question__secondary__navbar flex items-center max-w-[95%] mx-auto my-4">
               <div className='flex items-center cursor-pointer' style={{color: "#6b7780"}} onClick={() => navigate('/teacher/courses/assignment/' + location.state.assignment.name, {state: location.state})}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -96,7 +96,7 @@ function CreateQuestionForm() {
             </div>
             <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
 
-                <form className='flex flex-col bg-white w-4/5 py-8 px-6 rounded-md shadow-lg mt-4 mb-10 mx-auto' action="" onSubmit={getFormDetail}>
+                <form className='flex flex-col bg-white w-4/5 py-8 px-6 rounded-md shadow-lg mt-4 mb-10 mx-auto sm:w-full' action="" onSubmit={getFormDetail}>
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Question Title</p>
                     <input className='question__title' type="text" onChange={(event) => setQuestionTitle(event.target.value)} />
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Question Description</p>
@@ -112,7 +112,7 @@ function CreateQuestionForm() {
                         <option value="medium">Medium</option>
                         <option value="hard">Hard</option>
                     </select>
-                    <div className='inout flex justify-between'>
+                    <div className='inout flex justify-between sm:flex-col'>
                         <div>
                             <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Input File</p>
                             <input className='input__file' type="file" onChange={(event) => {
@@ -137,7 +137,7 @@ function CreateQuestionForm() {
                             }} />
                         </div>
                     </div>
-                    <div className='sample__inout flex justify-between'>
+                    <div className='sample__inout flex justify-between sm:flex-col'>
                         <div>
                             <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Sample Input File</p>
                             <input className='input__file' type="file" onChange={(event) => {
@@ -165,28 +165,28 @@ function CreateQuestionForm() {
                     <input className='question__title' type="text" onChange={(event) => setScore(event.target.value)} />
                     {/* checkbox for tags of question */}
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Tags</p>
-                    <div className='tags__checkbox grid grid-cols-3'>
-                        <div className='form_check'>
+                    <div className='tags__checkbox grid grid-cols-3 sm:grid-cols-2'>
+                        <div className='form_check sm:gap-2 flex items-center'>
                             <input value={'array'} type="checkbox" onChange={submitValue} />
                             <label htmlFor="">Array</label>
                         </div>
-                        <div className='form_check'>
+                        <div className='form_check sm:gap-2 flex items-center'>
                             <input value={'string'} type="checkbox" onChange={submitValue} />
                             <label htmlFor="">String</label>
                         </div>
-                        <div className='form_check'>
+                        <div className='form_check sm:gap-2 flex items-center'>
                             <input value={'linkedlist'} type="checkbox" onChange={submitValue} />
                             <label htmlFor="">Linked List</label>
                         </div>
-                        <div className='form_check'>
+                        <div className='form_check sm:gap-2 flex items-center'>
                             <input value='stack' type="checkbox" onChange={submitValue} />
                             <label htmlFor="">Stack</label>
                         </div>
-                        <div className='form_check'>
+                        <div className='form_check sm:gap-2 flex items-center'>
                             <input value='queue' type="checkbox" onChange={submitValue} />
                             <label htmlFor="">Queue</label>
                         </div>
-                        <div className='form_check'>
+                        <div className='form_check sm:gap-2 flex items-center'>
                             <input value='tree' type="checkbox" onChange={submitValue} />
                             <label htmlFor="">Tree</label>
                         </div>

@@ -44,6 +44,7 @@ import Question from './Components/Teacher/Courses/IndividualCourse/Question';
 import StudentIndividualCourse from './Components/Student/Courses/IndividualStudentCourse/StudentIndividualCourse';
 import StudentAssignment from './Components/Student/Courses/IndividualStudentCourse/StudentAssignment';
 import PublicCourses from './Components/PublicCourses/PublicCourses';
+import SinglePublicCourse from './Components/PublicCourses/SinglePublicCourse';
 
 function App() {
   return (
@@ -101,6 +102,7 @@ function App() {
 
             {/* ******************** Public courses routes ***************************************************************/}
             <Route path='/publiccourses' element={<PublicCourses />} />
+            <Route path='/publiccourses/:courseid' element={<SinglePublicCourse />} />
 
             {/* ******************** Error routes ***************************************************************/}
             <Route path='*' element={<ErrorPage />} />

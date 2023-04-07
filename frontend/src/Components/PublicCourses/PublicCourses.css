@@ -19,7 +19,7 @@ input:focus{
     background-color: #FFEA20;
     text-shadow: 1px 0px 3px rgba(0, 0, 0, 0.4);
     /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); */
-    color: #6b7780ff;
+    color: rgb(84, 93, 99);
 }
 
 .enroll__button::before {
@@ -41,6 +41,11 @@ input:focus{
     font-weight: 800;
     font-size: 1.4rem;
     letter-spacing: 1px;
+    overflow: hidden;
+    max-height: calc(2em * 2);
+    line-height: 1.5em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .public__course__description{
@@ -51,4 +56,9 @@ input:focus{
   /* overflow: hidden; Hide the overflowing text */
   text-overflow: ellipsis; /* Show ellipsis for the overflow */
   white-space: nowrap; /* Prevent wrapping of text */
+}
+
+
+.color__card{
+    background-image: linear-gradient(to right, #36d1dc, #00c2e7, #00b1ef, #0c9def, #5b86e5);
 }
