@@ -171,6 +171,7 @@ const universityLogin = async (req, res) => {
 
 const universityAddSchool = async (req, res) => {
     const { schoolName, universityId } = req.body;
+    console.log({ schoolName })
     try {
         const university = await models.University.findById(universityId).exec();
         if (!university) {
@@ -296,6 +297,7 @@ const universityRejectCourse = async (req, res) => {
 
 const getUniversityDetails = async (req, res) => {
     const { universityId } = req.body;
+    console.log("I'm here")
     try {
         const university = await models.University.findById(universityId).exec();
         if (!university) {
@@ -687,6 +689,7 @@ const addStudentToCourse = async (req, res) => {
 
 const getCoursesOfTeacher = async (req, res) => {
     const { teacherId } = req.body;
+    console.log({ teacherId })
     try {
         const teacher = await models.Teacher.findById(teacherId).exec();
         if (!teacher) {
@@ -1654,13 +1657,17 @@ const getUniversityCourseByTeacherId = async (req, res) => {
 
 
 const getAllUniversities = async (req, res) => {
+    console.log("I'm here")
     try {
         models.University.find({}, { _id: 1, name: 1 }, (err, universities) => {
             if (err) {
                 res.status(500).json(err);
             }
-            else
+            else {
+                console.log(universities)
                 res.status(200).json(universities);
+
+            }
         });
     }
     catch (error) {
@@ -1682,8 +1689,8 @@ const teacherLogin = async (req, res) => {
                             res.status(500).json(err);
                         else {
                             if (result) {
-                                const token = generateToken(teacher[0].name, teacher[0].email);
-                                res.status(200).json({ auth: true, token: token, _id: teacher[0]._id });
+                                const token = generateToken(teacher[0].email);
+                                res.status(200).json({ auth: true, token: token, _id: teacher[0]._id, universityId: teacher[0].university });
                             }
                             else
                                 res.status(200).json({ message: "Invalid password" });
@@ -1958,6 +1965,7 @@ const submitStudent = async (req, res) => {
 
 const getTeacherData = async (req, res) => {
     const { teacherId } = req.body;
+    console.log("HERE I AM")
     try {
         models.Teacher.find({ _id: teacherId }, (err, teacher) => {
             if (err) {
