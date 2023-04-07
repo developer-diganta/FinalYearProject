@@ -176,4 +176,7 @@ router.post("/moocs/student/all", controls.getMoocsOfStudent);
 router.post("/moocs/student/enroll", controls.enrollStudentToMooc);
 router.post("/moocs/teacher/add/assignment", controls.addAssignmentToMooc);
 router.post("/moocs/teacher/add/question", controls.addQuestionToMoocs);
+router.post("/moocs/assignment/get", controls.getAssignmentsFromMoocs);
+router.post("/moocs/question", controls.getQuestionsInMooc);
+router.post("/moocs/question/id", controls.getMoocQuestionById);
 module.exports = router; 

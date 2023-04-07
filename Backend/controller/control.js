@@ -998,9 +998,7 @@ const approveMoocs = async (req, res) => {
     const { moocsId } = req.body;
     try {
         const moocs = await models.Moocs.findById(moocsId).exec();
-        if (!moocs.length) {
-            res.status(404).json({ "message": "No Moocs Found" })
-        }
+
 
         moocs.approvalStatus = "verified";
         await moocs.save();
@@ -1017,9 +1015,7 @@ const rejectMoocs = async (req, res) => {
     const { moocsId } = req.body;
     try {
         const moocs = await models.Moocs.findById(moocsId).exec();
-        if (!moocs.length) {
-            res.status(404).json({ "message": "No Moocs Found" })
-        }
+
 
         moocs.approvalStatus = "rejected";
         await moocs.save();
@@ -1171,9 +1167,58 @@ const addQuestionToMoocs = async (req, res) => {
     }
 }
 
+const getAssignmentsFromMoocs = async (req, res) => {
+    const { moocId } = req.body;
+    try {
+        const assignments = await models.MoocsAssignment.find({ mooc: moocId }).exec();
+        res.status(200).json({ assignments })
+    }
+    catch (err) {
+        res.status(500).json({ message: "error" })
+    }
+}
+const getQuestionsInMooc = async (req, res) => {
+    const { assignmentId } = req.body;
+    try {
+        const questions = await models.MoocsQuestion.find({ moocassignment: assignmentId }).exec();
+        res.status(200).json({ questions })
+    } catch (err) {
+        res.status(500).json({ message: "ERROR" })
+    }
+}
+
+const getMoocQuestionById = async (req, res) => {
+    const { questionId } = req.body;
+    try {
+        models.MoocsQuestion.findById(questionId, (err, question) => {
+            if (err) {
+                res.status(500).json(err);
+            } else {
+                if (question) {
+                    const result = {
+                        _id: question._id,
+                        title: question.title,
+                        question: question.question,
+                        mooc: question.course,
+                        sampleInput: question.sampleInput,
+                        sampleOutput: question.sampleOutput,
+                        difficulty: question.difficulty,
+                        category: question.category,
+                        tags: question.tags,
+                        dateCreated: question.dateCreated,
+                    }
+                } else {
+                    res.status(200).json({ message: "Invalid question id" });
+                }
+            }
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
 
 
-// -------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------End Of Moocs Controllers --------------------------------------------------------------------------------------------- //
 
 const adminSignIn = async (req, res) => {
     const { username, password } = req.body;
@@ -2407,5 +2452,8 @@ module.exports = {
     getMoocsOfStudent,
     enrollStudentToMooc,
     addAssignmentToMooc,
-    addQuestionToMoocs
+    addQuestionToMoocs,
+    getAssignmentsFromMoocs,
+    getQuestionsInMooc,
+    getMoocQuestionById
 };

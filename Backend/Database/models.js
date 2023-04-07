@@ -50,8 +50,8 @@ const Department = mongoose.model("Department", departmentSchema);
 const Program = mongoose.model("Program", programSchema);
 const Assignment = mongoose.model("Assignment", assignmentSchema)
 const Moocs = mongoose.model("Moocs", moocsSchema);
-const MoocsAssignment = mongoose.model("Moocs", moocsassignmentSchema);
-const MoocsQuestion = mongoose.model("Moocs", moocsquestionSchema);
+const MoocsAssignment = mongoose.model("MoocsAssignment", moocsassignmentSchema);
+const MoocsQuestion = mongoose.model("MoocsQuestion", moocsquestionSchema);
 // passport.use(Teacher.createStrategy());
 // passport.serializeUser(Teacher.serializeUser());
 // passport.deserializeUser(Teacher.deserializeUser());
