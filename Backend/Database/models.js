@@ -32,7 +32,7 @@ const programSchema = new mongoose.Schema(program);
 const assignmentSchema = new mongoose.Schema(assignment);
 const moocsSchema = new mongoose.Schema(moocs);
 const moocsassignmentSchema = new mongoose.Schema(moocsassignment);
-const moocsquestionSchema = new mongoose.Schema(moocsquestion);
+const moocsquestionSchema = new mongoose.Schema(moocquestion);
 // teacherSchema.plugin(passportLocalMongoose);
 
 
