@@ -23,29 +23,29 @@ router.post("/university/signup", controls.universitySignUp);
 
 router.post("/university/signin", controls.universityLogin);
 
-router.post("/university/addSchool", controls.universityAddSchool);
+router.post("/university/addSchool", authorise, controls.universityAddSchool);
 
-router.post("/university/addDepartment", controls.universityAddDepartment);
+router.post("/university/addDepartment", authorise, controls.universityAddDepartment);
 
-router.post("/university/addProgram", controls.addUniversityProgram);
+router.post("/university/addProgram", authorise, controls.addUniversityProgram);
 
-router.post("/university/verifyCourse", controls.universityVerifyCourse);
+router.post("/university/verifyCourse", authorise, controls.universityVerifyCourse);
 
-router.post("/university/rejectCourse", controls.universityRejectCourse);
+router.post("/university/rejectCourse", authorise, controls.universityRejectCourse);
 
 router.post("/university/details", controls.getUniversityDetails);
 
-router.post("/university/teacher", controls.universityTeacherData);
+router.post("/university/teacher", authorise, controls.universityTeacherData);
 
-router.post("/university/teacher/count", controls.universityTeacherCount);
+router.post("/university/teacher/count", authorise, controls.universityTeacherCount);
 
 router.post("/university/contract", controls.getUniversityContract);
 
-router.post("/university/contract/expiry", controls.contractExpiryDetails);
+router.post("/university/contract/expiry", authorise, controls.contractExpiryDetails);
 
-router.post("/university/student", controls.getUniversityStudentData);
+router.post("/university/student", authorise, controls.getUniversityStudentData);
 
-router.post("/university/teacher/waitlist", controls.getUniversityTeacherWaitlist);
+router.post("/university/teacher/waitlist", authorise, controls.getUniversityTeacherWaitlist);
 
 
 
@@ -56,25 +56,25 @@ router.post("/university/teacher/waitlist", controls.getUniversityTeacherWaitlis
 
 router.post('/signup/teacher', controls.signupTeacher);
 
-router.post("/teacher/course/add", controls.addCourse);
+router.post("/teacher/course/add", authorise, controls.addCourse);
 
 router.post("/teacher/assignment/add", authorise, controls.addAssignment);
 
-router.post("/teacher/assignment/addQuestion", controls.addQuestion);
+router.post("/teacher/assignment/addQuestion", authorise, controls.addQuestion);
 
-router.post("/teacher/course/addStudent", controls.addStudentToCourse);
+router.post("/teacher/course/addStudent", authorise, controls.addStudentToCourse);
 
-router.post("/teacher/courses/getAll", controls.getCoursesOfTeacher);
+router.post("/teacher/courses/getAll", authorise, controls.getCoursesOfTeacher);
 
-router.post("/teacher/courses/assignment", controls.getAssignmentsFromCourse);
+router.post("/teacher/courses/assignment", authorise, controls.getAssignmentsFromCourse);
 
-router.post("/teacher/courses/questionById", controls.getQuestionById);
+router.post("/teacher/courses/questionById", authorise, controls.getQuestionById);
 
-router.post("/teacher/courses/getQuestionsInAssignment", controls.getQuestionsInAssignment);
+router.post("/teacher/courses/getQuestionsInAssignment", authorise, controls.getQuestionsInAssignment);
 
-router.post("/teacher/course/students", controls.getStudentDetails);
+router.post("/teacher/course/students", authorise, controls.getStudentDetails);
 
-router.post("/teacher/university/student", controls.getUniversityStudentData);
+router.post("/teacher/university/student", authorise, controls.getUniversityStudentData);
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
 
@@ -130,11 +130,11 @@ router.post("/student/signup", controls.studentSignUp);
 
 router.post("/teacher/signin", controls.teacherLogin);
 
-router.post("/teacher/course/getCourses", controls.getCoursesForTeacher);
+router.post("/teacher/course/getCourses", authorise, controls.getCoursesForTeacher);
 
 
 
-router.post("/teacher/data", controls.getTeacherData);
+router.post("/teacher/data", authorise, controls.getTeacherData);
 
 router.post("/university/getMultiCourses", controls.getMultiCourses);
 // router.post("/teacher/course/details", authorise, controls.getCourseDetailsTeacher);
