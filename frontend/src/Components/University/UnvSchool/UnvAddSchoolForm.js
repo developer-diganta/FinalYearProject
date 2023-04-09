@@ -45,7 +45,7 @@ function UnvAddSchoolForm() {
                 <form className='bg-formBackground w-3/4 mx-auto py-4 px-6 rounded-md shadow-md' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} action="" onSubmit={addSchoolToUniversity}>
                     <div className='flex flex-col gap-2'>
                         <label className='pt-4' htmlFor="schoolName">School Name</label>
-                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onClick={(event) => setUnvSchools(event.target.value)} />
+                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onChange={(event) => setUnvSchools(event.target.value)} />
                     </div>
                     <div className='w-full flex justify-center'>
                         <button className='bg-[#BFC9CA] py-1 px-4 rounded-sm my-4' style={{letterSpacing: "2px"}}>Add School</button>

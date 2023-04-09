@@ -9,9 +9,9 @@ function CourseDescription({course}) {
               <h4>Course Type: </h4>
               <p className='font-semibold'>{course.courseType}</p>
             </div>
-            <div className='py-4 px-4 text-base flex items-center gap-4'>
+            <div className='py-4 px-4 text-base flex items-center gap-4 sm:items-start'>
               <h4>Compilers: </h4>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 sm:flex-col'>
                 {
                   course.courseCompilers?.map((compiler, index) => (
                     <p className='uppercase font-semibold' key={index}>{compiler}</p>

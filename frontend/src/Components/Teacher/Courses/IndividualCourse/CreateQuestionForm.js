@@ -40,39 +40,74 @@ function CreateQuestionForm() {
         console.log(inputFile, base64In);
         console.log(outputFile, base64Out, questionDifficulty);
         // console.log(questionTitle, questionDescription, questionDifficulty, inputFile, outputFile, tags);
-        try {
-            const instance = axios.create({
-                headers: {
-                    'x-auth-token': teacherToken,
-                },
-            });
-            const question__create__response = await instance.post(backend_url + '/teacher/assignment/addQuestion', {
-                courseId: location.state.course._id,
-                universityId: location.state.course.university,
-                assignmentId: location.state.assignment._id,
-                teacherId: teacherId,
-                title: questionTitle,
-                question: questionDescription,
-                input: base64In,
-                output: base64Out,
-                sampleInput: sampleInput,
-                sampleOutput: sampleOutput,
-                difficulty: questionDifficulty,
-                category: 'coding',
-                tags: tags,
-                datePublished: new Date(),
-                score: score
-            });
-            console.log(question__create__response);
-            if(question__create__response.status === 200){
-                // alert('Question added successfully');
-                alert('Question added successfully');
-                navigate('/teacher/courses/assignment/' + location.state.assignment.name, {state: location.state});
+        if(location.state.course.courseType === "public"){
+            try {
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': teacherToken,
+                    },
+                });
+                const question__create__response = await instance.post(backend_url + '/moocs/teacher/add/question', {
+                    moocId: location.state.course._id,
+                    moocAssignmentId: location.state.assignment._id,
+                    title: questionTitle,
+                    question: questionDescription,
+                    input: base64In,
+                    output: base64Out,
+                    sampleInput: sampleInput,
+                    sampleOutput: sampleOutput,
+                    difficulty: questionDifficulty,
+                    category: 'coding',
+                    tags: tags,
+                    score: score
+                });
+                console.log(question__create__response);
+                if(question__create__response.status === 200){
+                    // alert('Question added successfully');
+                    alert('Question added successfully');
+                    navigate('/teacher/courses/assignment/' + location.state.assignment.name, {state: location.state});
+                }
+            } catch (error) {
+                console.log(error);
+                alert('Something went wrong. Please try again.');
             }
-        } catch (error) {
-            console.log(error);
-            alert('Something went wrong. Please try again.');
         }
+        else{
+            try {
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': teacherToken,
+                    },
+                });
+                const question__create__response = await instance.post(backend_url + '/teacher/assignment/addQuestion', {
+                    courseId: location.state.course._id,
+                    universityId: location.state.course.university,
+                    assignmentId: location.state.assignment._id,
+                    teacherId: teacherId,
+                    title: questionTitle,
+                    question: questionDescription,
+                    input: base64In,
+                    output: base64Out,
+                    sampleInput: sampleInput,
+                    sampleOutput: sampleOutput,
+                    difficulty: questionDifficulty,
+                    category: 'coding',
+                    tags: tags,
+                    datePublished: new Date(),
+                    score: score
+                });
+                console.log(question__create__response);
+                if(question__create__response.status === 200){
+                    // alert('Question added successfully');
+                    alert('Question added successfully');
+                    navigate('/teacher/courses/assignment/' + location.state.assignment.name, {state: location.state});
+                }
+            } catch (error) {
+                console.log(error);
+                alert('Something went wrong. Please try again.');
+            }
+        }
+
     }
 
     return (
