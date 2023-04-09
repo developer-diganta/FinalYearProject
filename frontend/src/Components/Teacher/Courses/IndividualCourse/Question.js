@@ -51,13 +51,25 @@ function Question() {
   //   }]
 
   async function getQuestions(){
-    try {
-      const questions = await axios.post(backend_url + '/teacher/courses/getQuestionsInAssignment', {assignmentId: location.state.assignment._id});
-      console.log("questions.", questions);
-      setAllQuestions(questions.data.questions);
-    } catch (error) {
-      console.log(error);
-      alert("Error in getting questions");
+    if(location.state.course.courseType === "public"){
+      try {
+        const questions = await axios.post(backend_url + '/moocs/question', {assignmentId: location.state.assignment._id});
+        console.log("questions.", questions);
+        setAllQuestions(questions.data.questions);
+      } catch (error) {
+        console.log(error);
+        alert("Error in getting questions");
+      }
+    }
+    else{
+      try {
+        const questions = await axios.post(backend_url + '/teacher/courses/getQuestionsInAssignment', {assignmentId: location.state.assignment._id});
+        console.log("questions.", questions);
+        setAllQuestions(questions.data.questions);
+      } catch (error) {
+        console.log(error);
+        alert("Error in getting questions");
+      }
     }
   }
 

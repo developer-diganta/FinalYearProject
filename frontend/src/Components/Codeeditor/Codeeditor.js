@@ -38,7 +38,7 @@ function Codeeditor() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location, student_id);
+    // console.log(location, student_id);
 
     function chooseOptions(event, options) {
         event.preventDefault();
@@ -46,12 +46,33 @@ function Codeeditor() {
     }
 
     const submit = async () => {
-        setOpScreen(true);
-        setOutput('');
-        console.log(code);
-        const sub_res = await axios.post(backend_url + '/submit/student', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
-        console.log(sub_res.data.stdout);
-        setOutput(base64.decode(sub_res.data.stdout));
+      console.log(location.state.courseDetail.course.courseType, "*");
+        if(location.state.courseDetail.course.courseType === "public"){
+          try{
+            setOpScreen(true);
+            setOutput('');
+            console.log(code);
+            const sub_res = await axios.post(backend_url + '/moocs/question/code/submit', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
+            console.log(sub_res.data);
+            setOutput(base64.decode(sub_res.data.stdout));
+          }catch(err){
+            console.log(err);
+            alert('Something went wrong');
+          }
+        }
+        else{
+          try{
+            setOpScreen(true);
+            setOutput('');
+            console.log(code);
+            const sub_res = await axios.post(backend_url + '/submit/student', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
+            console.log(sub_res.data.stdout);
+            setOutput(base64.decode(sub_res.data.stdout));
+          }catch(err){
+            console.log(err);
+            alert('Something went wrong');
+          }
+        }
     }
 
     async function runCode(){
@@ -61,7 +82,6 @@ function Codeeditor() {
       const res = await axios.post(backend_url + '/submit', {sourceCode: code, languageId: language, sampleInput: location.state.question.sampleInput.slice(23), sampleOutput: location.state.question.sampleOutput.slice(23)});
       setOutput(res.data.status.description);
       console.log(res.data);
-      // setOutput(base64.decode(res.data.stdout));
     }
 
     function hideScreen(){
@@ -83,7 +103,7 @@ function Codeeditor() {
         {/* <div className="divder tooltip_1 hover:bg-[#B8B8B8]" onClick={() => setSlide(!slide)}>
             <div className='tooltiptext_1 text-xs font-semibold'>Click to adjust size</div>
         </div> */}
-        <div className='md:hidden'>
+        <div className='md:hidden w-full'>
           <SplitPane split="vertical" defaultSize="50%">
             <Pane initialSize="50%" maxSize="800px">
               {/* question detail section */}

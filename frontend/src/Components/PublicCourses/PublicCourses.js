@@ -75,6 +75,7 @@ function PublicCourses() {
   const [query, setQuery] = useState('');
   const [search, setSearch] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [studentDetail, setStudentDetail] = useState();
   const navigate = useNavigate();
 
   const student__token = localStorage.getItem('student__token');
@@ -134,7 +135,19 @@ function PublicCourses() {
     setStoreAllCourses(response.data.moocs);
   }
 
+  async function getStudentsDetail(){
+    const instance = axios.create({
+      headers: {
+        'x-auth-token': student__token
+      }
+    });
+    const response = await instance.post(backend_url + '/student/data', {studentId: student__id});
+    console.log(response.data);
+    setStudentDetail(response.data);
+  }
+
   useEffect(() => {
+    getStudentsDetail();
     getPublicAllCourses();
   }, [])
 
@@ -174,7 +187,7 @@ function PublicCourses() {
         <div className='public__courses__container grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8 my-4 mx-4'>
           {
             courses?.map((course) => (
-              <div className='public__course__card my-2 rounded-lg shadow-md cursor-pointer' key={course._id} onClick={(event) => navigate('/publiccourses/' + course._id, {state: {course, color: getRandomColor()}})}>
+              <div className='public__course__card my-2 rounded-lg shadow-md cursor-pointer' key={course._id} onClick={(event) => navigate('/publiccourses/' + course._id, {state: {course, color: getRandomColor(), detail: studentDetail}})}>
                 <div className='public__course__info relative'>
                   <div className='public__course__title text-7xl font-semibold py-4 rounded-t-lg px-4 h-40' style={{backgroundColor: `${getRandomColor()}`, fontFamily: "sans-serif", color: 'rgba(255, 255, 255, 0.4)', letterSpacing: "3px"}}>{course.name}</div>
                   <div className='bg-[#9900ff] text-white px-4 py-1 enroll__button cursor-pointer'>Enroll Now</div>

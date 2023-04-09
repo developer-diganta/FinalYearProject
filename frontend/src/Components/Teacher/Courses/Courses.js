@@ -48,40 +48,40 @@ function Courses() {
     // ]
 
     const options = {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-    };
-
-    async function getPreviousCourses(){
-        try {
-            const instance = axios.create({
-                headers: {
-                    'x-auth-token': teacherToken,
-                },
-            });
-            const all__courses = await instance.post(backend_url + `/teacher/courses/getAll`, {teacherId: teacherId, email: teacher__email});
-            console.log(all__courses.data.courses);
-            // const previous__courses = all__courses.data.filter((course) => {
-            //     const today = new Date();
-            //     const course__date = new Date(course.courseStartDate);
-            //     console.log(today, course__date);
-            //     const diffTime = Math.abs(today - course__date);
-            //     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            //     console.log(diffDays); 
-            //     return course.expectedCourseDuration >= diffDays;
-            // });
-            const dateObj = new Date(all__courses);
-
-            setPreviousCourses(all__courses.data.courses);
-        } catch (error) {
-            console.log(error);
-            alert('Something went wrong');
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+        };
+    
+        async function getPreviousCourses(){
+            try {
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': teacherToken,
+                    },
+                });
+                const all__courses = await instance.post(backend_url + `/teacher/courses/getAll`, {teacherId: teacherId, email: teacher__email});
+                console.log(all__courses.data.courses);
+                // const previous__courses = all__courses.data.filter((course) => {
+                //     const today = new Date();
+                //     const course__date = new Date(course.courseStartDate);
+                //     console.log(today, course__date);
+                //     const diffTime = Math.abs(today - course__date);
+                //     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                //     console.log(diffDays); 
+                //     return course.expectedCourseDuration >= diffDays;
+                // });
+                const dateObj = new Date(all__courses);
+    
+                setPreviousCourses(all__courses.data.courses);
+            } catch (error) {
+                console.log(error);
+                alert('Something went wrong');
+            }
         }
-    }
-    useState(() => {
-        getPreviousCourses();
-    }, [])
+        useState(() => {
+            getPreviousCourses();
+        }, [])
   return (
     <div className='current__courses flex md:block'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
@@ -108,7 +108,7 @@ function Courses() {
                         </div>
                     </div>
                     <div className='bg-[#6b7780] px-4 xxs:hidden rounded-3xl cursor-pointer py-1 text-sm xxs:text-xs text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>Create Course <span className='text-lg pl-2'>+</span> </div>
-                    <div className='bg-[#6b7780] hidden xxs:flex items-center justify-center h-8 w-8 cursor-pointer py-1 text-sm xxs:text-xl rounded-full text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>+</div>
+                    <div className='bg-[#6b7780] hidden xxs:flex xxs:items-center xxs:justify-center h-8 w-8 cursor-pointer py-1 text-sm xxs:text-xl rounded-full text-white items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>+</div>
                 </div>
             </div>
             <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>

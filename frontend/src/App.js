@@ -45,6 +45,11 @@ import StudentIndividualCourse from './Components/Student/Courses/IndividualStud
 import StudentAssignment from './Components/Student/Courses/IndividualStudentCourse/StudentAssignment';
 import PublicCourses from './Components/PublicCourses/PublicCourses';
 import SinglePublicCourse from './Components/PublicCourses/SinglePublicCourse';
+import UniversityPublicCourse from './Components/University/PublicCourse/UniversityPublicCourse';
+import UniversityAcceptedPublicCourse from './Components/University/PublicCourse/UniversityAcceptedPublicCourse';
+import TeacherPublicCourse from './Components/Teacher/Courses/TeacherPublicCourse/TeacherPublicCourse';
+import PublicCourseAssignment from './Components/PublicCourses/PublicCourseAssignment';
+import PublicCourseQuestions from './Components/PublicCourses/PublicCourseQuestions';
 
 function App() {
   return (
@@ -70,6 +75,8 @@ function App() {
             <Route path='/university/addprogram' element={<AddUnvProgram />} />
             <Route path='/university/edit' element={<EditPage />} />
             <Route path='/university/course/:courseId' element={<Course />} />
+            <Route path='/university/publiccourse' element={<UniversityAcceptedPublicCourse />} />
+            <Route path='/university/pendingpubliccourse' element={<UniversityPublicCourse />} />
             {/* <Route path='/university/addcourse' element={<CourseCreateForm />} /> */}
             
             {/* ******************** Teacher routes ***************************************************************/}
@@ -88,6 +95,7 @@ function App() {
             <Route path='/teacher/courses/createassignment' element={<CreateAssignmentForm />} />
             <Route path='/teacher/courses/assignment/:assignment' element={<Question />} />
             <Route path='/mailverification/:message' element={<Verificatin />} />
+            <Route path='/teacher/publiccourse' element={<TeacherPublicCourse />} />
 
             {/* ******************** Student routes ***************************************************************/}
             <Route path='/student/signup' element={<StudentSignup />} />
@@ -103,6 +111,8 @@ function App() {
             {/* ******************** Public courses routes ***************************************************************/}
             <Route path='/publiccourses' element={<PublicCourses />} />
             <Route path='/publiccourses/:courseid' element={<SinglePublicCourse />} />
+            <Route path='/publiccourses/assignment' element={<PublicCourseAssignment />} />
+            <Route path='/publiccourses/assignment/questions' element={<PublicCourseQuestions />} />
 
             {/* ******************** Error routes ***************************************************************/}
             <Route path='*' element={<ErrorPage />} />
