@@ -13,10 +13,11 @@ function CreateAssignmentForm() {
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const[name, setName] = useState();
     const[description, setDescription] = useState();
-    const[universityId, setUniversityId] = useState();
+    // const[universityId, setUniversityId] = useState();
     const teacther__id = localStorage.getItem('teacher__id');
     const teacher__token = localStorage.getItem('teacher__token');
     const teacher__email = localStorage.getItem('teacher__email');
+    const universityId = localStorage.getItem('university');
     const navigate = useNavigate();
     const location = useLocation();
     console.log(location.state);
@@ -86,27 +87,27 @@ function CreateAssignmentForm() {
                 }
                 else{
                     alert(error.response.data.message + ". please try again");
-                    navigate('/teacher/courses/createassignment');
+                    navigate('/teacher/courses/createassignment', {state: location.state});
                 }
             }
         }
     }
 
-    async function setAllDetails(){
-        let teacher__data;
-        try {
-            teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id});
-            console.log(teacher__data);
-        } catch (error) {
-            console.log(error);
-        }
-        const {university} = teacher__data.data;
-        setUniversityId(university);
-    }
+    // async function setAllDetails(){
+    //     let teacher__data;
+    //     try {
+    //         teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id, email: teacher__email});
+    //         console.log(teacher__data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    //     const {university} = teacher__data.data;
+    //     setUniversityId(university);
+    // }
 
-    useEffect(() => {
-        setAllDetails();
-    }, [])
+    // useEffect(() => {
+    //     setAllDetails();
+    // }, [])
 
   return (
     <div className='assignment__create__form flex md:block'>

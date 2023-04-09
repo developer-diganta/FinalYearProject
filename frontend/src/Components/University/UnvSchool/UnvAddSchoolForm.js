@@ -10,22 +10,28 @@ function UnvAddSchoolForm() {
     const[unvSchools, setUnvSchools] = useState()
     const unvToken = localStorage.getItem('signup_token');
     const unvId = localStorage.getItem('university__id');
+    const university__email = localStorage.getItem('university__email');
     const navigate = useNavigate();
     const { openClose, unvSign } = useSelector((state) => state.counter);
 
     async function addSchoolToUniversity(event){
         event.preventDefault();
         console.log(unvSchools);
-        const instance = axios.create({
-            headers: {
-              'x-auth-token': unvToken,
-            },
-        });
-        const getResponse = await instance.post(backend_url + '/university/addSchool', {schoolName: unvSchools, universityId: unvId});
-        console.log(getResponse);
-        alert(getResponse.data.message);
-        if(getResponse.data.message === "School added successfully"){
-            navigate('/university/schools');
+        try {
+            const instance = axios.create({
+                headers: {
+                  'x-auth-token': unvToken,
+                },
+            });
+            const getResponse = await instance.post(backend_url + '/university/addSchool', {schoolName: unvSchools, universityId: unvId, email: university__email});
+            console.log(getResponse);
+            alert(getResponse.data.message);
+            if(getResponse.data.message === "School added successfully"){
+                navigate('/university/schools');
+            }
+        } catch (error) {
+            console.log(error);
+            alert(error.response.data.message);
         }
     }
 

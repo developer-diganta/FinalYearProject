@@ -29,11 +29,15 @@ async function getFormValue(event){
   console.log(name, username, email, password, unId);
   const res = await axios.post(backend_url + '/signup/teacher', {name: name, username: username, email: email, password: password, uniId: unId, departmentId: UnvDept});
   console.log("hvjvjvjvjvj", res, res.data._id);
-  localStorage.setItem('teacher__token', res.data.token);
-  localStorage.setItem('teacher__id', res.data._id);
-  localStorage.setItem('teacher__email', email);
-  if(res.data.auth == true){
+  if(res.status === 200){
+    localStorage.setItem('teacher__token', res.data.token);
+    localStorage.setItem('teacher__id', res.data._id);
+    localStorage.setItem('teacher__email', email);
+    localStorage.setItem('university', unId);
     navigate('/teacher/status');
+  }
+  else{
+    alert("Something went wrong");
   }
 }
 

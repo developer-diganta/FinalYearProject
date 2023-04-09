@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { backend_url } from '../../BackendRoutes';
 import Sidebaruniversity from './Sidebaruniversity/Sidebaruniversity';
 import './University.css';
+import { MdTry } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 function UniversityTeacher() {
   const[btnActive, setBtnActive] = useState(1);
@@ -12,6 +14,7 @@ function UniversityTeacher() {
   const[pending, setPending] = useState([]);
   const[teacher, setTeacher] = useState([]);
   const { openClose, unvSign } = useSelector((state) => state.counter);
+  const navigate = useNavigate();
 
   // const teacher = [
   //   {
@@ -39,39 +42,59 @@ function UniversityTeacher() {
   // ]
 
   async function getPendingTeachers(){
-    const instance = axios.create({
-      headers: {
-        'x-auth-token': token,
-      },
-    });
-    const pending__teachers = await instance.post(backend_url + '/university/teacher/waitlist', {universityId: unv__id});
-    console.log("pendingTeachers", pending__teachers);
-    setPending(pending__teachers.data);
+    try {
+      const instance = axios.create({
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+      const pending__teachers = await instance.post(backend_url + '/university/teacher/waitlist', {universityId: unv__id, email: unv__email});
+      console.log("pendingTeachers", pending__teachers);
+      setPending(pending__teachers.data);
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data.message);
+      navigate('/university/login');
+    }
   }
 
   async function acceptTeacher(teacher__id){
-    const instance = axios.create({
-      headers: {
-        'x-auth-token': token,
-      },
-    });
-    const unv__id = localStorage.getItem('university__id');
-    console.log(teacher__id, unv__id);
-    const teacher__acceptance = await instance.post(backend_url + '/university/teacher/waitlist/accept/' + teacher__id, {teacherId: teacher__id, universityId: unv__id, email: unv__email});
-    console.log("teacher__acceptance", teacher__acceptance);
-    alert(teacher__acceptance.data.message);
-    getPendingTeachers();
+    try {
+      const instance = axios.create({
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+      const unv__id = localStorage.getItem('university__id');
+      console.log(teacher__id, unv__id);
+      const teacher__acceptance = await instance.post(backend_url + '/university/teacher/waitlist/accept/' + teacher__id, {teacherId: teacher__id, universityId: unv__id, email: unv__email});
+      console.log("teacher__acceptance", teacher__acceptance);
+      alert(teacher__acceptance.data.message);
+      getPendingTeachers();
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data.message);
+      navigate('/university/login');
+    }
   }
 
   async function getAllAcceptedTeachers(){
-    const instance = axios.create({
-      headers: {
-        'x-auth-token': token,
-      },
-    });
-    const accepted__teachers = await instance.post(backend_url + '/university/teacher', {universityId: unv__id});
-    console.log("acceptedTeachers", accepted__teachers);
-    setTeacher(accepted__teachers.data);
+    try {
+      const instance = axios.create({
+        headers: {
+          'x-auth-token': token,
+        },
+      });
+      const accepted__teachers = await instance.post(backend_url + '/university/teacher', {universityId: unv__id, email: unv__email});
+      console.log("acceptedTeachers", accepted__teachers);
+      setTeacher(accepted__teachers.data.filter((item,index)=>{
+        return item.status === "active"
+      }));
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data.message);
+      navigate('/university/login');
+    }
   }
   useEffect(() => {
     getAllAcceptedTeachers();
