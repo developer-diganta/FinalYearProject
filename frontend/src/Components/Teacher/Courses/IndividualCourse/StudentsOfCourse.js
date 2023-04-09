@@ -15,16 +15,21 @@ function StudentsOfCourse() {
     const navigate = useNavigate();
     const location = useLocation();
     console.log(location);
+
+    const teacher__id = localStorage.getItem('teacher__id');
+    const teacher__token = localStorage.getItem('teacher__token');
+    const teacher__email = localStorage.getItem('teacher__email');
+
     async function getStudents(){
       try {
-        // const instance = axios.create({
-        //   headers: {
-        //     'x-auth-token': university__token
-        //   }
-        // });
+        const instance = axios.create({
+          headers: {
+            'x-auth-token': teacher__token
+          }
+        });
   
         console.log("jgfwjegfkw", location.state.course.university);
-        const res = await axios.post(backend_url + '/teacher/university/student', {universityId: location.state.course.university});
+        const res = await instance.post(backend_url + '/teacher/university/student', {universityId: location.state.course.university, email: teacher__email});
         console.log(res);
         setAllStudents(res.data);
       } catch (error) {

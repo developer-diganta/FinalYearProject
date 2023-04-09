@@ -3,12 +3,15 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { backend_url } from '../../../../BackendRoutes';
+import { useNavigate } from 'react-router-dom';
 
 function CourseStudents({currentCourse}) {
     const[allStudents, setAllStudents] = useState([]);
     console.log(currentCourse);
     const teacher__token = localStorage.getItem('teacher__token');
     const teacher__email = localStorage.getItem('teacher__email');
+    const teacher__id = localStorage.getItem('teacher__id');
+    const navigate = useNavigate();
 
     async function getStudents(){
         try {
@@ -19,14 +22,14 @@ function CourseStudents({currentCourse}) {
           });
     
           console.log("jgfwjegfkw", currentCourse.course.university);
-          const res = await axios.post(backend_url + '/teacher/university/student', {universityId: currentCourse.course.university});
+          const res = await instance.post(backend_url + '/teacher/university/student', {universityId: currentCourse.course.university, email: teacher__email});
           console.log(res);
           setAllStudents(res.data);
         } catch (error) {
           console.log(error);
           alert("Something went wrong");
           if(error.response.status === 401){
-            // navigate('/teacher/login');
+            navigate('/teacher/login');
           }
         }
       }

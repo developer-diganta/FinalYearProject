@@ -21,6 +21,7 @@ function CourseCreateForm() {
     const[school, setSchool] = useState();
     const[Programme, setProgramme] = useState();
     const[universityId, setUniversityId] = useState();
+
     const teacther__id = localStorage.getItem('teacher__id');
     const teacher__token = localStorage.getItem('teacher__token');
     const teacher__email = localStorage.getItem('teacher__email');
@@ -115,13 +116,27 @@ function CourseCreateForm() {
         // find comp in compilers array
         if(!compilers.includes(comp)){
             setCompilers([...compilers, comp]);
+            document.getElementById(comp).style.backgroundColor = '#9900ff';
+            document.getElementById(comp).style.color = '#FFF';
+        }
+        else{
+            // if already include then remove it
+            let new__compilers = compilers.filter((item) => item !== comp);
+            setCompilers(new__compilers);
+            document.getElementById(comp).style.backgroundColor = '#adb5bd';
+            document.getElementById(comp).style.color = '#444d5c';
         }
     }
 
     async function setAllDetails(){
+        const instance = axios.create({
+            headers: {
+                'x-auth-token': teacher__token,
+            },
+        });
         let teacher__data;
         try {
-            teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id});
+            teacher__data = await instance.post(backend_url + '/teacher/data', {teacherId: teacther__id, email: teacher__email});
             console.log(teacher__data);
         } catch (error) {
             console.log(error);
@@ -150,7 +165,7 @@ function CourseCreateForm() {
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
             <SidebarTEacher />
         </div>
-        <div className={`pt-4 pl-6 ml-1/5 flex justify-center sm:py-0 bg-[#f3f4f6] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen sm:px-0 sm:w-full sm:mx-0`} style={{float: "right"}}>
+        <div className={`pt-4 pl-6 ml-1/5 pb-4 flex justify-center sm:py-0 bg-[#f3f4f6] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen sm:px-0 sm:w-full sm:mx-0`} style={{float: "right"}}>
             <form className="course__form flex flex-col bg-white w-4/5 px-6 rounded-md shadow-lg sm:w-full sm:rounded-[0px] sm:text-sm" onSubmit={setNewCourse}>
                 <h1 className='text-center py-4 text-lg font-bold'>Cerate new course</h1>
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course name</p>
@@ -205,26 +220,19 @@ function CourseCreateForm() {
                 <div className="course__compiler flex gap-8 sm:grid sm:grid-cols-2 sm:gap-x-14">
                     <div className="compilers cpp font-semibold text-[#444d5c] sm:text-center" id='cpp' onClick={() => {
                         addCompilers('cpp')
-                        document.getElementById('cpp').style.backgroundColor = '#9900ff';
-                        document.getElementById('cpp').style.color = '#FFF';
+                        
                         }}>cpp</div>
                     <div className="compilers python font-semibold text-[#444d5c] sm:text-center" id='python' onClick={() => {
                         addCompilers('python')
-                        document.getElementById('python').style.backgroundColor = '#9900ff';
-                        document.getElementById('python').style.color = '#FFF';
                         }}>python</div>
                     <div className="compilers java font-semibold text-[#444d5c] sm:text-center" id='java' onClick={() => {
                         addCompilers('java')
-                        document.getElementById('java').style.backgroundColor = '#9900ff';
-                        document.getElementById('java').style.color = '#FFF';
                         }}>java</div>
                     <div className="compilers javascript font-semibold text-[#444d5c] sm:text-center" id='javascript' onClick={() => {
                         addCompilers('javascript')
-                        document.getElementById('javascript').style.backgroundColor = '#9900ff';
-                        document.getElementById('javascript').style.color = '#FFF';
                         }}>javascript</div>
                 </div>
-                <button type='submit' className='bg-[#2d3142] text-white py-2 px-8 mt-16 text-lg font-semibold w-32 mx-auto mb-4'>Submit</button>
+                <button type='submit' className='bg-[#2d3142] text-white py-2 px-8 mt-16 text-lg font-semibold w-32 mx-auto mb-4 rounded-sm'>Submit</button>
             </form>
         </div>
     </div>
