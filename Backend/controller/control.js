@@ -488,10 +488,13 @@ const signupTeacher = async (req, res) => {
                 });
 
                 const savedTeacher = await teacher.save();
+                const token = generateToken(teacher[0].email);
                 res.status(200).json({
                     _id: savedTeacher._id,
                     email: savedTeacher.email,
-                    username: savedTeacher.username
+                    username: savedTeacher.username,
+                    university: uniId,
+                    token: token
                 });
             }
         });
@@ -1322,6 +1325,20 @@ const submitCodeToMoocs = async (req, res) => {
 
 }
 
+const getMoocsCreatedByTeacher = async (req, res) => {
+    try {
+
+        const { teacherId } = req.body;
+        const teacher = await models.Teacher.findById(teacherId).exec();
+        if (!teacher)
+            res.status(404).json({ "message": "No Teacher Found" })
+        const moocs = await models.Moocs.find({ teacher: teacherId }).exec();
+        res.status(200).json({ moocs });
+
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
+    }
+}
 // ---------------------------------------------------------------------------------------------End Of Moocs Controllers --------------------------------------------------------------------------------------------- //
 
 const adminSignIn = async (req, res) => {
