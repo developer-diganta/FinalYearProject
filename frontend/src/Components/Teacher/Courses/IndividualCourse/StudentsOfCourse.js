@@ -15,16 +15,21 @@ function StudentsOfCourse() {
     const navigate = useNavigate();
     const location = useLocation();
     console.log(location);
+
+    const teacher__id = localStorage.getItem('teacher__id');
+    const teacher__token = localStorage.getItem('teacher__token');
+    const teacher__email = localStorage.getItem('teacher__email');
+
     async function getStudents(){
       try {
-        // const instance = axios.create({
-        //   headers: {
-        //     'x-auth-token': university__token
-        //   }
-        // });
+        const instance = axios.create({
+          headers: {
+            'x-auth-token': teacher__token
+          }
+        });
   
         console.log("jgfwjegfkw", location.state.course.university);
-        const res = await axios.post(backend_url + '/teacher/university/student', {universityId: location.state.course.university});
+        const res = await instance.post(backend_url + '/teacher/university/student', {universityId: location.state.course.university, email: teacher__email});
         console.log(res);
         setAllStudents(res.data);
       } catch (error) {
@@ -55,7 +60,8 @@ function StudentsOfCourse() {
       <div className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3'>
           <h1 className='text-base font-bold cursor-pointer border-[2px] border-[#6b7780] py-1 px-3 rounded-full' style={{letterSpacing: "1px"}} onClick={() => setStudentComponentOp('students')}>Students</h1>
           <div className="flex items-center gap-4">
-            <div className='bg-[#6b7780] px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setStudentComponentOp('addStudent')}>Add Students <span className='text-lg pl-2'>+</span> </div>
+            <div className='bg-[#6b7780] sm:hidden px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setStudentComponentOp('addStudent')}>Add Students <span className='text-lg pl-2'>+</span> </div>
+            <div className='bg-[#6b7780] hidden sm:flex h-10 w-10 rounded-full text-xl cursor-pointer py-1 text-white items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setStudentComponentOp('addStudent')}>+</div>
           </div>
       </div>
       <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>

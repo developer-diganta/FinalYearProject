@@ -54,14 +54,19 @@ function UniversitySignup() {
     if(check){
       setMessage();
     }
-    const unv_signup_res = await axios.post(backend_url+'/university/signup', {name, email, password, phone});
-    console.log("************************************", unv_signup_res, unv_signup_res.data.token);
-    if(unv_signup_res.data.token){
-      localStorage.setItem('signup_token', unv_signup_res.data.token);
-      localStorage.setItem('university__id', unv_signup_res.data._id);
-      localStorage.setItem('university__email', email);
-      dispatch(universitySignup(true));
-      navigate('/university/dashboard');
+    try {
+      const unv_signup_res = await axios.post(backend_url+'/university/signup', {name, email, password, phone});
+      console.log("************************************", unv_signup_res, unv_signup_res.data.token);
+      if(unv_signup_res.data.token){
+        localStorage.setItem('signup_token', unv_signup_res.data.token);
+        localStorage.setItem('university__id', unv_signup_res.data._id);
+        localStorage.setItem('university__email', email);
+        dispatch(universitySignup(true));
+        navigate('/university/dashboard');
+      }
+    } catch (error) {
+      console.log(error);
+      setMessage("Something went wrong");
     }
     
     console.log(name, email, password, phone);
@@ -79,7 +84,7 @@ function UniversitySignup() {
   // }, [])
 
   return (
-    <div>
+    <div className='min-h-[104vh]'>
         <LandingHeader />
         <div className="signup flex justify-center">
         <div className="student_signup_left w-1/2 lg:w-0 flex items-center justify-center">

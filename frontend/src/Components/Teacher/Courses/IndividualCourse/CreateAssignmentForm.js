@@ -13,10 +13,11 @@ function CreateAssignmentForm() {
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const[name, setName] = useState();
     const[description, setDescription] = useState();
-    const[universityId, setUniversityId] = useState();
+    // const[universityId, setUniversityId] = useState();
     const teacther__id = localStorage.getItem('teacher__id');
     const teacher__token = localStorage.getItem('teacher__token');
     const teacher__email = localStorage.getItem('teacher__email');
+    const universityId = localStorage.getItem('university');
     const navigate = useNavigate();
     const location = useLocation();
     console.log(location.state);
@@ -24,54 +25,89 @@ function CreateAssignmentForm() {
     async function setNewCourse(event){
         event.preventDefault();
         console.log(name, description);
-        try {
-            const instance = axios.create({
-                headers: {
-                    'x-auth-token': teacher__token
+        if(location.state.course.courseType === "public"){
+            try {
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': teacher__token
+                    }
+                });
+                const new__course = await instance.post(backend_url + '/moocs/teacher/add/assignment', {
+                universityId: universityId,
+                name: name,
+                description: description,
+                email: teacher__email,
+                moocId: location.state.course._id
+                });
+                console.log(new__course);
+                if(new__course.status === 200){
+                    alert("course created successfully");
+                    navigate('/teacher/courses');
                 }
-            });
-            const new__course = await instance.post(backend_url + '/teacher/assignment/add', {
-            universityId: universityId,
-            name: name,
-            description: description,
-            email: teacher__email,
-            courseId: location.state.course._id
-            });
-            console.log(new__course);
-            if(new__course.status === 200){
-                alert("course created successfully");
-                navigate('/teacher/courses');
+            
+            } catch (error) {
+                console.log(error);
+                if(error.response.status === 401){
+                    alert("please login again");
+                    localStorage.removeItem('teacher__token');
+                    navigate('/teacher/login');
+                }
+                else{
+                    alert(error.response.data.message + ". please try again");
+                    // navigate('/teacher/courses/createassignment');
+                }
             }
-        
-        } catch (error) {
-            console.log(error);
-            if(error.response.status === 401){
-                alert("please login again");
-                localStorage.removeItem('teacher__token');
-                navigate('/teacher/login');
-            }
-            else{
-                alert(error.response.data.message + ". please try again");
-                navigate('/teacher/courses/createassignment');
+        }
+        else{
+            try {
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': teacher__token
+                    }
+                });
+                const new__course = await instance.post(backend_url + '/teacher/assignment/add', {
+                universityId: universityId,
+                name: name,
+                description: description,
+                email: teacher__email,
+                courseId: location.state.course._id
+                });
+                console.log(new__course);
+                if(new__course.status === 200){
+                    alert("course created successfully");
+                    navigate('/teacher/courses');
+                }
+            
+            } catch (error) {
+                console.log(error);
+                if(error.response.status === 401){
+                    alert("please login again");
+                    localStorage.removeItem('teacher__token');
+                    navigate('/teacher/login');
+                }
+                else{
+                    alert(error.response.data.message + ". please try again");
+                    navigate('/teacher/courses/createassignment', {state: location.state});
+                }
             }
         }
     }
 
-    async function setAllDetails(){
-        let teacher__data;
-        try {
-            teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id});
-            console.log(teacher__data);
-        } catch (error) {
-            console.log(error);
-        }
-        const {university} = teacher__data.data;
-        setUniversityId(university);
-    }
+    // async function setAllDetails(){
+    //     let teacher__data;
+    //     try {
+    //         teacher__data = await axios.post(backend_url + '/teacher/data', {teacherId: teacther__id, email: teacher__email});
+    //         console.log(teacher__data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    //     const {university} = teacher__data.data;
+    //     setUniversityId(university);
+    // }
 
-    useEffect(() => {
-        setAllDetails();
-    }, [])
+    // useEffect(() => {
+    //     setAllDetails();
+    // }, [])
 
   return (
     <div className='assignment__create__form flex md:block'>

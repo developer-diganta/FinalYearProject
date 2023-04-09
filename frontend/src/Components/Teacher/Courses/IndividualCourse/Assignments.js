@@ -40,7 +40,23 @@ function Assignments() {
   console.log(location);
 
   async function getassignments(){
-    try {
+    if(location.state.course.courseType === "public"){
+      try {
+        const instance = axios.create({
+            headers: {
+                'x-auth-token': teacherToken,
+            },
+        });
+        const all__courses = await instance.post(backend_url + `/moocs/assignment/get`, {teacherId: teacherId, email: teacher__email, moocId: location.state.course._id});
+        console.log(all__courses);
+        setassignments([...all__courses.data.assignments]);
+      } catch (error) {
+          console.log(error);
+          alert('Something went wrong');
+      }
+    }
+    else{
+      try {
         const instance = axios.create({
             headers: {
                 'x-auth-token': teacherToken,
@@ -53,6 +69,8 @@ function Assignments() {
           console.log(error);
           alert('Something went wrong');
       }
+    }
+
   }
   useState(() => {
       getassignments();
@@ -61,7 +79,7 @@ function Assignments() {
     <div>
       <div className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3 sm:flex-col sm:w-full sm:mt-0 sm:mb-0'>
           <h1 className='text-xl font-bold sm:my-2' style={{letterSpacing: "1px"}}>Assignments</h1>
-          <div className='divider bg-divider min-h-[1px] min-w-[95%] max-w-[95%] mx-auto'></div>
+          <div className='divider bg-divider min-h-[1px] min-w-[95%] max-w-[95%] mx-auto hidden sm:block'></div>
           <div className="flex items-center gap-4 sm:py-2">
               <div className='relative'>
                   <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setDropDown(!dropDown)}>Sort By 
@@ -74,7 +92,7 @@ function Assignments() {
                   </div>
               </div>
               <div className='bg-[#6b7780] sm:hidden px-4 rounded-3xl cursor-pointer py-1 text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/courses/createassignment', {state: location.state})}>Create New Assignment <span className='text-lg pl-2'>+</span> </div>
-              <div className='bg-[#6b7780] hidden sm:flex h-10 w-10 rounded-full text-xl cursor-pointer py-1 text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/courses/createassignment', {state: location.state})}>+</div>
+              <div className='bg-[#6b7780] hidden sm:flex h-10 w-10 rounded-full text-xl cursor-pointer py-1 text-white items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/courses/createassignment', {state: location.state})}>+</div>
           </div>
       </div>
       <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>

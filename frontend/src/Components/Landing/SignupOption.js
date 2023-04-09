@@ -7,18 +7,31 @@ import './LandingPage.css'
 
 function SignupOption() {
     const navigate = useNavigate();
+
     async function checkForSignup(){
-        console.log("Check??")
         const token = localStorage.getItem('teacher__token');
         const teacher__id = localStorage.getItem('teacher__id');
+        const teacher__email = localStorage.getItem('teacher__email');
         if(token){
-            const res = await axios.post(backend_url + '/teacher/data', {teacherId: teacher__id});
-            console.log("15", res.data.status);
-            if(res.data.status === "active"){
-                navigate('/teacher/dashboard');
-            }
-            else{
-                navigate('/teacher/status');
+            try{
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': token,
+                    }
+                });
+                const res = await instance.post(backend_url + '/teacher/data', {teacherId: teacher__id, email: teacher__email});
+                console.log("15", res.data.status);
+                if(res.data.status === "active"){
+                    navigate('/teacher/dashboard');
+                }
+                else{
+                    navigate('/teacher/status');
+                }
+            } catch(err) {
+                console.log(err);
+                alert("Something went wrong");
+                localStorage.removeItem('teacher__token');
+                navigate('/teacher/signup');
             }
         }
         else{
@@ -30,14 +43,21 @@ function SignupOption() {
         console.log("Check??")
         const student__token = localStorage.getItem('student__token');
         const student__id = localStorage.getItem('student__id');
+        const student__email = localStorage.getItem('student__email');
         if(student__token){
-            const res = await axios.post(backend_url + '/student/data', {studentId: student__id});
-            console.log("15", res.data.status);
-            if(res.data.status === "active"){
-                navigate('/student/dashboard');
-            }
-            else{
-                navigate('/student/status');
+            try {
+                const res = await axios.post(backend_url + '/student/data', {studentId: student__id});
+                console.log("15", res.data.status);
+                if(res.data.status === "active"){
+                    navigate('/student/dashboard');
+                }
+                else{
+                    navigate('/student/status');
+                }
+            } catch (error) {
+                console.log(error);
+                alert("Something went wrong");
+                navigate('/student/signup');
             }
         }
         else{

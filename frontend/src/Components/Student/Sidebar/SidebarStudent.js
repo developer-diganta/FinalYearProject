@@ -99,7 +99,7 @@ function SidebarStudent() {
             </div>
           </div>
         </section>
-      </div>
+    </div>
   )
 }
 

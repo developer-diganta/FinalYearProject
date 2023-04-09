@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { backend_url } from '../../../../BackendRoutes';
+import { useNavigate } from 'react-router-dom';
 
 function AddStudentToCourse({currentCourse}) {
     const[allStudents, setAllStudents] = useState([]);
@@ -10,6 +11,8 @@ function AddStudentToCourse({currentCourse}) {
     const teacher__token = localStorage.getItem('teacher__token');
     const teacherId = localStorage.getItem('teacher__id');
     const teacher__email = localStorage.getItem('teacher__email');
+    
+    const navigate = useNavigate();
 
     console.log(currentCourse);
 
@@ -22,14 +25,14 @@ function AddStudentToCourse({currentCourse}) {
           });
     
           console.log("jgfwjegfkw", currentCourse.course.university);
-          const res = await axios.post(backend_url + '/teacher/university/student', {universityId: currentCourse.course.university});
+          const res = await instance.post(backend_url + '/teacher/university/student', {universityId: currentCourse.course.university, email: teacher__email});
           console.log(res);
           setAllStudents(res.data);
         } catch (error) {
           console.log(error);
           alert("Something went wrong");
           if(error.response.status === 401){
-            // navigate('/teacher/login');
+            navigate('/teacher/login');
           }
         }
       }
@@ -57,8 +60,8 @@ function AddStudentToCourse({currentCourse}) {
                 },
             });
             const all__courses = await instance.post(backend_url + `/teacher/course/addStudent`, {teacherId: teacherId, email: teacher__email, courseId: currentCourse.course._id, studentId: studentId});
-            // console.log(all__courses);
-            if(all__courses.data.status === 200){
+            console.log(all__courses);
+            if(all__courses.status === 200){
                 alert(all__courses.data.message);
             }
         } catch (error) {

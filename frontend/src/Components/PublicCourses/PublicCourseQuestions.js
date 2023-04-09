@@ -1,16 +1,13 @@
 import axios from 'axios';
-import React from 'react'
-import { useState } from 'react';
-import { CgChevronDoubleRight } from 'react-icons/cg';
-import { IoIosArrowDown } from 'react-icons/io';
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom'
-import { backend_url } from '../../../../BackendRoutes';
-import SidebarStudent from '../../Sidebar/SidebarStudent';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { backend_url } from '../../BackendRoutes';
 import { BiCheck } from 'react-icons/bi';
-import '../StudentCourse.css';
+import SidebarStudent from '../Student/Sidebar/SidebarStudent';
+import { CgChevronDoubleRight } from 'react-icons/cg';
 
-function StudentAssignment() {
+function PublicCourseQuestions() {
     const[questions, setQuestions] = useState([]);
     const[dropDown, setDropDown] = useState(false);
     const student__token = localStorage.getItem('student__token');
@@ -30,9 +27,9 @@ function StudentAssignment() {
                   'x-auth-token': student__token,
               },
           });
-          const all__courses = await instance.post(backend_url + `/student/questions`, {studentId: student__id, assignmentId: location.state.assignment._id});
+          const all__courses = await instance.post(backend_url + `/moocs/question`, {assignmentId: location.state.assignment._id});
           console.log(all__courses);
-          setQuestions(all__courses.data);
+          setQuestions(all__courses.data.questions);
         } catch (error) {
             console.log(error);
             alert('Something went wrong');
@@ -118,4 +115,4 @@ function StudentAssignment() {
   )
 }
 
-export default StudentAssignment
+export default PublicCourseQuestions

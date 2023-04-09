@@ -10,22 +10,28 @@ function UnvAddSchoolForm() {
     const[unvSchools, setUnvSchools] = useState()
     const unvToken = localStorage.getItem('signup_token');
     const unvId = localStorage.getItem('university__id');
+    const university__email = localStorage.getItem('university__email');
     const navigate = useNavigate();
     const { openClose, unvSign } = useSelector((state) => state.counter);
 
     async function addSchoolToUniversity(event){
         event.preventDefault();
         console.log(unvSchools);
-        const instance = axios.create({
-            headers: {
-              'x-auth-token': unvToken,
-            },
-        });
-        const getResponse = await instance.post(backend_url + '/university/addSchool', {schoolName: unvSchools, universityId: unvId});
-        console.log(getResponse);
-        alert(getResponse.data.message);
-        if(getResponse.data.message === "School added successfully"){
-            navigate('/university/schools');
+        try {
+            const instance = axios.create({
+                headers: {
+                  'x-auth-token': unvToken,
+                },
+            });
+            const getResponse = await instance.post(backend_url + '/university/addSchool', {schoolName: unvSchools, universityId: unvId, email: university__email});
+            console.log(getResponse);
+            alert(getResponse.data.message);
+            if(getResponse.data.message === "School added successfully"){
+                navigate('/university/schools');
+            }
+        } catch (error) {
+            console.log(error);
+            alert(error.response.data.message);
         }
     }
 
@@ -45,7 +51,7 @@ function UnvAddSchoolForm() {
                 <form className='bg-formBackground w-3/4 mx-auto py-4 px-6 rounded-md shadow-md' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} action="" onSubmit={addSchoolToUniversity}>
                     <div className='flex flex-col gap-2'>
                         <label className='pt-4' htmlFor="schoolName">School Name</label>
-                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onClick={(event) => setUnvSchools(event.target.value)} />
+                        <input type="text" className='py-1 px-2 rounded-md' name="schoolName" required id="schoolName" style={{outline: "none", letterSpacing: "2px"}} onChange={(event) => setUnvSchools(event.target.value)} />
                     </div>
                     <div className='w-full flex justify-center'>
                         <button className='bg-[#BFC9CA] py-1 px-4 rounded-sm my-4' style={{letterSpacing: "2px"}}>Add School</button>

@@ -3,12 +3,15 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { backend_url } from '../../../../BackendRoutes';
+import { useNavigate } from 'react-router-dom';
 
 function CourseStudents({currentCourse}) {
     const[allStudents, setAllStudents] = useState([]);
     console.log(currentCourse);
     const teacher__token = localStorage.getItem('teacher__token');
     const teacher__email = localStorage.getItem('teacher__email');
+    const teacher__id = localStorage.getItem('teacher__id');
+    const navigate = useNavigate();
 
     async function getStudents(){
         try {
@@ -19,14 +22,14 @@ function CourseStudents({currentCourse}) {
           });
     
           console.log("jgfwjegfkw", currentCourse.course.university);
-          const res = await axios.post(backend_url + '/teacher/university/student', {universityId: currentCourse.course.university});
+          const res = await instance.post(backend_url + '/teacher/university/student', {universityId: currentCourse.course.university, email: teacher__email});
           console.log(res);
           setAllStudents(res.data);
         } catch (error) {
           console.log(error);
           alert("Something went wrong");
           if(error.response.status === 401){
-            // navigate('/teacher/login');
+            navigate('/teacher/login');
           }
         }
       }
@@ -60,7 +63,7 @@ function CourseStudents({currentCourse}) {
                 <div key={index} className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3 border-[1px] border-[#6b7780] rounded-full'>
                     <div className='flex items-center px-2 py-2'>
                         <div className='w-8 h-8 rounded-full flex justify-center items-center text-white mr-4 font-bold sm:text-sm sm:w-6 sm:h-6' style={{backgroundImage: "linear-gradient(to right top, #7633b7, #7739c7, #7640d9, #7347ea, #6e4ffc)"}}>{index+1}</div>
-                        <div className='flex items-center gap-8'>
+                        <div className='flex items-center gap-8 xxs:flex-col xxs:gap-1'>
                             <p className='text-lg font-semibold sm:text-sm'>{item.name}</p>
                             <p className='text-sm text-gray-500 sm:text-xs'>{item.email}</p>
                         </div>

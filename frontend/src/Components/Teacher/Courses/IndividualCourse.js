@@ -54,8 +54,8 @@ function IndividualCourse() {
                 <FiEdit className='xs:hidden' />
                 <p>Assignments</p>
               </div>              
-              <div className="vertical__divider min-h-[20px] max-h-[20px] min-w-[1px] bg-white"></div>
-              <div className='flex items-center gap-2 text-white hover:border-[1px] hover:border-[#FFF] border-[1px] border-[transparent] px-2 py-1 rounded-sm cursor-pointer duration-200'
+              <div className={`${location.state.course.courseType === 'public' ? 'hidden' : 'block'} vertical__divider min-h-[20px] max-h-[20px] min-w-[1px] bg-white`}></div>
+              <div className={`${location.state.course.courseType === 'public' ? 'hidden' : 'flex'} items-center gap-2 text-white hover:border-[1px] hover:border-[#FFF] border-[1px] border-[transparent] px-2 py-1 rounded-sm cursor-pointer duration-200`}
                 onClick={() => setShowOption('students')}
               >
                 <HiOutlineUserGroup className='xs:hidden' />
