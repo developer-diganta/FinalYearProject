@@ -519,6 +519,7 @@ const addCourse = async (req, res) => {
     try {
 
         const university = await models.University.findById(universityId).exec();
+        console.log({ university })
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -566,6 +567,7 @@ const addAssignment = async (req, res) => {
         name,
         description
     } = req.body;
+    console.log({ universityId })
     try {
         const university = await models.University.findById(universityId).exec();
         if (!university) {
@@ -609,6 +611,7 @@ const addQuestion = async (req, res) => {
         tags,
         score
     } = req.body;
+    console.log(req.body)
     try {
         const university = await models.University.findById(universityId).exec();
         if (!university) {

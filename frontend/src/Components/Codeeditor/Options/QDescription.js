@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 // import { Questions } from '../../../Question';
 
-function QDescription({question}) {
+function QDescription({ question }) {
 
-  const[sampleInputFileData, setsampleInputFileData] = useState("");
-  const[sampleOutputFileData, setsampleOutputFileData] = useState("");
-  const{id} = useParams();
+  const [sampleInputFileData, setsampleInputFileData] = useState("");
+  const [sampleOutputFileData, setsampleOutputFileData] = useState("");
+  const { id } = useParams();
   console.log(question);
   const question__description = question.question.split("\n");
   // const question = Questions.filter((question) => question.id === parseInt(id))[0];
@@ -42,10 +42,10 @@ function QDescription({question}) {
     const c = getSampleOutput();
     const d = c.split("\r\n");
     setsampleOutputFileData(d);
-}, [])
+  }, [])
 
   return (
-    <div className='question__solve text-[#414242]' style={{fontFamily: "sans-serif"}}>
+    <div className='question__solve text-[#414242]' style={{ fontFamily: "sans-serif" }}>
       {
         question ?
           <div>
@@ -53,8 +53,8 @@ function QDescription({question}) {
               <h1 className='text-2xl pb-2 font-semibold'>{question.title}</h1>
             </div>
             <div className='question__difficulty flex items-center gap-2'>
-              <p className='text-xs text-[#969898]' style={{letterSpacing: "2px"}}>Diffeculty: </p>
-              <p className={`text-xs uppercase font-bold ${question.difficulty === 'easy' ? 'text-[#97D01E]' : question.difficulty === 'medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} `} style={{letterSpacing: "2px", fontWeight: "800"}}>{question.difficulty}</p>
+              <p className='text-xs text-[#969898]' style={{ letterSpacing: "2px" }}>Diffeculty: </p>
+              <p className={`text-xs uppercase font-bold ${question.difficulty === 'easy' ? 'text-[#97D01E]' : question.difficulty === 'medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} `} style={{ letterSpacing: "2px", fontWeight: "800" }}>{question.difficulty}</p>
             </div>
             <div className='divider min-w-[100%] min-h-[1px] bg-[#D1D2D2] my-2'></div>
             <div>
@@ -63,14 +63,14 @@ function QDescription({question}) {
                   question__description ? question__description.map((data, index) => {
                     return (
                       <>
-                        <p className='text-sm' style={{letterSpacing: "1px"}} key={index}>{data}</p>
+                        <p className='text-sm' style={{ letterSpacing: "1px" }} key={index}>{data}</p>
                         <br />
                       </>
                     )
                   })
-                  :
-                  console.log('')
-                }  
+                    :
+                    console.log('')
+                }
               </p>
             </div>
             <div>
@@ -84,8 +84,8 @@ function QDescription({question}) {
                         <p className='text-sm' key={index}>{data}</p>
                       )
                     })
-                    :
-                    console.log('')
+                      :
+                      console.log('')
                   }
                 </div>
               </div>
@@ -99,15 +99,15 @@ function QDescription({question}) {
                         <p className='text-sm' key={index}>{data}</p>
                       )
                     })
-                    :
-                    console.log('')
+                      :
+                      console.log('')
                   }
                 </div>
               </div>
             </div>
           </div>
-        :
-        console.log("dkjfsdkjksj.")
+          :
+          console.log("dkjfsdkjksj.")
       }
     </div>
   )
