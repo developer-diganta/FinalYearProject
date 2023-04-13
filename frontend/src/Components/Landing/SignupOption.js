@@ -46,7 +46,14 @@ function SignupOption() {
         const student__email = localStorage.getItem('student__email');
         if(student__token){
             try {
-                const res = await axios.post(backend_url + '/student/data', {studentId: student__id});
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': student__token,
+                    }
+                });
+                
+                console.log(student__token, instance);
+                const res = await instance.post(backend_url + '/student/data', {studentId: student__id, email: student__email});
                 console.log("15", res.data.status);
                 if(res.data.status === "active"){
                     navigate('/student/dashboard');
