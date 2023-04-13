@@ -874,7 +874,7 @@ const studentSignUp = async (req, res) => {
                                                 res.status(500).json(err);
                                             else {
                                                 const token = generateToken(email);
-                                                res.status(200).json({ auth: true, token: token, _id: student._id });
+                                                res.status(200).json({ auth: true, token: token, _id: student._id, university: uniId });
                                             }
                                         });
                                     }
