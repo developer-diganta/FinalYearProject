@@ -2192,7 +2192,7 @@ const studentLogin = async (req, res) => {
                         else {
                             if (result) {
                                 const token = generateToken(student[0].email);
-                                res.status(200).json({ auth: true, token: token, _id: student[0]._id });
+                                res.status(200).json({ auth: true, token: token, _id: student[0]._id, university: student[0].university });
                             }
                             else
                                 res.status(200).json({ message: "Invalid password" });
