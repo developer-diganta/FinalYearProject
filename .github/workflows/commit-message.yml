@@ -1,18 +1,23 @@
-name: Check commit messages
-
-on:
-  push:
-  pull_request:
+name: Check Commit Messages
+on: push
 
 jobs:
-  commitlint:
+  commit-message-check:
+    name: Commit Message Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-      - name: Install dependencies
-        run: npm install
-      - name: Check commit messages
-        run: npx commitlint --from=HEAD~1
+
+      - name: Install Dependencies
+        run: npm install @commitlint/cli @commitlint/config-conventional wagoid/commitlint-github-action@v5
+
+      - name: Run Commit Lint
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          config-path: './node_modules/@commitlint/config-conventional/index.js'
