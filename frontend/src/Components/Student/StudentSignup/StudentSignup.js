@@ -37,6 +37,7 @@ function StudentSignup() {
     localStorage.setItem('student__token', res.data.token);
     localStorage.setItem('student__id', res.data._id);
     localStorage.setItem('student__email', email);
+    localStorage.setItem('university', res.data.university);
     if(res.data.auth == true){
       navigate('/student/status');
     }
