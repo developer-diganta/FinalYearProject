@@ -6,6 +6,7 @@ submission = {
     status: String,
     dateCreated: Date,
     plagarized: Boolean,
+    review: String
 }
 
 module.exports = submission;

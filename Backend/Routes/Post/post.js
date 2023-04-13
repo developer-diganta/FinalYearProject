@@ -75,6 +75,15 @@ router.post("/teacher/courses/getQuestionsInAssignment", authorise, controls.get
 router.post("/teacher/course/students", authorise, controls.getStudentDetails);
 
 router.post("/teacher/university/student", authorise, controls.getUniversityStudentData);
+
+
+router.post("/teacher/analysis/student/allSubmissions", authorise, controls.analysisStudentAllSubmissions);
+router.post("/teacher/analysis/student/individualSubmission", authorise, controls.individualSubmission)
+
+router.post("/teacher/analysis/student/submission/changePlagarism", authorise, controls.changePlagarism);
+
+router.post("/teacher/analysis/student/submission/grade", authorise, controls.analysisTeacherToStudentGrade)
+
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
 

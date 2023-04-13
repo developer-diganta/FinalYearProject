@@ -12,6 +12,7 @@ const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/Auth/jwtGeneration");
 const { model } = require("mongoose");
 const PlagiarismChecker = require("../utils/PlagarismChecker/plagarismChecker");
+const sgMail = require('@sendgrid/mail');
 
 // const passport = require("passport");
 let languageIds = null;
@@ -831,6 +832,76 @@ const getStudentDetails = async (req, res) => {
     }
 }
 
+const analysisStudentAllSubmissions = async (req, res) => {
+    try {
+        const { studentId, questionId } = req.body;
+        const student = await models.Student.findById(studentId).exec();
+        if (!student) {
+            res.status(404).json({ "message": "Invalid Student ID" });
+        }
+        const question = await models.Student.findById(questionId).exec();
+        if (!question) {
+            res.status(404).json({ "message": "Invalid Question ID" });
+        }
+        const submissions = await models.Question.find({ student: studentId, question: questionId });
+        res.status(200).json({ submissions });
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
+    }
+}
+
+const individualSubmission = async (req, res) => {
+    try {
+        const { submissionId } = req.body;
+        const submission = await models.Question.findById(submissionId);
+        res.status(200).json({ submission });
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
+    }
+}
+
+const changePlagarism = async (req, res) => {
+    try {
+        const { submissionId, plagValue } = req.body;
+        const submission = await models.Submission.findById(submissionId);
+        submission.plagarized = plagValue === 0 ? false : true;
+        await submission.save();
+        res.status(200).json({ "message": "Plagarism Changed!" })
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
+    }
+}
+
+const analysisTeacherToStudentGrade = async (req, res) => {
+    try {
+        const { submissionId, review } = req.body;
+        const submission = await models.Submission.findById(submissionId);
+        submission.review = review;
+        await submission.save();
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        const msg = {
+            to: `${req.body.email}`,
+            from: 'digantabanik2000@gmail.com',
+            subject: 'Your Question Has Been Graded!',
+            text: 'Sample Data',
+            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        };
+        (async () => {
+            try {
+                await sgMail.send(msg);
+            } catch (error) {
+                console.error(error);
+
+                if (error.response) {
+                    console.error(error.response.body)
+                }
+            }
+        })();
+        res.status(200).json({ "message": "EMAIL SENT!" })
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
+    }
+}
 
 // --------------------------------------------------------------------------------------------- End Teacher Controllers --------------------------------------------------------------------------------------------- //
 
@@ -2586,5 +2657,9 @@ module.exports = {
     getAssignmentsFromMoocs,
     getQuestionsInMooc,
     getMoocQuestionById,
-    submitCodeToMoocs
+    submitCodeToMoocs,
+    analysisStudentAllSubmissions,
+    individualSubmission,
+    changePlagarism,
+    analysisTeacherToStudentGrade
 };
