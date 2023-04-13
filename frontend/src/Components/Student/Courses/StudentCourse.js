@@ -46,6 +46,7 @@ function StudentCourse() {
       const dateObj = new Date(all__courses);
       
       let coursesArray = []
+      
       for(let i=0; i<all__courses.data.courses.length; i++){
         const courseDetail = await instance.post(backend_url + `/university/course/details`, {universityId: universityDetail, courseId: all__courses.data.courses[i].course});
         courseDetail.data.completed = all__courses.data.courses[i].completed;

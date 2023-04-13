@@ -96,6 +96,14 @@ function SidebarStudent() {
                 </h2>
               </Link>
               ))}
+              <div className='ml-2 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
+                localStorage.removeItem('student__token');
+                localStorage.removeItem('student__id');
+                localStorage.removeItem('student__email');
+                navigate('/');
+              }}>
+                Log out
+              </div>
             </div>
           </div>
         </section>

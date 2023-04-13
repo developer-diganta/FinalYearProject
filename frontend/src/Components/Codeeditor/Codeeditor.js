@@ -36,44 +36,46 @@ function Codeeditor() {
   const student_id = localStorage.getItem('student__id');
   const university = localStorage.getItem('university');
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  // console.log(location, student_id);
+    const location = useLocation();
+    const navigate = useNavigate();
+    console.log(location, student_id);
+
+// atob
 
   function chooseOptions(event, options) {
     event.preventDefault();
     setOptions(options);
   }
 
-  const submit = async () => {
-    console.log(location.state.courseDetail.courseType, "*");
-    if (location.state.courseDetail.courseType === "public") {
-      try {
-        setOpScreen(true);
-        setOutput('');
-        console.log(code);
-        const sub_res = await axios.post(backend_url + '/moocs/question/code/submit', { code: code, student_id: student_id, question_id: location.state.question._id, language_id: language });
-        console.log(sub_res.data);
-        setOutput(base64.decode(sub_res.data.stdout));
-      } catch (err) {
-        console.log(err);
-        alert('Something went wrong');
-      }
+    const submit = async () => {
+      // console.log(location.state.courseDetail.course.courseType, "*");
+        if(location.state.courseDetail.courseType === "public"){
+          try{
+            setOpScreen(true);
+            setOutput('');
+            console.log(code);
+            const sub_res = await axios.post(backend_url + '/moocs/question/code/submit', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
+            console.log(sub_res.data);
+            setOutput(base64.decode(sub_res.data.stdout));
+          }catch(err){
+            console.log(err);
+            alert('Something went wrong');
+          }
+        }
+        else{
+          try{
+            setOpScreen(true);
+            setOutput('');
+            console.log(code);
+            const sub_res = await axios.post(backend_url + '/submit/student', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
+            console.log(sub_res.data.stdout);
+            setOutput(base64.decode(sub_res.data.stdout));
+          }catch(err){
+            console.log(err);
+            alert('Something went wrong');
+          }
+        }
     }
-    else {
-      try {
-        setOpScreen(true);
-        setOutput('');
-        console.log(code);
-        const sub_res = await axios.post(backend_url + '/submit/student', { code: code, student_id: student_id, question_id: location.state.question._id, language_id: language });
-        console.log(sub_res.data.stdout);
-        setOutput(base64.decode(sub_res.data.stdout));
-      } catch (err) {
-        console.log(err);
-        alert('Something went wrong');
-      }
-    }
-  }
 
   async function runCode() {
     setOpScreen(true);
@@ -193,8 +195,19 @@ function Codeeditor() {
                     </svg>
                   </div>
                 </div>
-                <div className='output_box'>
-                  <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center'><img style={{ height: "100px" }} src="loading.gif" alt="" /></div>}</div>
+                <div className={opScreen === false ? 'hide-op' : 'output'}>
+                  <div className="dw bg-slate-300 flex justify-between items-center gap-2 pr-8 cursor-pointer" onClick={hideScreen}>
+                    <div className='pt-1 pb-1 pl-4'>OUTPUT</div>
+                    <div className='flex items-center'>
+                      Hide
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className='output_box'>
+                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center flex-col items-center'><img style={{height: "100px"}} src="/loading1.gif" alt="" /><p className='text-[#000000] text-xs -top-4 relative'>compiling....</p></div>}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -292,8 +305,21 @@ function Codeeditor() {
                     </svg>
                   </div>
                 </div>
-                <div className='output_box'>
-                  <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center'><img style={{ height: "100px" }} src="loading.gif" alt="" /></div>}</div>
+                <div className={opScreen === false ? 'hide-op' : 'output'}>
+                  <div className="dw bg-slate-300 flex justify-between items-center gap-2 pr-8 cursor-pointer" onClick={hideScreen}>
+                    <div className='pt-1 pb-1 pl-4'>OUTPUT</div>
+                    <div className='flex items-center'>
+                      Hide
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className='output_box'>
+                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>
+                      {output === '????' ? null : output}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

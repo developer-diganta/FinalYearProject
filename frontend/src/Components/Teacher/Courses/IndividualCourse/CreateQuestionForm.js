@@ -144,7 +144,7 @@ function CreateQuestionForm() {
                         console.log(event.target.value);
                         setQuestionDifficulty(event.target.value)
                     }}>
-                        <option>Choose diffeculty</option>
+                        <option>Choose difficulty</option>
                         <option value="easy">Easy</option>
                         <option value="medium">Medium</option>
                         <option value="hard">Hard</option>

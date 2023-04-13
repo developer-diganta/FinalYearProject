@@ -26,6 +26,11 @@ function Question() {
   }
   const location = useLocation();
   console.log("location.", location);
+
+  const teacher__token = localStorage.getItem('teacher__token');
+  const teacher__id = localStorage.getItem('teacher__id');
+  const teacher__email = localStorage.getItem('teacher__email');
+
   // const allQuestions = [
   //   {
   //     title: "String Manipulation",
@@ -75,7 +80,12 @@ function Question() {
     }
     else {
       try {
-        const questions = await instance.post(backend_url + '/teacher/courses/getQuestionsInAssignment', { assignmentId: location.state.assignment._id, email: email });
+        const instance = axios.create({
+          headers: {
+            'x-auth-token': teacher__token
+          }
+      })
+        const questions = await instance.post(backend_url + '/teacher/courses/getQuestionsInAssignment', {assignmentId: location.state.assignment._id, email: teacher__email});
         console.log("questions.", questions);
         setAllQuestions(questions.data.questions);
       } catch (error) {
@@ -136,13 +146,14 @@ function Question() {
                 })
                   :
                   null
-              }
-            </div>
-            :
-            <div>
-              <div className='flex justify-center items-center w-full flex-col'>
-                <img src="/teacherrC.svg" className='w-48 h-48 mt-20 opacity-50' alt="" />
-                <h2 className='py-4 font-semibold'>No Courses Found.</h2>
+                }
+              </div>
+              :
+              <div>
+                  <div className='flex justify-center items-center w-full flex-col'>
+                      <img src="/teacherrC.svg" className='w-48 h-48 mt-20 opacity-50' alt="" />
+                      <h2 className='py-4 font-semibold'>No Questions Found.</h2>
+                  </div>
               </div>
             </div>
         }
