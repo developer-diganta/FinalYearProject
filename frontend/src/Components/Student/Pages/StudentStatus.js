@@ -7,10 +7,19 @@ import LandingHeader from '../../Landing/LandingHeader'
 
 function StudentStatus() {
 
+  const student__token = localStorage.getItem('student__token');
+  const student__email = localStorage.getItem('student__email');
+  const student__id = localStorage.getItem('student__id');
+
   const navigate = useNavigate();
 
   async function checkForStatus(){
-    const res = await axios.post(backend_url + '/student/data', {studentId: localStorage.getItem('student__id')});
+    const instance = axios.create({
+        headers: {
+            'x-auth-token': student__token,
+        },
+    });
+    const res = await axios.post(backend_url + '/student/data', {studentId: localStorage.getItem('student__id'), email: student__email});
     console.log(res);
     if(res.data.status == 'active'){
       navigate('/student/dashboard');

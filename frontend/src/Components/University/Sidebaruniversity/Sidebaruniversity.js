@@ -92,6 +92,14 @@ const Sidebaruniversity = () => {
                 </h2>
               </Link>
               ))}
+              <div className='ml-2 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
+                localStorage.removeItem('signup_token');
+                localStorage.removeItem('university__id');
+                localStorage.removeItem('university__email');
+                navigate('/');
+              }}>
+                Log out
+              </div>
             </div>
           </div>
         </section>

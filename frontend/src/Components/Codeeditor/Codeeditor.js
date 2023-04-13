@@ -38,7 +38,9 @@ function Codeeditor() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    // console.log(location, student_id);
+    console.log(location, student_id);
+
+// atob
 
     function chooseOptions(event, options) {
         event.preventDefault();
@@ -46,8 +48,8 @@ function Codeeditor() {
     }
 
     const submit = async () => {
-      console.log(location.state.courseDetail.course.courseType, "*");
-        if(location.state.courseDetail.course.courseType === "public"){
+      // console.log(location.state.courseDetail.course.courseType, "*");
+        if(location.state.courseDetail.courseType === "public"){
           try{
             setOpScreen(true);
             setOutput('');
@@ -194,7 +196,7 @@ function Codeeditor() {
                     </div>
                   </div>
                   <div className='output_box'>
-                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center'><img style={{height: "100px"}} src="loading.gif" alt="" /></div>}</div>
+                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center flex-col items-center'><img style={{height: "100px"}} src="/loading1.gif" alt="" /><p className='text-[#000000] text-xs -top-4 relative'>compiling....</p></div>}</div>
                   </div>
                 </div>
               </div>
@@ -293,7 +295,9 @@ function Codeeditor() {
                     </div>
                   </div>
                   <div className='output_box'>
-                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center'><img style={{height: "100px"}} src="loading.gif" alt="" /></div>}</div>
+                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>
+                      {output === '????' ? null : output}
+                    </div>
                   </div>
                 </div>
               </div>

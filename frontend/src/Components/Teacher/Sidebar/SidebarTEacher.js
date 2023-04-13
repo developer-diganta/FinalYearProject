@@ -97,6 +97,14 @@ const SidebarTEacher = () => {
                   </h2>
                 </Link>
               ))}
+              <div className='ml-2 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
+                localStorage.removeItem('teacher__token');
+                localStorage.removeItem('teacher__id');
+                localStorage.removeItem('teacher__email');
+                navigate('/');
+              }}>
+                Log out
+              </div>
             </div>
           </div>
         </section>

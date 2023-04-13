@@ -30,7 +30,7 @@ function StudentAssignment() {
                   'x-auth-token': student__token,
               },
           });
-          const all__courses = await instance.post(backend_url + `/student/questions`, {studentId: student__id, assignmentId: location.state.assignment._id});
+          const all__courses = await instance.post(backend_url + `/student/questions`, {studentId: student__id, assignmentId: location.state.assignment._id, email: student__email});
           console.log(all__courses);
           setQuestions(all__courses.data);
         } catch (error) {
@@ -109,7 +109,7 @@ function StudentAssignment() {
               <div>
                   <div className='flex justify-center items-center w-full flex-col'>
                       <img src="/teacherrC.svg" className='w-48 h-48 mt-20 opacity-50' alt="" />
-                      <h2 className='py-4 font-semibold'>No Courses Found.</h2>
+                      <h2 className='py-4 font-semibold'>No Questions Found.</h2>
                   </div>
               </div>
             }
