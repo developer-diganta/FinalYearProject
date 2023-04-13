@@ -38,8 +38,8 @@ function CreateQuestionForm() {
 
     async function getFormDetail(e) {
         e.preventDefault();
-        console.log(inputFile, base64In);
-        console.log(outputFile, base64Out, questionDifficulty);
+        console.log(base64In, base64Out);
+        console.log(sampleInput, sampleOutput);
         // console.log(questionTitle, questionDescription, questionDifficulty, inputFile, outputFile, tags);
         if (location.state.course.courseType === "public") {
             try {
@@ -157,8 +157,8 @@ function CreateQuestionForm() {
                                 const reader = new FileReader();
                                 reader.readAsDataURL(event.target.files[0]);
                                 reader.onload = () => {
-                                    console.log(reader.result);
-                                    setBase64In(reader.result);
+                                    console.log(reader.result.substring(23));
+                                    setBase64In(reader.result.substring(23));
                                 };
                             }} />
                         </div>
@@ -169,7 +169,8 @@ function CreateQuestionForm() {
                                 const reader2 = new FileReader();
                                 reader2.readAsDataURL(event.target.files[0]);
                                 reader2.onload = () => {
-                                    setBase64Out(reader2.result);
+                                    console.log(reader2.result.substring(23));
+                                    setBase64Out(reader2.result.substring(23));
                                 };
                             }} />
                         </div>
@@ -182,7 +183,7 @@ function CreateQuestionForm() {
                                 const reader3 = new FileReader();
                                 reader3.readAsDataURL(event.target.files[0]);
                                 reader3.onload = () => {
-                                    setsampleInput(reader3.result);
+                                    setsampleInput(reader3.result.substring(23));
                                 };
                             }} />
                         </div>
@@ -193,7 +194,7 @@ function CreateQuestionForm() {
                                 const reader4 = new FileReader();
                                 reader4.readAsDataURL(event.target.files[0]);
                                 reader4.onload = () => {
-                                    setsampleOutput(reader4.result);
+                                    setsampleOutput(reader4.result.substring(23));
                                 };
                             }} />
                         </div>
