@@ -113,7 +113,7 @@ router.post("/university/student/waitlist/reject/all", authorise, controls.rejec
 
 router.post("/university/course", authorise, controls.getUniversityCourse);
 
-router.post("/university/allUniversities", authorise, controls.getAllUniversities);
+router.post("/university/allUniversities", controls.getAllUniversities);
 
 router.post("/university/course/teacher/:id", authorise, controls.getUniversityCourseByTeacherId);
 
