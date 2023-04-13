@@ -35,6 +35,7 @@ function StudentLogin() {
       localStorage.setItem('student__token', student__login.data.token);
       localStorage.setItem('student__id', student__login.data._id);
       localStorage.setItem('student__email', email);
+      localStorage.setItem('university', student__login.data.university)
       // dispatch(universitySignup(true));
       navigate('/student/dashboard');
     }
