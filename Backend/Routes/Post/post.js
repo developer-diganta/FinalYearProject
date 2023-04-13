@@ -156,7 +156,7 @@ router.post("/teacher/course/question/analysis", authorise, controls.getQuestion
 router.post("/university/getStudents", controls.getStudents);
 
 
-router.post("/student/signin", authorise, controls.studentLogin);
+router.post("/student/signin", controls.studentLogin);
 router.post("/student/data", authorise, controls.getStudentData);
 router.post("/student/question", authorise, controls.getQuestionForStudent);
 
