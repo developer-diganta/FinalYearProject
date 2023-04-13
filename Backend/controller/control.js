@@ -1920,6 +1920,7 @@ const submitStudent = async (req, res) => {
         };
 
         const submissionResponse = await axios.request(getSubmissionOptions);
+        console.log(submissionResponse)
         // console.log(submissionResponse)
         console.log("3.Received submission response from compiler");
 
@@ -1940,7 +1941,7 @@ const submitStudent = async (req, res) => {
         console.log("4.Saved to Submission DB");
 
         question.studentsAttempted.push(student_id);
-
+        console.log(submissionResponse.data)
         if (submissionResponse.data.status.id === 3) {
             question.studentsCorrect.push(student_id);
         } else {
@@ -1948,7 +1949,6 @@ const submitStudent = async (req, res) => {
         }
 
         const getSubmissionData = await models.Submission.find({ question: question_id }).exec();
-        console.log(getSubmissionData)
         console.log("5.Retrieved submission data from DB");
 
         const checker = new PlagiarismChecker(getSubmissionData, student_id);
