@@ -2,13 +2,13 @@ name: Check commit message format
 on: [push, pull_request]
 
 jobs:
-commitlint:
-runs - on: ubuntu - latest
-steps:
-- uses: actions / checkout@v2
-- name: Install dependencies
-run: |
-    npm install @commitlint/cli @commitlint/config - conventional
-        - name: Check commit message
-run: |
-    npx commitlint--from = ${ { github.event.before } } --to=${ { github.sha } }
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          npm install @commitlint/cli @commitlint/config-conventional
+      - name: Check commit message
+        run: |
+          npx commitlint --from=${{ github.event.before }} --to=${{ github.sha }}
