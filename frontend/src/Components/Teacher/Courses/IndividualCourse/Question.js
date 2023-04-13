@@ -13,7 +13,6 @@ function Question() {
   const { openClose, unvSign } = useSelector((state) => state.counter);
   const email = localStorage.getItem('teacher__email');
   // const[allQuestions, setAllQuestions] = useState([]);
-  const teacher__token = localStorage.getItem('teacher__token');
   let instance;
   try {
     instance = axios.create({
@@ -155,7 +154,6 @@ function Question() {
                       <h2 className='py-4 font-semibold'>No Questions Found.</h2>
                   </div>
               </div>
-            </div>
         }
       </div>
     </div>
