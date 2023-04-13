@@ -4,6 +4,7 @@ const author = (req, res, next) => {
     const token = req.header("x-auth-token");
     console.log({ token })
     console.log("here now")
+    console.log(req.body.message)
     if (!token) {
         console.log("NO TOKEN DETECTED")
         res.status(401).json({ message: "No token detected" });

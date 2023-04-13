@@ -2191,7 +2191,7 @@ const studentLogin = async (req, res) => {
                             res.status(500).json(err);
                         else {
                             if (result) {
-                                const token = generateToken(student[0].name, student[0].email);
+                                const token = generateToken(student[0].email);
                                 res.status(200).json({ auth: true, token: token, _id: student[0]._id });
                             }
                             else
@@ -2211,6 +2211,7 @@ const studentLogin = async (req, res) => {
 
 const getStudentData = async (req, res) => {
     const { studentId } = req.body;
+    console.log("HEREX2")
     try {
         models.Student.find({ _id: studentId }, (err, student) => {
             if (err) {

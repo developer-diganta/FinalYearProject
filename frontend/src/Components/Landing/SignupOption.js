@@ -8,94 +8,94 @@ import './LandingPage.css'
 function SignupOption() {
     const navigate = useNavigate();
 
-    async function checkForSignup(){
+    async function checkForSignup() {
         const token = localStorage.getItem('teacher__token');
         const teacher__id = localStorage.getItem('teacher__id');
         const teacher__email = localStorage.getItem('teacher__email');
-        if(token){
-            try{
+        if (token) {
+            try {
                 const instance = axios.create({
                     headers: {
                         'x-auth-token': token,
                     }
                 });
-                const res = await instance.post(backend_url + '/teacher/data', {teacherId: teacher__id, email: teacher__email});
+                const res = await instance.post(backend_url + '/teacher/data', { teacherId: teacher__id, email: teacher__email });
                 console.log("15", res.data.status);
-                if(res.data.status === "active"){
+                if (res.data.status === "active") {
                     navigate('/teacher/dashboard');
                 }
-                else{
+                else {
                     navigate('/teacher/status');
                 }
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
                 alert("Something went wrong");
                 localStorage.removeItem('teacher__token');
                 navigate('/teacher/signup');
             }
         }
-        else{
+        else {
             navigate('/teacher/signup');
         }
     }
 
-    async function checkForStudentSignup(){
+    async function checkForStudentSignup() {
         console.log("Check??")
         const student__token = localStorage.getItem('student__token');
         const student__id = localStorage.getItem('student__id');
         const student__email = localStorage.getItem('student__email');
-        if(student__token){
+        if (student__token) {
             try {
                 const instance = axios.create({
                     headers: {
                         'x-auth-token': student__token,
                     }
                 });
-                
+
                 console.log(student__token, instance);
-                const res = await instance.post(backend_url + '/student/data', {studentId: student__id, email: student__email});
+                const res = await instance.post(backend_url + '/student/data', { studentId: student__id, email: student__email, message: 'I am hrtr' });
                 console.log("15", res.data.status);
-                if(res.data.status === "active"){
+                if (res.data.status === "active") {
                     navigate('/student/dashboard');
                 }
-                else{
+                else {
                     navigate('/student/status');
                 }
             } catch (error) {
                 console.log(error);
-                alert("Something went wrong");
+                alert("Something went ooop");
                 navigate('/student/signup');
             }
         }
-        else{
+        else {
             navigate('/student/signup');
         }
     }
 
-  return (
-    <div>
-        <LandingHeader />
-        <div className="signupOption_body relative md:pb-20" style={{minHeight: "90vh", backgroundColor: "#f7f7f7"}}>
-            <img className='absolute bottom-0 z-0 md:hidden' src="wave.svg" alt="" />
-            <img className='absolute bottom-0 rotate-360 z-0 opacity-80 md:hidden' src="wave_2.svg" alt="" />
-            <h1 className='flex justify-center text-2xl font-semibold py-4'>Sign up as a - </h1>
-            <div className="signup_options flex justify-center gap-28 pt-10 z-50 md:flex-col md:items-center ">
-                <div className="as_teacher relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => {
+    return (
+        <div>
+            <LandingHeader />
+            <div className="signupOption_body relative md:pb-20" style={{ minHeight: "90vh", backgroundColor: "#f7f7f7" }}>
+                <img className='absolute bottom-0 z-0 md:hidden' src="wave.svg" alt="" />
+                <img className='absolute bottom-0 rotate-360 z-0 opacity-80 md:hidden' src="wave_2.svg" alt="" />
+                <h1 className='flex justify-center text-2xl font-semibold py-4'>Sign up as a - </h1>
+                <div className="signup_options flex justify-center gap-28 pt-10 z-50 md:flex-col md:items-center ">
+                    <div className="as_teacher relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => {
                         checkForSignup();
                     }}>
-                    <img className='w-full h-full' src="teacher.svg" alt="" />
-                    <p className='flex justify-center pt-4 text-2xl font-semibold'>Teacher</p>
-                </div>
-                <div className="as_student relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => {
-                    checkForStudentSignup();
-                }}>
-                    <img className='w-full h-full' src="student.svg" alt="" />
-                    <p className='flex justify-center pt-4 text-2xl font-semibold'>Student</p>
+                        <img className='w-full h-full' src="teacher.svg" alt="" />
+                        <p className='flex justify-center pt-4 text-2xl font-semibold'>Teacher</p>
+                    </div>
+                    <div className="as_student relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => {
+                        checkForStudentSignup();
+                    }}>
+                        <img className='w-full h-full' src="student.svg" alt="" />
+                        <p className='flex justify-center pt-4 text-2xl font-semibold'>Student</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default SignupOption
