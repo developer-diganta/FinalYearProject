@@ -89,7 +89,7 @@ function StudentAssignment() {
                         >
                         <div className='flex items-center gap-4 w-5/6'>
                           <div className='question__title'>
-                            <h3 className='question__p text-base text-[#606b73] font-semibold pb-1' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.question}</h3>
+                            <h3 className='question__p text-base text-[#606b73] font-semibold pb-1' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.title}</h3>
                           </div>
                           <div className='question__difficulty flex items-center'>
                             <p className='text-sm font-bold' style={{fontSize: "16px", color: "#97a0a6"}}>&#91;</p>

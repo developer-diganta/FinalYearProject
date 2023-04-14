@@ -13,7 +13,8 @@ function QDescription({ question }) {
 
   const getSampleInput = (event) => {
     let base64String = question.sampleInput;
-    let base64String2 = base64String.split("base64,")[1];
+    console.log(base64String);
+    let base64String2 = base64String;
     console.log(base64String2);
     return decodeURIComponent(
       atob(base64String2)
@@ -25,7 +26,8 @@ function QDescription({ question }) {
 
   const getSampleOutput = (event) => {
     let base64String = question.sampleOutput;
-    let base64String2 = base64String.split("base64,")[1];
+    console.log(base64String);
+    let base64String2 = base64String;
     console.log(base64String2);
     return decodeURIComponent(
       atob(base64String2)

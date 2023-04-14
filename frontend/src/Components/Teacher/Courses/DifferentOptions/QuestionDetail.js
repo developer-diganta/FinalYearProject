@@ -41,7 +41,7 @@ function QuestionDetail() {
 
     const getInput = (event) => {
       let base64String = location.state.question.input;
-      let base64String2 = base64String.split("base64,")[1];
+      let base64String2 = base64String;
       console.log(base64String2);
       return decodeURIComponent(
         atob(base64String2)
@@ -53,7 +53,7 @@ function QuestionDetail() {
 
     const getOutput = (event) => {
       let base64String = location.state.question.output;
-      let base64String2 = base64String.split("base64,")[1];
+      let base64String2 = base64String;
       console.log(base64String2);
       return decodeURIComponent(
         atob(base64String2)
@@ -65,7 +65,7 @@ function QuestionDetail() {
 
     const getSampleInput = (event) => {
       let base64String = location.state.question.sampleInput;
-      let base64String2 = base64String.split("base64,")[1];
+      let base64String2 = base64String;
       console.log(base64String2);
       return decodeURIComponent(
         atob(base64String2)
@@ -77,7 +77,7 @@ function QuestionDetail() {
 
     const getSampleOutput = (event) => {
       let base64String = location.state.question.sampleOutput;
-      let base64String2 = base64String.split("base64,")[1];
+      let base64String2 = base64String;
       console.log(base64String2);
       return decodeURIComponent(
         atob(base64String2)
@@ -117,7 +117,7 @@ function QuestionDetail() {
           </div>
           <div className="question__diffeculty py-2 flex items-center">
             <p className='text-xs pr-2 font-semibold text-[#898989]' style={{letterSpacing: "1px"}}>Diffeculty : </p>
-            <p className={`text-xs capitalize ${location.state.question.difficulty === 'Easy' ? 'text-[#97D01E]' : location.state.question.difficulty === 'Medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} font-semibold`}>{location.state.question.difficulty}</p>
+            <p className={`text-xs capitalize ${location.state.question.difficulty === 'easy' ? 'text-[#97D01E]' : location.state.question.difficulty === 'medium' ? 'text-[#FEC831]' : 'text-[#FB4A3F]'} font-semibold`}>{location.state.question.difficulty}</p>
           </div>
           <div className="seperate__line bg-[#E8E8E8]" style={{minWidth: "100%", minHeight: "1px"}}></div>
           <div className="question__body pt-4 text-sm flex" style={{fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'", letterSpacing: "1px"}}>
