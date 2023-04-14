@@ -754,10 +754,22 @@ const getQuestionById = async (req, res) => {
 }
 
 const getQuestionsInAssignment = async (req, res) => {
-    const { assignmentId } = req.body;
+    const { assignmentId, university, courseId } = req.body;
     try {
         const questions = await models.Question.find({ assignment: assignmentId }).exec();
-        res.status(200).json({ questions })
+        const { university, courseId } = req.body;
+        const students = await models.Student.find({ university: university }).exec();
+        // console.log(students)
+        let totalStudents = [];
+        for (var i = 0; i < students.length; i++) {
+            const courses = students[i].courses;
+            for (var j = 0; j < courses.length; j++) {
+                if (courses[i].course === courseId) {
+                    totalStudents.push(students[i]._id);
+                }
+            }
+        }
+        res.status(200).json({ questions, totalStudents })
     } catch (err) {
         res.status(500).json({ message: "ERROR" })
     }
@@ -902,6 +914,31 @@ const analysisTeacherToStudentGrade = async (req, res) => {
         res.status(500).json({ "message": "Internal Server Error" });
     }
 }
+
+const teacherAnalysisGetStudentTotal = async (req, res) => {
+
+    try {
+        const { university, courseId } = req.body;
+        const students = await models.Student.find({ university: university }).exec();
+        // console.log(students)
+        let totalStudents = [];
+        for (var i = 0; i < students.length; i++) {
+            const courses = students[i].courses;
+            for (var j = 0; j < courses.length; j++) {
+                if (courses[i].course === courseId) {
+                    totalStudents.push(students[i]._id);
+                }
+            }
+        }
+        res.status(200).json({ totalStudents });
+
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
+
+    }
+
+}
+
 
 // --------------------------------------------------------------------------------------------- End Teacher Controllers --------------------------------------------------------------------------------------------- //
 
@@ -1972,8 +2009,8 @@ const submitStudent = async (req, res) => {
             data: {
                 "source_code": encoded,
                 "language_id": language_id,
-                "stdin": base64encode(question.input),
-                "expected_output": base64encode(question.output)
+                "stdin": question.input,
+                "expected_output": question.output
             }
         };
 
@@ -2661,5 +2698,6 @@ module.exports = {
     analysisStudentAllSubmissions,
     individualSubmission,
     changePlagarism,
-    analysisTeacherToStudentGrade
+    analysisTeacherToStudentGrade,
+    teacherAnalysisGetStudentTotal
 };

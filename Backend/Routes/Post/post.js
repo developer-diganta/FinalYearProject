@@ -83,6 +83,7 @@ router.post("/teacher/analysis/student/individualSubmission", authorise, control
 router.post("/teacher/analysis/student/submission/changePlagarism", authorise, controls.changePlagarism);
 
 router.post("/teacher/analysis/student/submission/grade", authorise, controls.analysisTeacherToStudentGrade)
+router.post("/teacher/analysis/student/total", authorise, controls.teacherAnalysisGetStudentTotal);
 
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
