@@ -447,6 +447,32 @@ const getUniversityStudentData = async (req, res) => {
     }
 }
 
+const deleteUniversity = async (req, res) => {
+    try {
+        const { universityId, } = req.body;
+        const university = await models.University.updateOne({ _id: universityId }, { isdeleted: false }).exec();
+        const teachers = await models.Teacher.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const students = await models.Student.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const program = await models.Program.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const moocs = await models.Moocs.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const department = await models.Department.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const course = await models.Course.updateMany({ university: universityId }, { isdeleted: false }).exec();
+
+        res.status("200").json({
+            university,
+            teachers,
+            students,
+            program,
+            moocs,
+            department,
+            course
+        })
+
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
 
 // -------------------------------------------------------------------------------------------- Teacher Section --------------------------------------------------------------------------------------------
 
@@ -2736,7 +2762,8 @@ module.exports = {
     teacherAnalysisAllSubmissionsForAQuestion,
     analysisTeacherToStudentGrade,
     teacherAnalysisGetStudentTotal,
-    adminUniversityData
+    adminUniversityData,
+    deleteUniversity
 
 };
 

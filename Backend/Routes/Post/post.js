@@ -45,6 +45,8 @@ router.post("/university/student", authorise, controls.getUniversityStudentData)
 
 router.post("/university/teacher/waitlist", authorise, controls.getUniversityTeacherWaitlist);
 
+router.post("/university/delete", authorise, controls.deleteUniversity);
+
 
 
 // ------------------------------------------- End of University Routes -------------------------------------------//
