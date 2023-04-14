@@ -1,6 +1,5 @@
 student = {
     name: String,
-    age: Number,
     university: String,
     password: String,
     status: String,

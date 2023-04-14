@@ -865,7 +865,7 @@ const analysisStudentAllSubmissions = async (req, res) => {
 const individualSubmission = async (req, res) => {
     try {
         const { submissionId } = req.body;
-        const submission = await models.Question.findById(submissionId);
+        const submission = await models.Submission.findById(submissionId);
         res.status(200).json({ submission });
     } catch (err) {
         res.status(500).json({ "message": "Internal Server Error" })
@@ -939,6 +939,16 @@ const teacherAnalysisGetStudentTotal = async (req, res) => {
 
 }
 
+const teacherAnalysisAllSubmissionsForAQuestion = async (req, res) => {
+    try {
+        const { questionId } = req.body;
+        const submissions = models.Submission.find({ question: questionId }).exec();
+        res.status(200).json({ submissions });
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
+
+    }
+}
 
 // --------------------------------------------------------------------------------------------- End Teacher Controllers --------------------------------------------------------------------------------------------- //
 
@@ -2610,6 +2620,31 @@ const adminSignIn = async (req, res) => {
 
 
 
+const adminUniversityData = async (req, res) => {
+    try {
+        const universities = await models.University.find().select('_id name phone email contract isdeleted').exec();
+        res.status(200).json({ universities });
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
+    }
+}
+
+const adminGetIndividualUniversityData = async (req, res) => {
+    try {
+        const { universityId } = req.body;
+        const universityDetails = await models.University.findById(universityId).exec();
+        if (!universityDetails) {
+            res.status(404).json({ "message": "No Data Found" });
+        }
+        const teachers = await models.Teacher.find({ university: universityId }).select('name username _id email department courses isdeleted').exec();
+        if (!teachers) {
+            res.status(404).json({ "message": "No Data Found" });
+        }
+        const students = await models.Student.find({ university: universityId }).select('name university registrationNumber rollNumber program').exec();
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
+    }
+}
 
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
@@ -2698,8 +2733,11 @@ module.exports = {
     analysisStudentAllSubmissions,
     individualSubmission,
     changePlagarism,
+    teacherAnalysisAllSubmissionsForAQuestion,
     analysisTeacherToStudentGrade,
-    teacherAnalysisGetStudentTotal
+    teacherAnalysisGetStudentTotal,
+    adminUniversityData
+
 };
 
 

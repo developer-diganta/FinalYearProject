@@ -14,8 +14,6 @@ router.post('/submit', controls.submit);
 router.post('/submit/student', controls.submitStudent);
 router.post("/languages", controls.languages);
 
-// Admin routes
-router.post("/admin/signin", controls.adminSignIn);
 
 
 //---------------------------------------- University Routes ----------------------------------------//
@@ -84,6 +82,7 @@ router.post("/teacher/analysis/student/submission/changePlagarism", authorise, c
 
 router.post("/teacher/analysis/student/submission/grade", authorise, controls.analysisTeacherToStudentGrade)
 router.post("/teacher/analysis/student/total", authorise, controls.teacherAnalysisGetStudentTotal);
+router.post("/teacher/analysis/question", authorise, controls.teacherAnalysisAllSubmissionsForAQuestion);
 
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
@@ -190,4 +189,7 @@ router.post("/moocs/assignment/get", controls.getAssignmentsFromMoocs);
 router.post("/moocs/question", controls.getQuestionsInMooc);
 router.post("/moocs/question/id", controls.getMoocQuestionById);
 router.post("/moocs/question/code/submit", controls.submitCodeToMoocs);
+
+// ADMIN ROUTES
+router.post("/admin/signin", controls.adminSignIn);
 module.exports = router; 
