@@ -21,7 +21,8 @@ moocquestion = {
     plagarismAnalysis: Array,
     moocassignment: String,
     score: Number,
-
+    isdeleted: Boolean,
+    deletionTime: Date
 }
 
 module.exports = moocquestion;

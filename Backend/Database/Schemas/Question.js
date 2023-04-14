@@ -5,7 +5,7 @@ question = {
     solution: String,
     solutionDescription: String,
     input: String,
-    output: String, 
+    output: String,
     sampleInput: String,
     sampleOutput: String,
     difficulty: String,
@@ -21,6 +21,8 @@ question = {
     plagarismAnalysis: Array,
     assignment: String,
     score: Number,
+    isdeleted: Boolean,
+    deletionTime: Date
 
 }
 

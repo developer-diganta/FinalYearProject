@@ -1452,33 +1452,6 @@ const getMoocsCreatedByTeacher = async (req, res) => {
 }
 // ---------------------------------------------------------------------------------------------End Of Moocs Controllers --------------------------------------------------------------------------------------------- //
 
-const adminSignIn = async (req, res) => {
-    const { username, password } = req.body;
-    try {
-        const validate = await signUpSchema.validateAsync({ username, password });
-        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-            const time = new Date.getTime() / 1000();
-            const token = generateToken(username, time);
-            adminLogin = {
-                token: token,
-                ip: req.ip
-            }
-            res.status(200).json({ auth: true, token: token });
-        }
-    }
-    catch (error) {
-        res.status(422).json(error);
-    }
-}
-
-const adminUniversityData = async (req, res) => {
-    await models.University.find({}, (err, universities) => {
-        if (err)
-            res.status(500).json(err);
-        else
-            res.status(200).json(universities);
-    });
-}
 
 
 const getRemainingStudents = async (req, res) => {
@@ -2614,6 +2587,33 @@ const getCourseByStudentId = async (req, res) => {
     }
 }
 
+
+// ------------------------------------------------------------------ ADMIN SECTION ---------------------------------------------------
+const adminSignIn = async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        // const validate = await signUpSchema.validateAsync({ username, password });
+        if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+            const time = new Date.getTime() / 1000();
+            const token = generateToken(username);
+            adminLogin = {
+                token: token,
+                ip: req.ip
+            }
+            res.status(200).json({ auth: true, token: token });
+        }
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+}
+
+
+
+
+// ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
+
+
 module.exports = {
     home,
     languages,
@@ -2701,3 +2701,6 @@ module.exports = {
     analysisTeacherToStudentGrade,
     teacherAnalysisGetStudentTotal
 };
+
+
+

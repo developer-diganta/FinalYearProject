@@ -20,6 +20,8 @@ university = {
         contract_link: String,
         contract_notes: String,
     },
+    isdeleted: Boolean,
+    deletionTime: Date
 }
 
 module.exports = university;

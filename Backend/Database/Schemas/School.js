@@ -1,6 +1,8 @@
 school = {
     name: String,
     university: String,
+    isdeleted: Boolean,
+    deletionTime: Date
 }
 
 module.exports = school;

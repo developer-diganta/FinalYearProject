@@ -25,7 +25,9 @@ student = {
         progress: Number,
     }],
     email: String,
-    submissions: Array
+    submissions: Array,
+    isdeleted: Boolean,
+    deletionTime: Date
 }
 
 module.exports = student;

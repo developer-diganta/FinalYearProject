@@ -10,6 +10,8 @@ moocs = {
     courseStartDate: Date,
     approvalStatus: String,
     teacher: String,
+    isdeleted: Boolean,
+    deletionTime: Date
 }
 
 module.exports = moocs;
