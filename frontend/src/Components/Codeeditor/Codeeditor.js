@@ -68,7 +68,7 @@ function Codeeditor() {
             setOutput('');
             console.log(code);
             const sub_res = await axios.post(backend_url + '/submit/student', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
-            console.log(sub_res.data.stdout);
+            console.log(sub_res.data);
             setOutput(base64.decode(sub_res.data.stdout));
           }catch(err){
             console.log(err);
@@ -81,7 +81,8 @@ function Codeeditor() {
     setOpScreen(true);
     setOutput('');
     console.log(code);
-    const res = await axios.post(backend_url + '/submit', { sourceCode: code, languageId: language, sampleInput: location.state.question.sampleInput.slice(23), sampleOutput: location.state.question.sampleOutput.slice(23) });
+    console.log(location);
+    const res = await axios.post(backend_url + '/submit', { sourceCode: code, languageId: language, sampleInput: location.state.question.sampleInput, sampleOutput: location.state.question.sampleOutput});
     setOutput(res.data.status.description);
     console.log(res.data);
   }
@@ -185,7 +186,7 @@ function Codeeditor() {
                   <div className="submit px-4 py-1 flex justify-center items-center my-2 rounded-xl cursor-pointer font-semibold" onClick={submit}>Submit</div>
                 </div>
               </div>
-              <div className={opScreen === false ? 'hide-op' : 'output'}>
+              {/* <div className={opScreen === false ? 'hide-op' : 'output'}>
                 <div className="dw bg-slate-300 flex justify-between items-center gap-2 pr-8 cursor-pointer" onClick={hideScreen}>
                   <div className='pt-1 pb-1 pl-4'>OUTPUT</div>
                   <div className='flex items-center'>
@@ -195,6 +196,7 @@ function Codeeditor() {
                     </svg>
                   </div>
                 </div>
+              </div> */}
                 <div className={opScreen === false ? 'hide-op' : 'output'}>
                   <div className="dw bg-slate-300 flex justify-between items-center gap-2 pr-8 cursor-pointer" onClick={hideScreen}>
                     <div className='pt-1 pb-1 pl-4'>OUTPUT</div>
@@ -209,7 +211,6 @@ function Codeeditor() {
                     <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center flex-col items-center'><img style={{height: "100px"}} src="/loading1.gif" alt="" /><p className='text-[#000000] text-xs -top-4 relative'>compiling....</p></div>}</div>
                   </div>
                 </div>
-              </div>
             </div>
           </Pane>
         </SplitPane>

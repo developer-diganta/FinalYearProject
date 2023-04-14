@@ -36,7 +36,7 @@ function StudentsOfCourse() {
         console.log(error);
         alert("Something went wrong");
         if(error.response.status === 401){
-          // navigate('/teacher/login');
+          navigate('/teacher/signup');
         }
       }
     }

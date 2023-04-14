@@ -63,7 +63,7 @@ function SignupOption() {
                 }
             } catch (error) {
                 console.log(error);
-                alert("Something went ooop");
+                alert("Something went wrong");
                 navigate('/student/signup');
             }
         }
