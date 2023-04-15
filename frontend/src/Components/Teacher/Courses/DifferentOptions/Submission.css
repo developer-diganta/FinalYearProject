@@ -1,0 +1,19 @@
+.subm{
+    /* Created with https://www.css-gradient.com */
+    background: #E751FC;
+    background: -webkit-linear-gradient(left, #E751FC, #815DE8);
+    background: -moz-linear-gradient(left, #E751FC, #815DE8);
+    background: linear-gradient(to right, #E751FC, #815DE8);
+}
+
+table {
+    border-collapse: collapse;
+  }
+  
+  table tr:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+  }
+  
+  table td {
+    padding: 8px;
+  }
