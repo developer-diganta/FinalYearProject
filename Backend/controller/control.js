@@ -2049,10 +2049,11 @@ const submitStudent = async (req, res) => {
             code: code,
             language: language_id,
             status: submissionResponse.data.status.id,
+            statusDescription: submissionResponse.data.status.description,
             dateCreated: new Date().toISOString(),
             plagarized: false
         });
-
+        console.log({ newSubmission })
 
         const submissionToDB = await newSubmission.save();
         console.log("4.Saved to Submission DB");

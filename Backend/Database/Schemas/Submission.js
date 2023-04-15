@@ -4,6 +4,7 @@ submission = {
     code: String,
     language: Number,
     status: String,
+    statusDescription: String,
     dateCreated: Date,
     plagarized: Boolean,
     review: String
