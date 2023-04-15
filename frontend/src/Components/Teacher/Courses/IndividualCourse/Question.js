@@ -9,9 +9,9 @@ import './IndividualCourse.css';
 
 function Question() {
   const [allQuestions, setAllQuestions] = useState([]);
+  const [totalStudents, setTotalStudents] = useState();
   const navigate = useNavigate();
   const { openClose, unvSign } = useSelector((state) => state.counter);
-  const email = localStorage.getItem('teacher__email');
   // const[allQuestions, setAllQuestions] = useState([]);
   let instance;
   try {
@@ -29,6 +29,7 @@ function Question() {
   const teacher__token = localStorage.getItem('teacher__token');
   const teacher__id = localStorage.getItem('teacher__id');
   const teacher__email = localStorage.getItem('teacher__email');
+  const universityId = localStorage.getItem('university');
 
   // const allQuestions = [
   //   {
@@ -84,9 +85,10 @@ function Question() {
             'x-auth-token': teacher__token
           }
       })
-        const questions = await instance.post(backend_url + '/teacher/courses/getQuestionsInAssignment', {assignmentId: location.state.assignment._id, email: teacher__email});
+        const questions = await instance.post(backend_url + '/teacher/courses/getQuestionsInAssignment', {assignmentId: location.state.assignment._id, email: teacher__email, university: universityId, courseId: location.state.course._id});
         console.log("questions.", questions);
         setAllQuestions(questions.data.questions);
+        setTotalStudents(questions.data.totalStudents);
       } catch (error) {
         console.log(error);
         alert("Error in getting questions");
@@ -128,7 +130,7 @@ function Question() {
                 allQuestions ? allQuestions.map((question, index) => {
                   return (
                     <div className='question bg-white my-6 py-3 px-4 flex justify-between items-end rounded-sm shadow-md cursor-pointer border-[1px] border-[#97a0a6] hover:bg-[#f0f1f2] duration-150'
-                    onClick={() => navigate('/teacher/question/questiondetail', {state: {question, courseDetail: "courseDetail", questionNo: index+1}})}
+                    onClick={() => navigate('/teacher/question/questiondetail', {state: {question, courseDetail: "courseDetail", questionNo: index+1, totalStudents: totalStudents}})}
                     >
                       <div className='flex items-center gap-4'>
                         <div className='question__title'>

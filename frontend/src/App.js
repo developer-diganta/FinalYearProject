@@ -50,6 +50,8 @@ import UniversityAcceptedPublicCourse from './Components/University/PublicCourse
 import TeacherPublicCourse from './Components/Teacher/Courses/TeacherPublicCourse/TeacherPublicCourse';
 import PublicCourseAssignment from './Components/PublicCourses/PublicCourseAssignment';
 import PublicCourseQuestions from './Components/PublicCourses/PublicCourseQuestions';
+import TotalSubmission from './Components/Teacher/Courses/DifferentOptions/TotalSubmission';
+import IndividualStudentAnalysis from './Components/Teacher/Courses/DifferentOptions/IndividualStudentAnalysis';
 
 function App() {
   return (
@@ -90,13 +92,14 @@ function App() {
             {/* <Route path='/teacher/previouscourse/:options' element={<CourseOfTeacher />} /> */}
             <Route path='/teacher/courses/:courseId' element={<IndividualCourse />} />
             <Route path='/teacher/createquestion' element={<CreateQuestionForm />} />
-            <Route path='/teacher/question/questiondetail' element={<QuestionDetail />} />
             <Route path='/teacher/cretatecourse' element={<CourseCreateForm />} />
             <Route path='/teacher/courses/createassignment' element={<CreateAssignmentForm />} />
             <Route path='/teacher/courses/assignment/:assignment' element={<Question />} />
             <Route path='/mailverification/:message' element={<Verificatin />} />
             <Route path='/teacher/publiccourse' element={<TeacherPublicCourse />} />
-
+            <Route path='/teacher/question/questiondetail' element={<QuestionDetail />} />
+            <Route path='/teacher/question/totalsubmit' element={<TotalSubmission />} />
+            <Route path='/teacher/studentanalysis' element={<IndividualStudentAnalysis />} />
             {/* ******************** Student routes ***************************************************************/}
             <Route path='/student/signup' element={<StudentSignup />} />
             <Route path='/student/dashboard' element={<StudentDashboard />} />
