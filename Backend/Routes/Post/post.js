@@ -17,7 +17,6 @@ router.post("/languages", controls.languages);
 // Admin routes
 router.post("/admin/signin", controls.adminSignIn);
 
-
 //---------------------------------------- University Routes ----------------------------------------//
 router.post("/university/signup", controls.universitySignUp);
 
@@ -47,6 +46,8 @@ router.post("/university/student", authorise, controls.getUniversityStudentData)
 
 router.post("/university/teacher/waitlist", authorise, controls.getUniversityTeacherWaitlist);
 
+router.post("/university/delete", authorise, controls.deleteUniversity);
+
 
 
 // ------------------------------------------- End of University Routes -------------------------------------------//
@@ -75,6 +76,17 @@ router.post("/teacher/courses/getQuestionsInAssignment", authorise, controls.get
 router.post("/teacher/course/students", authorise, controls.getStudentDetails);
 
 router.post("/teacher/university/student", authorise, controls.getUniversityStudentData);
+
+
+router.post("/teacher/analysis/student/allSubmissions", authorise, controls.analysisStudentAllSubmissions);
+router.post("/teacher/analysis/student/individualSubmission", authorise, controls.individualSubmission)
+
+router.post("/teacher/analysis/student/submission/changePlagarism", authorise, controls.changePlagarism);
+
+router.post("/teacher/analysis/student/submission/grade", authorise, controls.analysisTeacherToStudentGrade)
+router.post("/teacher/analysis/student/total", authorise, controls.teacherAnalysisGetStudentTotal);
+router.post("/teacher/analysis/question", authorise, controls.teacherAnalysisAllSubmissionsForAQuestion);
+
 // -------------------------------------------- End of Teacher Routes --------------------------------------------//
 
 
@@ -95,34 +107,34 @@ router.post("/university/teacher/:id", controls.getUniversityTeacherData);
 
 // router.post("/university/teacher/waitlist/:id",    controls.getUniversityTeacherWaitlistById);
 // 
-router.post("/university/teacher/waitlist/accept/:id", controls.acceptTeacherWaitlist);
+router.post("/university/teacher/waitlist/accept/:id", authorise, controls.acceptTeacherWaitlist);
 
-router.post("/university/teacher/waitlist/reject/:id", controls.rejectTeacherWaitlist);
+router.post("/university/teacher/waitlist/reject/:id", authorise, controls.rejectTeacherWaitlist);
 
-router.post("/university/student/waitlist", controls.getUniversityStudentWaitlist);
+router.post("/university/student/waitlist", authorise, controls.getUniversityStudentWaitlist);
 
-router.post("/university/student/waitlist/:id", controls.getUniversityStudentWaitlistById);
+router.post("/university/student/waitlist/:id", authorise, controls.getUniversityStudentWaitlistById);
 
-router.post("/university/student/waitlist/accept/byId", controls.acceptStudentWaitlist);
+router.post("/university/student/waitlist/accept/byId", authorise, controls.acceptStudentWaitlist);
 
-router.post("/university/student/waitlist/reject/:id", controls.rejectStudentWaitlist);
+router.post("/university/student/waitlist/reject/:id", authorise, controls.rejectStudentWaitlist);
 
-router.post("/university/student/waitlist/accept/all", controls.acceptAllStudentWaitlist);
+router.post("/university/student/waitlist/accept/all", authorise, controls.acceptAllStudentWaitlist);
 
-router.post("/university/student/waitlist/reject/all", controls.rejectAllStudentWaitlist);
+router.post("/university/student/waitlist/reject/all", authorise, controls.rejectAllStudentWaitlist);
 
-router.post("/university/course", controls.getUniversityCourse);
+router.post("/university/course", authorise, controls.getUniversityCourse);
 
 router.post("/university/allUniversities", controls.getAllUniversities);
 
-router.post("/university/course/teacher/:id", controls.getUniversityCourseByTeacherId);
+router.post("/university/course/teacher/:id", authorise, controls.getUniversityCourseByTeacherId);
 
-router.post("/university/course/add", controls.addCourse);
+router.post("/university/course/add", authorise, controls.addCourse);
 
-router.post("/university/course/add/teacher", controls.addCourseTeacher);
+router.post("/university/course/add/teacher", authorise, controls.addCourseTeacher);
 
 
-router.post("/university/course/add/student", controls.addCourseStudent);
+router.post("/university/course/add/student", authorise, controls.addCourseStudent);
 // Student routes
 router.post("/student/signup", controls.studentSignUp);
 
@@ -148,19 +160,19 @@ router.post("/university/course/details", controls.getCourseDetails);
 
 
 
-router.post("/teacher/course/questionById", controls.getQuestionById);
+router.post("/teacher/course/questionById", authorise, controls.getQuestionById);
 
-router.post("/teacher/course/question/analysis", controls.getQuestionAnalysis);
+router.post("/teacher/course/question/analysis", authorise, controls.getQuestionAnalysis);
 
 
 router.post("/university/getStudents", controls.getStudents);
 
 
 router.post("/student/signin", controls.studentLogin);
-router.post("/student/data", controls.getStudentData);
-router.post("/student/question", controls.getQuestionForStudent);
+router.post("/student/data", authorise, controls.getStudentData);
+router.post("/student/question", authorise, controls.getQuestionForStudent);
 
-router.post("/student/performance", controls.getStudentPerformance)
+router.post("/student/performance", authorise, controls.getStudentPerformance)
 
 // router.post("/teacher/checkSubmission/", controls.checkSubmission);
 // later
@@ -180,4 +192,7 @@ router.post("/moocs/assignment/get", controls.getAssignmentsFromMoocs);
 router.post("/moocs/question", controls.getQuestionsInMooc);
 router.post("/moocs/question/id", controls.getMoocQuestionById);
 router.post("/moocs/question/code/submit", controls.submitCodeToMoocs);
+
+// ADMIN ROUTES
+router.post("/admin/signin", controls.adminSignIn);
 module.exports = router; 
