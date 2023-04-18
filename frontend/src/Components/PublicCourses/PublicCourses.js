@@ -141,7 +141,7 @@ function PublicCourses() {
         'x-auth-token': student__token
       }
     });
-    const response = await instance.post(backend_url + '/student/data', {studentId: student__id});
+    const response = await instance.post(backend_url + '/student/data', {studentId: student__id, email: student__email});
     console.log(response.data);
     setStudentDetail(response.data);
   }

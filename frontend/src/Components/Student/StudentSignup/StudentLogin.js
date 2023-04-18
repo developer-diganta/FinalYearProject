@@ -6,30 +6,21 @@ import { useNavigate } from 'react-router-dom';
 import { backend_url } from '../../../BackendRoutes';
 import { setUniversityDetail } from '../../../Redux/Counter';
 import LandingHeader from '../../Landing/LandingHeader'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 function StudentLogin() {
   const[email, setEmail] = useState();
   const[password, setPassword] = useState();
   const[message, setMessage] = useState();
+  const[passwordVisibility, setPasswordVisibility] = useState(false);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   async function getFormValue(event){
     event.preventDefault();
-    const student__login = await axios.post(backend_url + '/student/signin', {email, password});
-    try {
-      const instance = axios.create({
-          headers: {
-              'x-auth-token': student__login.data.token,
-          }
-      });      
-      const student__data = await instance.post(backend_url + '/student/data', {studentId: student__login.data._id, email: student__login.data.email});
-      console.log("************************************", student__data);
-      dispatch(setUniversityDetail(student__data.data.university));
-    } catch (error) {
-      console.log(error);
-    }
+    const student__login = await axios.post(backend_url + '/student/signin', {email: email, password: password});
+    console.log("21.", student__login);
     
     if(student__login.data.token && student__login.data._id){
       localStorage.setItem('student__token', student__login.data.token);
@@ -73,11 +64,18 @@ function StudentLogin() {
               <BiPhone style={{color: "rgba(77, 85, 89, 0.8)"}} />
               <input type="text" placeholder="Enter phone no" onChange={(ele) => setPhone(ele.target.value)} />
             </div> */}
-            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2 focus:ring focus:ring-error' >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              </svg>
-              <input className='' type="password" placeholder="Enter password" onChange={(ele) => setPassword(ele.target.value)} />
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center justify-between border-2 p-2 mx-10 my-2 gap-2' >
+              <div className='flex items-center gap-2'>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <input required type={`${passwordVisibility ? 'text' : 'password'}`} placeholder="Enter your password" onChange={(ele) => setPassword(ele.target.value)} />
+              </div>
+              <div className='password_visibility text-2xl' onClick={() => setPasswordVisibility(!passwordVisibility)}>
+              {
+                passwordVisibility ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
+              }
+              </div>
             </div>
               <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
               <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/teacher/signup')}>create</span> </h1></div>

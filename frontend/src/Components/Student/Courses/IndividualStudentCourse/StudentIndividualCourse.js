@@ -41,6 +41,8 @@ function StudentIndividualCourse() {
         } catch (error) {
             console.log(error);
             alert('Something went wrong');
+            // localStorage.removeItem('student__token');
+            navigate('/student/signup');
         }
     }
 
