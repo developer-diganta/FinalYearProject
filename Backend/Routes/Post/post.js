@@ -174,6 +174,9 @@ router.post("/student/question", authorise, controls.getQuestionForStudent);
 
 router.post("/student/performance", authorise, controls.getStudentPerformance)
 
+router.post("/student/question/allAnalysis", controls.getStudentAnalysisSingleQuestion)
+router.post("/student/course/analysis", controls.getStudentCourseAnalysis)
+
 // router.post("/teacher/checkSubmission/", controls.checkSubmission);
 // later
 // router.post("/teacher/course/question/edit", controls.editQuestion);

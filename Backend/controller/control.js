@@ -110,6 +110,10 @@ const universitySignUp = async (req, res) => {
                         res.status(500).json(err);
                     } else if (university.length) {
                         console.log(university);
+                        if (university[0].isdeleted === true) {
+                            res.status(403).json({ "message": "University Currently Moved To Trash. Please contact administrator" });
+                            return;
+                        }
                         res.status(400).json({ message: "University already exists" });
                     } else {
                         const newUniversity = new models.University({
@@ -154,6 +158,10 @@ const universityLogin = async (req, res) => {
                         res.status(500).json(err);
                     } else if (result) {
                         console.log("RRR", university)
+                        if (university[0].isdeleted === true) {
+                            res.status(403).json({ "message": "University Currently Moved To Trash. Please contact administrator" });
+                            return;
+                        }
                         const token = generateToken(email);
                         res.status(200).json({ auth: true, token: token, _id: university[0]._id });
                     } else {
@@ -174,7 +182,7 @@ const universityAddSchool = async (req, res) => {
     const { schoolName, universityId } = req.body;
     console.log({ schoolName })
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -195,7 +203,7 @@ const universityAddSchool = async (req, res) => {
 const universityAddDepartment = async (req, res) => {
     const { departmentName, schoolId, universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -968,11 +976,19 @@ const teacherAnalysisGetStudentTotal = async (req, res) => {
 const teacherAnalysisAllSubmissionsForAQuestion = async (req, res) => {
     try {
         const { questionId } = req.body;
-        const submissions = models.Submission.find({ question: questionId }).exec();
+        const submissions = await models.Submission.find({ question: questionId }).exec();
         res.status(200).json({ submissions });
     } catch (err) {
         res.status(500).json({ "message": "Internal Server Error" });
 
+    }
+}
+
+const teacherDelete = async (req, res) => {
+    try {
+
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
     }
 }
 
@@ -2624,7 +2640,62 @@ const getCourseByStudentId = async (req, res) => {
     }
 }
 
+const getStudentSelfAnalysisSingleQuestion = async (req, res) => {
+    try {
+        const { studentId, questionId } = req.body;
+        const student = await models.Student.findById({ _id: studentId, isdeleted: false }).exec();
+        if (!student) {
+            res.status(404).json({ "message": "Not found" })
+        }
+        const submissions = await models.Submission.find({ question: questionId });
+        res.status(200).json({ submissions });
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
 
+const getStudentAnalysisSingleQuestion = async (req, res) => {
+    try {
+        const { studentId, questionId } = req.body;
+        const student = await models.Student.findById({ _id: studentId, isdeleted: false }).exec();
+        if (!student) {
+            res.status(404).json({ "message": "Not found" })
+        }
+        const submissions = await models.Submission.find({ question: questionId }).exec();
+        let allSubmissions = {}
+
+        for (var i = 0; i < submissions.length; i++) {
+            if (submissions[i].student in allSubmissions) {
+                const temp = allSubmissions[submissions[i].student];
+                temp.push(submissions[i]);
+                allSubmissions[submissions[i].student] = temp;
+            } else {
+
+                const temp = []
+                temp.push(submissions[i])
+                allSubmissions[submissions[i].student] = temp;
+            }
+        }
+        res.status(200).json({ allSubmissions });
+    } catch (err) {
+        console.log(err)
+        res.status(500).json(err);
+    }
+}
+
+const getStudentCourseAnalysis = async (req, res) => {
+    try {
+        const { studentId } = req.body;
+        const student = await models.Student.findById({ _id: studentId, isdeleted: false }).exec();
+        if (!student) {
+            res.status(404).json({ "message": "Not found" })
+        }
+        const courses = student.courses;
+        res.status(200).json({ courses })
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
 // ------------------------------------------------------------------ ADMIN SECTION ---------------------------------------------------
 const adminSignIn = async (req, res) => {
     const { username, password } = req.body;
@@ -2764,8 +2835,10 @@ module.exports = {
     analysisTeacherToStudentGrade,
     teacherAnalysisGetStudentTotal,
     adminUniversityData,
-    deleteUniversity
-
+    deleteUniversity,
+    teacherDelete,
+    getStudentAnalysisSingleQuestion,
+    getStudentCourseAnalysis
 };
 
 
