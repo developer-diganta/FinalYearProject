@@ -52,6 +52,7 @@ import PublicCourseAssignment from './Components/PublicCourses/PublicCourseAssig
 import PublicCourseQuestions from './Components/PublicCourses/PublicCourseQuestions';
 import TotalSubmission from './Components/Teacher/Courses/DifferentOptions/TotalSubmission';
 import IndividualStudentAnalysis from './Components/Teacher/Courses/DifferentOptions/IndividualStudentAnalysis';
+import IndividualSubmission from './Components/Teacher/Courses/DifferentOptions/IndividualSubmission';
 
 function App() {
   return (
@@ -100,6 +101,8 @@ function App() {
             <Route path='/teacher/question/questiondetail' element={<QuestionDetail />} />
             <Route path='/teacher/question/totalsubmit' element={<TotalSubmission />} />
             <Route path='/teacher/studentanalysis' element={<IndividualStudentAnalysis />} />
+            <Route path='/teacher/individualsubmission' element={<IndividualSubmission />} />
+            
             {/* ******************** Student routes ***************************************************************/}
             <Route path='/student/signup' element={<StudentSignup />} />
             <Route path='/student/dashboard' element={<StudentDashboard />} />

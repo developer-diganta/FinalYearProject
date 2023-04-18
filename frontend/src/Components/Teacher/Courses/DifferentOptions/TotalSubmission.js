@@ -44,7 +44,7 @@ function TotalSubmission() {
             let students = [];
             for (const student of temp) {
                 // console.log(student);
-                const res = await instance.post(backend_url + '/student/data', {studentId: student});
+                const res = await instance.post(backend_url + '/student/data', {studentId: student, email: teacher__email});
                 // console.log(res);
                 students.push(res.data);
             }
@@ -55,8 +55,8 @@ function TotalSubmission() {
             console.log(error);
             alert('something went wrong');
             if(error.response.status === 401){
-                localStorage.removeItem('teacher__token');
-                navigate('/teacher/signup');
+                // localStorage.removeItem('teacher__token');
+                // navigate('/teacher/signup');
             }
         }
     }
