@@ -8,9 +8,12 @@ import { HiStar } from 'react-icons/hi';
 import axios from 'axios';
 import { backend_url } from '../../BackendRoutes';
 import {  BsArrowRight } from 'react-icons/bs';
+import { FaUniversity } from 'react-icons/fa';
 
 function SinglePublicCourse() {
   const[enrolled, setEnrolled] = useState(false);
+  const[university, setUniversity] = useState();
+  const[teacher, setTeacher] = useState();
   const { openClose } = useSelector((state) => state.counter);
   const location = useLocation().state;
   console.log(location);
@@ -53,7 +56,39 @@ function SinglePublicCourse() {
     }
   }
 
+  async function setUniversityDetail(){
+    try {
+      const instance = axios.create({
+          headers: {
+              'x-auth-token': student__token,
+          },
+      });
+      const universityData = await axios.post(backend_url + `/university/details`, {universityId: location.course.university, email: student__email});
+      console.log(universityData);
+      setUniversity(universityData.data.universityDetails.name)
+    } catch (error) {
+      
+    }
+  }
+
+  async function getTeacherDetail(){
+    try {
+      const instance = axios.create({
+          headers: {
+              'x-auth-token': student__token,
+          },
+      });
+      const teacherData = await instance.post(backend_url + `/teacher/data`, {teacherId: location.course.teacher, email: student__email});
+      console.log(teacherData);
+      setTeacher(teacherData.data.name)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
+    setUniversityDetail();
+    getTeacherDetail();
     checkIfEnrolled();
   }, [])
 
@@ -99,6 +134,10 @@ function SinglePublicCourse() {
             <div className='pl-10 pt-6 w-10/12 mb-8'>
                 <h1 className="course__text__title text-2xl font-bold font-sans text-[#5b6064] pb-4" style={{letterSpacing: "2px"}}>{location.course.name}</h1>
                 <p className="course__text__description text-sm font-sans text-[#5b6064]" style={{letterSpacing: "1px"}}>{location.course.description}</p>
+                <div className="course__text__description text-sm flex items-center gap-2 font-sans text-[#5b6064] mt-4">
+                  <FaUniversity className='text-[#7C7D7D] text-xl' />
+                  <p className='text-lg' style={{fontStyle: "italic"}}>{university}</p>
+                </div>
                 <div className='flex items-center gap-1'>
                     <HiStar className='text-[#ffd200] text-xl mt-4' />
                     <HiStar className='text-[#ffd200] text-xl mt-4' />
@@ -108,8 +147,8 @@ function SinglePublicCourse() {
                     <p className='mt-4 font-sans text-sm font-semibold'>4.5</p>
                 </div>
                 <div className="course__instructor flex items-center font-sans gap-2 mt-4">
-                    <div className='uppercase bg-[#6b7780ff] h-10 w-10 rounded-full flex items-center justify-center text-white text-lg font-bold'>p</div>
-                    <p className='font-semibold text-[#5b6064]' style={{letterSpacing: "1px"}}>Pragyan Bhattacharya</p>
+                    <div className='uppercase bg-[#6b7780ff] h-10 w-10 rounded-full flex items-center justify-center text-white text-lg font-bold'>{teacher ? teacher.charAt(0) : null}</div>
+                    <p className='font-semibold text-[#5b6064]' style={{letterSpacing: "1px"}}>{teacher}</p>
                 </div>
             </div>
         </div>

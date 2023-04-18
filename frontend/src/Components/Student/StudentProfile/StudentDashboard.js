@@ -5,152 +5,134 @@ import { useDispatch, useSelector } from 'react-redux';
 import StudentHeader from '../Pages/StudentHeader';
 import SidebarStudent from '../Sidebar/SidebarStudent';
 import Calendar from 'react-calendar'
-
 import { AiOutlineClose } from "react-icons/ai";
 import { setUniversityDetail } from '../../../Redux/Counter';
 import axios from 'axios';
 import { backend_url } from '../../../BackendRoutes';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import ProgressBar from '../Pages/ProgressBar';
+import './StudentProfile.css';
+import { IoLocationOutline } from 'react-icons/io5';
+import { FaUniversity } from 'react-icons/fa';
+import { Navigate, useNavigate } from 'react-router-dom';
 
-var activity = [
-  {
-      id: 1,
-      title: 'Task 1',
-      description: 'This is the description of the task 1',
-      date: '2023-01-26',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 2,
-      title: 'Task 2',
-      description: 'This is the description of the task 2',
-      date: '2023-01-01',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 3,
-      title: 'Task 3',
-      description: 'This is the description of the task 3',
-      date: '2023-01-16',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 4,
-      title: 'Task 4',
-      description: 'This is the description of the task 4',
-      date: '2023-01-04',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 5,
-      title: 'Task 5',
-      description: 'This is the description of the task 5',
-      date: '2023-01-17',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 6,
-      title: 'Task 6',
-      description: 'This is the description of the task 6',
-      date: '2022-09-05',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 7,
-      title: 'Task 7',
-      description: 'This is the description of the task 7',
-      date: '2021-09-01',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 8,
-      title: 'Task 8',
-      description: 'This is the description of the task 8',
-      date: '2021-09-01',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 9,
-      title: 'Task 9',
-      description: 'This is the description of the task 9',
-      date: '2021-09-01',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 10,
-      title: 'Task 10',
-      description: 'This is the description of the task 10',
-      // today date
-      date: '2023-01-19',
-      time: '10:00',
-      status: 'pending'
-  },
-  {
-      id: 11,
-      title: 'Task 11',
-      description: 'This is the description of the task 11',
-      date: '2023-01-19',
-      time: '10:00',
-      status: 'pending'
-  },
-]
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const q = {
+  total: 100,
+  completed: 30,
+  remaining: 70,
+  easy: 40,
+  easyComplete: 18,
+  medium: 30,
+  mediumComplete: 9,
+  hard: 30,
+  hardComplete: 3,
+}
+
+const data = {
+  datasets: [{
+    data: [30, 70],
+    backgroundColor: ['#8B5CFB', '#E3E2E3'],
+    borderWidth: 0,
+    cutout: 130,
+  }],
+  labels: [q.completed+' solved'],
+  // make the label position inside doughnut
+  
+};
 
 
 function StudentDashboard() {
-  const[value, onChange] = useState(new Date());
-    const[date, setDate] = useState('')
-    const[dateClick, setDateClick] = useState(false)
+    const[student, setStudent] = useState();
+    const[program, setProgram] = useState();
+    const[department, setDepartment] = useState();
+    const[school, setSchool] = useState();
     const { openClose, unvSign } = useSelector((state) => state.counter);
-    const dispatch = useDispatch();
-
-    
+    // const student = {
+    //     name: 'John Doe',
+    //     email: 'john@gmail.com',
+    //     phone: '1234567890',
+    //     address: 'ABC Street, XYZ City, India',
+    //     university: 'XYZ University',
+    //     department: 'Computer Science',
+    // }
     const student__id = localStorage.getItem('student__id');
     const student__token = localStorage.getItem('student__token');
     const student__email = localStorage.getItem('student__email');
-
-    function getDayActivity(date) {
-        // format date in yyyy-mm-dd format
-        var d = new Date(date);
-        var month = '' + (d.getMonth() + 1);
-        var day = '' + d.getDate();
-        var year = d.getFullYear();
-        console.log(month.length);
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-        console.log([year, month, day].join('-'));
-        console.log(activity.filter(item => item.date == [year, month, day].join('-')));
-        // console.log(tasks);
-        setDate([year, month, day].join('-'));
+    const universityDetail = localStorage.getItem('university');
+    const navigate = useNavigate();
+    
+    // const profle__name = student.name.split(' ');
+    // const profile__initial = profle__name[0].charAt(0) + profle__name[1].charAt(0);
+    
+    const detail = {
+        width: 260,
+        // color: '#9fa0ff',
+        color: '#2a9d8f',
+        percent: ((q.easyComplete)/q.easy)*100,
+    }
+    
+    const detail2 = {
+        width: 260,
+        // color: '#ff8500',
+        color: '#e9c46a',
+        percent: ((q.mediumComplete)/q.medium)*100,
+    }
+    
+    const detail3 = {
+        width: 260,
+        // color: '#6a040f',
+        color: '#e76f51',
+        percent: ((q.hardComplete)/q.hard)*100,
     }
 
-    async function getUniversityDetail() {
-        const student__data = await axios.post(backend_url + '/student/data', {studentId: student__id, email: student__email});
-        localStorage.setItem('university', student__data.data.university);
-    }
+    async function getStudentData(){
+        try {
+            const instance = axios.create({
+                headers: {
+                    'x-auth-token': student__token,
+                },
+            });
+            const all__courses = await instance.post(backend_url + `/student/data`, {studentId: student__id, email: student__email});
+            console.log(all__courses.data);
+            const programData = all__courses.data.program;
+            setStudent(all__courses.data);
 
+            const universityData = await axios.post(backend_url + `/university/details`, {universityId: universityDetail, email: student__email});
+            console.log(universityData);
+
+            const sch = universityData.data.universityDetails.schools;
+
+            for(let i=0; i<sch.length; i++){
+                const dept =  sch[i].departments;
+                for(let j=0; j<dept.length; j++){
+                    const prog = dept[j].programs;
+                    for(let k=0; k<prog.length; k++){
+                        if(prog[k].id === programData){
+                            console.log(sch[i].name, dept[j].name, prog[k].name);
+                            setSchool(sch[i].name);
+                            setDepartment(dept[j].name);
+                            setProgram(prog[k].name);
+                        }
+                    }
+                }
+            }
+
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong");
+            if(error.response.status === 401){
+                navigate('/student/signup')
+            }
+        }
+    }
 
     useEffect(() => {
-        var d = new Date();
-        var month = '' + (d.getMonth() + 1);
-        var day = '' + d.getDate();
-        var year = d.getFullYear();
-        console.log(month.length);
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-        console.log([year, month, day].join('-'));
-        console.log(activity.filter(item => item.date == [year, month, day].join('-')));
-        // console.log(tasks);
-        setDate([year, month, day].join('-'));
-        getUniversityDetail()
+        getStudentData();
     }, [])
+
   return (
     <div className='student__dashboard flex md:block'>
         <div className={`md:w-full ${openClose ? 'w-1/5' : 'w-16'} bg-[#9900ff]`}>
@@ -158,47 +140,80 @@ function StudentDashboard() {
         </div>
         <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <StudentHeader />
-            <div className='flex gap-2 mx-6 mt-10 '>
-                <div className="calender w-2/4 rounded-lg shadow-2xl p-4">
-                    <Calendar onChange={onChange} value={value} 
-
-                        // activeStartDate={new Date()}
-                        allowPartialRange={true}
-                        onClickDay={(value, event) => {
-                            // console.log(value, event)
-                            getDayActivity(value)
-                            setDateClick(true)
+            <div className='flex gap-2 mx-4 my-4'>
+                <div className='w-4/6 pr-4 py-0'>
+                    <div className='flex items-start justify-between gap-4'>
+                        <div className='flex items-center bg-white w-1/2 flex-col rounded-md shadow-lg'>
+                        <Doughnut 
+                        data={data}
+                        options={{
+                            responsive: true,
                         }}
-                    />
-                </div>
-                <div className={`${dateClick ? 'task' : ''} w-2/4 bg-[#2D3436] ${dateClick === true ? '' : 'hidden'}`}>
-                    <div className='flex justify-center items-center relative bg-[#733ef0] pl-1' style={{paddingTop: "14px", paddingBottom: "14px"}}>
-                        <AiOutlineClose className='text-2xl cursor-pointer text-white absolute left-2' onClick={() => setDateClick(!dateClick)} />
-                        <h1 className='text-[#FFF] font-bold'>{date ? date : ''}</h1>
-                    </div>
-                    {
-                        activity.filter(item => item.date == date).length === 0 ? 
-                        <div className='flex justify-center items-center h-96 flex-col gap-4'>
-                            <img className='w-32 h-32 bg-white rounded-full shadow-md' src="/empty_bird.svg" alt="" />
-                            <h4 className='text-white font-semibold' style={{letterSpacing: "1px"}}>nothing for today!!</h4>
+                        />
+                        <p className='my-4'>
+                            Total Questions: {q.total}
+                        </p>
                         </div>
-                        :
-                        activity.filter(item => item.date == date).map((item, key) => (
-                            <div className='task_1 rounded-lg shadow-2xl p-4 mt-10'>
-                                <div className='flex justify-between'>
-                                    <div className='flex gap-2 items-center'>
-                                        <div className='flex flex-col'>
-                                            <h1 className='text-[#FFF] font-bold'>{item.title}</h1>
-                                            <p className='text-[#FFF]'>{item.description}</p>
-                                        </div>
-                                    </div>
-                                    <div className='flex flex-col'>
-                                        <p className='text-[#FFF]'>{item.time}</p>
-                                    </div>
-                                </div>
+                        <div className='flex flex-col w-1/2 gap-8'>
+                        <div className="total__courses bg-white py-4 rounded-md shadow-lg">
+                            <div className='text-xs bg-white rounded-full w-28 h-28 mx-auto flex flex-col items-center justify-center' style={{border: "2px solid #f77f00"}}>
+                            <p>Total Courses</p>
+                            <p>6</p>
                             </div>
-                        ))
-                    }
+                        </div>
+                        <div className='bg-white px-8 py-8 rounded-md shadow-lg'>
+                            <div className='my-6'>
+                            <div className='flex items-center text-xs'>
+                                <p className='w-2/5'>Easy</p>
+                                <p>{q.easyComplete}/{q.easy}</p>
+                            </div>
+                            <ProgressBar progress={detail} />
+                            </div>
+                            <div className='my-6'>
+                            <div className='flex items-center text-xs'>
+                                <p className='w-2/5'>Medium</p>
+                                <p>{q.mediumComplete}/{q.medium}</p>
+                            </div>
+                            <ProgressBar progress={detail2} />
+                            </div>
+                            <div className='my-6'>
+                            <div className='flex items-center text-xs'>
+                                <p className='w-2/5'>Hard</p>
+                                <p>{q.hardComplete}/{q.hard}</p>
+                            </div>
+                            <ProgressBar progress={detail3} />
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div className='w-2/6 pt-2 flex items-center bg-white rounded-md shadow-lg flex-col min-h-[94vh]'>
+                    <div className='mt-8' style={{objectFit: 'cover'}}>
+                    <div className='profile__pic w-28 h-28 text-4xl'>{student ? (student.name.charAt(0) + student.name.charAt(1)) : null}</div>
+                    </div>
+                    <div className='flex flex-col items-center'>
+                    <h4 className='text-2xl font-bold pt-3 pb-1'>{student?.name}</h4>
+                    <h4 className='text-sm text-[#7C7D7D] pb-6' style={{letterSpacing: "1px"}}>{student?.email}</h4>
+                    <button className='w-56 bg-[#E8DEFF] py-2 rounded-md text-[#5F6161] text-sm font-semibold' style={{letterSpacing: "1px"}}>Edit Profile</button>
+                    </div>
+                    <div className="divider bg-[#D1D2D2] my-6" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                    <div className='w-full'>
+                        <div className='my-4 flex flex-col items-start pl-4'>
+                            <p>School</p>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{program}</h4>
+                        </div>
+                        <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                        <div className="university my-4 pt-2 flex flex-col items-start pl-4">
+                            <p>Department</p>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{department}</h4>
+                        </div>
+                        <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                        <div className="stream flex flex-col items-start pl-4">
+                            <p className='pt-4 pb-2'>Program</p>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{school}</h4>
+                        </div>
+                    </div>
+                    {/* <div className="divider bg-[#D1D2D2] my-4" style={{minWidth: "100%", minHeight: "1px"}}></div> */}
                 </div>
             </div>
         </div>
