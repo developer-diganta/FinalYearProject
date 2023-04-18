@@ -17,3 +17,8 @@ table {
   table td {
     padding: 8px;
   }
+
+
+.submit__review{
+  background-image: linear-gradient(to right top, #571845, #661646, #741245, #830e42, #900c3e);
+}

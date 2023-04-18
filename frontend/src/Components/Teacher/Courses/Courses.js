@@ -77,6 +77,10 @@ function Courses() {
             } catch (error) {
                 console.log(error);
                 alert('Something went wrong');
+                if(error.response.status === 401){
+                    // localStorage.removeItem('teacher__token');
+                    navigate('/teacher/signup');
+                }
             }
         }
         useState(() => {
