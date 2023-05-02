@@ -48,7 +48,9 @@ router.post("/university/teacher/waitlist", authorise, controls.getUniversityTea
 
 router.post("/university/delete", authorise, controls.deleteUniversity);
 
+router.post("/university/delete/teacher", authorise, controls.deleteTeacher);
 
+router.post("/university/delete/student", authorise, controls.deleteStudent);
 
 // ------------------------------------------- End of University Routes -------------------------------------------//
 
@@ -197,5 +199,10 @@ router.post("/moocs/question/id", controls.getMoocQuestionById);
 router.post("/moocs/question/code/submit", controls.submitCodeToMoocs);
 
 // ADMIN ROUTES
-router.post("/admin/signin", controls.adminSignIn);
+router.post("/admin/signin", authorise, controls.adminSignIn);
+router.post("/admin/restore/university", controls.restoreUniversity);
+router.post("/admin/restore/teacher", authorise, controls.restoreTeacher);
+router.post("/admin/restore/student", authorise, controls.restoreStudent);
+
+
 module.exports = router; 

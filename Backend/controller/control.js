@@ -458,13 +458,13 @@ const getUniversityStudentData = async (req, res) => {
 const deleteUniversity = async (req, res) => {
     try {
         const { universityId, } = req.body;
-        const university = await models.University.updateOne({ _id: universityId }, { isdeleted: false }).exec();
-        const teachers = await models.Teacher.updateMany({ university: universityId }, { isdeleted: false }).exec();
-        const students = await models.Student.updateMany({ university: universityId }, { isdeleted: false }).exec();
-        const program = await models.Program.updateMany({ university: universityId }, { isdeleted: false }).exec();
-        const moocs = await models.Moocs.updateMany({ university: universityId }, { isdeleted: false }).exec();
-        const department = await models.Department.updateMany({ university: universityId }, { isdeleted: false }).exec();
-        const course = await models.Course.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const university = await models.University.updateOne({ _id: universityId }, { isdeleted: true }).exec();
+        const teachers = await models.Teacher.updateMany({ university: universityId }, { isdeleted: true }).exec();
+        const students = await models.Student.updateMany({ university: universityId }, { isdeleted: true }).exec();
+        const program = await models.Program.updateMany({ university: universityId }, { isdeleted: true }).exec();
+        // const moocs = await models.Moocs.updateMany({ university: universityId }, { isdeleted: true }).exec();
+        const department = await models.Department.updateMany({ university: universityId }, { isdeleted: true }).exec();
+        const course = await models.Course.updateMany({ university: universityId }, { isdeleted: true }).exec();
 
         res.status("200").json({
             university,
@@ -481,6 +481,29 @@ const deleteUniversity = async (req, res) => {
     }
 }
 
+const deleteTeacher = async (req, res) => {
+    try {
+        const { teacherId } = req.body;
+        const teacher = await models.Teacher.updateOne({ _id: teacherId }, { isdeleted: true }).exec();
+        res.status("200").json({
+            teacher
+        })
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+const deleteStudent = async (req, res) => {
+    try {
+        const { studentId } = req.body;
+        const student = await models.Student.updateOne({ _id: studentId }, { isdeleted: true }).exec();
+        res.status("200").json({
+            student
+        })
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
 
 // -------------------------------------------------------------------------------------------- Teacher Section --------------------------------------------------------------------------------------------
 
@@ -2744,6 +2767,56 @@ const adminGetIndividualUniversityData = async (req, res) => {
     }
 }
 
+const restoreUniversity = async (req, res) => {
+    const { universityId } = req.body;
+    try {
+        const university = await models.University.updateOne({ _id: universityId }, { isdeleted: false }).exec();
+        const teachers = await models.Teacher.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const students = await models.Student.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const program = await models.Program.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        // const moocs = await models.Moocs.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const department = await models.Department.updateMany({ university: universityId }, { isdeleted: false }).exec();
+        const course = await models.Course.updateMany({ university: universityId }, { isdeleted: false }).exec();
+
+        res.status("200").json({
+            university,
+            teachers,
+            students,
+            program,
+            moocs,
+            department,
+            course
+        })
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" })
+    }
+}
+
+const restoreTeacher = async (req, res) => {
+    try {
+        const { teacherId } = req.body;
+        const teacher = await models.Teacher.updateOne({ _id: teacherId }, { isdeleted: false }).exec();
+        res.status("200").json({
+            teacher
+        })
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+const restoreStudent = async (req, res) => {
+    try {
+        const { studentId } = req.body;
+        const student = await models.Student.updateOne({ _id: studentId }, { isdeleted: false }).exec();
+        res.status("200").json({
+            student
+        })
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
 
@@ -2838,7 +2911,12 @@ module.exports = {
     deleteUniversity,
     teacherDelete,
     getStudentAnalysisSingleQuestion,
-    getStudentCourseAnalysis
+    getStudentCourseAnalysis,
+    deleteTeacher,
+    deleteStudent,
+    restoreUniversity,
+    restoreTeacher,
+    restoreStudent
 };
 
 
