@@ -86,10 +86,10 @@ function StudentAssignment() {
                 {
                   questions ? questions.map((question, index) => {
                     return (
-                        <div className='question bg-white my-6 gap-8 py-3 px-4 flex justify-between items-center rounded-sm shadow-md cursor-pointer border-[1px] border-[#97a0a6] hover:bg-[#f0f1f2] duration-150' 
-                        onClick={() => navigate('/student/question/solve', {state: {question, courseDetail: location.state.course, assignmentDetail: location.state.assignment}})}
+                      <div className='question bg-white my-6 gap-4 pr-4 flex justify-between items-center rounded-sm shadow-md cursor-pointer border-[1px] border-[#97a0a6] hover:bg-[#f0f1f2] duration-150'>
+                        <div className='flex items-center gap-4 w-9/12 py-3 px-4 '
+                          onClick={() => navigate('/student/question/solve', {state: {question, courseDetail: location.state.course, assignmentDetail: location.state.assignment}})}
                         >
-                        <div className='flex items-center gap-4 w-5/6'>
                           <div className='question__title'>
                             <h3 className='question__p text-base text-[#606b73] font-semibold pb-1' style={{fontFamily: "Whitney SSm A,Whitney SSm B,Avenir,Segoe UI,Ubuntu,Helvetica Neue,Helvetica,Arial,sans-serif"}}>{index+1}. {question.title}</h3>
                           </div>
@@ -99,7 +99,14 @@ function StudentAssignment() {
                             <p className='text-sm font-bold' style={{fontSize: "16px", color: "#97a0a6"}}>&#93;</p>
                           </div>
                         </div>
-                        <div className='w-1/6 flex justify-end'>{getQuestionStatus(question.studentsAttempted)}</div>
+                        <div className='w-1/12 flex justify-end'>{getQuestionStatus(question.studentsAttempted)}</div>
+                        <div className='w-2/12 py-1 px-2 flex items-center justify-end text-white rounded-md'
+                          onClick={() => navigate('/student/question/analysis', {state: question})}
+                        >
+                          <div className='max-w-48 subm px-4 py-1 rounded-sm'>
+                            detail
+                          </div>
+                        </div>
                       </div>
                     )
                   })

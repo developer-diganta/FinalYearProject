@@ -118,7 +118,7 @@ function Codeeditor() {
                 <div className={`br flex justify-center w-1/3 sol ${options === 'solutions' ? 'bg-[#f0f1f2]' : null} text-sm py-2 border-r-[1px] border-[#d1d5db]`} onClick={(event) => chooseOptions(event, 'solutions')}>
                   <h1 className='font-semibold'>Solution</h1>
                 </div>
-                <div className={`br flex justify-center w-1/3 subm ${options === 'submission' ? 'bg-[#f0f1f2]' : null} text-sm py-2`} onClick={(event) => chooseOptions(event, 'submission')}>
+                <div className={`br flex justify-center w-1/3 ${options === 'submission' ? 'bg-[#f0f1f2]' : null} text-sm py-2`} onClick={(event) => chooseOptions(event, 'submission')}>
                   <h1 className='font-semibold'>Submission</h1>
                 </div>
               </div>

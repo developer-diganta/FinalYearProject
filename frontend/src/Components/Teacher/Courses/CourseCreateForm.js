@@ -60,6 +60,7 @@ function CourseCreateForm() {
                 });
                 console.log(response);
                 alert(response.data.message);
+                navigate('/teacher/publiccourse');
             } catch (error) {
                 console.log(error);
                 if(error.response.status === 401){

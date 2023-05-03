@@ -76,6 +76,7 @@ function PublicCourses() {
   const [search, setSearch] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [studentDetail, setStudentDetail] = useState();
+  const [clear, setClear] = useState(false);
   const navigate = useNavigate();
 
   const student__token = localStorage.getItem('student__token');
@@ -176,13 +177,22 @@ function PublicCourses() {
               <ul className='shadow-lg'>
                 {
                 suggestions?.map((item) => (
-                  <li className='py-2 hover:bg-[#f7f7f7ff] cursor-pointer px-4 text-[#6b7780ff] bg-white' style={{fontFamily: "sans-serif"}} key={item.item._id}  onClick={(event) => sortCourses(item.item._id)}>{item.item.name}</li>
+                  <li className='py-2 hover:bg-[#f7f7f7ff] cursor-pointer px-4 text-[#6b7780ff] bg-white' style={{fontFamily: "sans-serif"}} key={item.item._id}  onClick={(event) => {
+                    sortCourses(item.item._id)
+                    setClear(true)
+                  }}>{item.item.name}</li>
                 ))
                 // console.log(suggestions)
                 }
               </ul>
             </div>
           </div>
+        </div>
+        <div className={`clear ${clear ? 'block' : 'hidden'}`}>
+          <button className='mx-4 mt-4 bg-[#dcdcdcff] px-2 py-1 rounded-lg'  onClick={(event) => {
+            getPublicAllCourses()
+            setClear(false)
+          }}>Clear</button>
         </div>
         <div className='public__courses__container grid grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8 my-4 mx-4'>
           {
