@@ -2,20 +2,20 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import StudentHeader from '../Pages/StudentHeader';
 import SidebarStudent from '../Sidebar/SidebarStudent';
-import Calendar from 'react-calendar'
-import { AiOutlineClose } from "react-icons/ai";
-import { setUniversityDetail } from '../../../Redux/Counter';
 import axios from 'axios';
 import { backend_url } from '../../../BackendRoutes';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import ProgressBar from '../Pages/ProgressBar';
 import './StudentProfile.css';
-import { IoLocationOutline } from 'react-icons/io5';
-import { FaUniversity } from 'react-icons/fa';
-import { Navigate, useNavigate } from 'react-router-dom';
+// import Calendar from 'react-calendar'
+// import { AiOutlineClose } from "react-icons/ai";
+// import { setUniversityDetail } from '../../../Redux/Counter';
+// import { IoLocationOutline } from 'react-icons/io5';
+// import { FaUniversity } from 'react-icons/fa';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -31,42 +31,39 @@ const q = {
   hardComplete: 3,
 }
 
-const data = {
-  datasets: [{
-    data: [30, 70],
-    backgroundColor: ['#8B5CFB', '#E3E2E3'],
-    borderWidth: 0,
-    cutout: 130,
-  }],
-  labels: [q.completed+' solved'],
-  // make the label position inside doughnut
-  
-};
-
 
 function StudentDashboard() {
     const[student, setStudent] = useState();
     const[program, setProgram] = useState();
     const[department, setDepartment] = useState();
     const[school, setSchool] = useState();
+    const[data, setData] = useState({
+        datasets: [{
+          data: [50, 10, 40],
+          backgroundColor: ['#34c9be', '#f7596d', '#E3E2E3'],
+          borderWidth: 0,
+      
+          // reduce the thikness
+          cutout: 70,
+        }],
+        labels: ['Submitted', 'Not Submitted']
+    });
+    const[questions, setQuestions] = useState();
+    const[totalQuestion, setTotal] = useState();
+    const[totalCourses, setTotalCourses] = useState();
+    const[easy, setEasy] = useState(0);
+    const[medium, setMedium] = useState(0);
+    const[hard, setHard] = useState(0);
+
+
     const { openClose, unvSign } = useSelector((state) => state.counter);
-    // const student = {
-    //     name: 'John Doe',
-    //     email: 'john@gmail.com',
-    //     phone: '1234567890',
-    //     address: 'ABC Street, XYZ City, India',
-    //     university: 'XYZ University',
-    //     department: 'Computer Science',
-    // }
+
     const student__id = localStorage.getItem('student__id');
     const student__token = localStorage.getItem('student__token');
     const student__email = localStorage.getItem('student__email');
     const universityDetail = localStorage.getItem('university');
     const navigate = useNavigate();
-    
-    // const profle__name = student.name.split(' ');
-    // const profile__initial = profle__name[0].charAt(0) + profle__name[1].charAt(0);
-    
+
     const detail = {
         width: 260,
         // color: '#9fa0ff',
@@ -99,6 +96,7 @@ function StudentDashboard() {
             console.log(all__courses.data);
             const programData = all__courses.data.program;
             setStudent(all__courses.data);
+            setTotalCourses(all__courses.data.courses.length);
 
             const universityData = await axios.post(backend_url + `/university/details`, {universityId: universityDetail, email: student__email});
             console.log(universityData);
@@ -129,8 +127,48 @@ function StudentDashboard() {
         }
     }
 
+    async function getQuestionDetailsForStudent(){
+        try {
+            const instance = axios.create({
+                headers: {
+                    'x-auth-token': student__token,
+                },
+            });
+            const question__details = await instance.post(backend_url + `/student/performance`, {studentId: student__id, email: student__email});
+            console.log(question__details.data);
+            setQuestions(question__details.data);
+            let totalQuestion = question__details.data.easy+question__details.data.medium+question__details.data.hard;
+            let accepted = question__details.data.easyAccepted+question__details.data.mediumAccepted+question__details.data.hardAccepted;
+            let rejected = question__details.data.easyRejected+question__details.data.mediumRejected+question__details.data.hardRejected;
+            let easyPer = (question__details.data.easyAccepted*100)/question__details.data.easy;
+            setEasy(question__details.data.easy === 0 ? 0 : easyPer);
+            let mediumPer = (question__details.data.mediumAccepted*100)/question__details.data.medium;
+            setMedium(question__details.data.medium === 0 ? 0 : mediumPer);
+            let hardPer = (question__details.data.hardAccepted*100)/question__details.data.hard;
+            setHard(question__details.data.hard === 0 ? 0 : hardPer);
+            console.log(totalQuestion, accepted, rejected);
+            let temp = {
+                datasets: [{
+                  data: [accepted, rejected, totalQuestion],
+                  backgroundColor: ['#34c9be', '#f7596d', '#E3E2E3'],
+                  borderWidth: 0,
+              
+                  // reduce the thikness
+                  cutout: 70,
+                }],
+                labels: ['accept', 'reject', 'total']
+            }
+            setData(temp);
+            setTotal(totalQuestion);
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong");
+        }
+    }
+
     useEffect(() => {
         getStudentData();
+        getQuestionDetailsForStudent();
     }, [])
 
   return (
@@ -145,43 +183,46 @@ function StudentDashboard() {
                     <div className='flex items-start justify-between gap-4'>
                         <div className='flex items-center bg-white w-1/2 flex-col rounded-md shadow-lg'>
                         <Doughnut 
-                        data={data}
-                        options={{
-                            responsive: true,
-                        }}
+                            data={data}
                         />
                         <p className='my-4'>
-                            Total Questions: {q.total}
+                            Total Questions: {totalQuestion}
                         </p>
                         </div>
-                        <div className='flex flex-col w-1/2 gap-8'>
+                        <div className='flex flex-col w-1/2 gap-4'>
                         <div className="total__courses bg-white py-4 rounded-md shadow-lg">
                             <div className='text-xs bg-white rounded-full w-28 h-28 mx-auto flex flex-col items-center justify-center' style={{border: "2px solid #f77f00"}}>
-                            <p>Total Courses</p>
-                            <p>6</p>
+                            <p className='text-[#f77f00] text-2xl font-bold'>{totalCourses ? totalCourses : null}</p>
+                            <p className='text-2xs' style={{fontSize: "10px"}}>Total Courses</p>
                             </div>
                         </div>
-                        <div className='bg-white px-8 py-8 rounded-md shadow-lg'>
-                            <div className='my-6'>
-                            <div className='flex items-center text-xs'>
-                                <p className='w-2/5'>Easy</p>
-                                <p>{q.easyComplete}/{q.easy}</p>
+                        <div className='bg-white py-2 rounded-md shadow-lg px-4'>
+                            <div className='my-2 mx-2'>
+                                <div className='flex items-center text-xs'>
+                                    <p className='w-2/5'>Easy</p>
+                                    <p>{questions ? questions.easyAccepted : null} / {questions ? questions.easy : null}</p>
+                                </div>
+                                <div style={{ '--value-color': '#2a9d8f' }}>
+                                    <ProgressBar value={easy} bgColor="#e3e2e3" />
+                                </div>
                             </div>
-                            <ProgressBar progress={detail} />
+                            <div className='my-6 mx-2'>
+                                <div className='flex items-center text-xs'>
+                                    <p className='w-2/5'>Medium</p>
+                                    <p>{questions ? questions.mediumAccepted : null} / {questions ? questions.medium : null}</p>
+                                </div>
+                                <div style={{ '--value-color': '#e9c46a' }}>
+                                    <ProgressBar value={medium} bgColor="#e3e2e3" />
+                                </div>
                             </div>
-                            <div className='my-6'>
-                            <div className='flex items-center text-xs'>
-                                <p className='w-2/5'>Medium</p>
-                                <p>{q.mediumComplete}/{q.medium}</p>
-                            </div>
-                            <ProgressBar progress={detail2} />
-                            </div>
-                            <div className='my-6'>
-                            <div className='flex items-center text-xs'>
-                                <p className='w-2/5'>Hard</p>
-                                <p>{q.hardComplete}/{q.hard}</p>
-                            </div>
-                            <ProgressBar progress={detail3} />
+                            <div className='my-6 mx-2'>
+                                <div className='flex items-center text-xs'>
+                                    <p className='w-2/5'>Hard</p>
+                                    <p>{questions ? questions.hardAccepted : null} / {questions ? questions.hard : null}</p>
+                                </div>
+                                <div style={{ '--value-color': '#e76f51' }}>
+                                    <ProgressBar value={hard} bgColor="#e3e2e3" />
+                                </div>
                             </div>
                         </div>
                         </div>

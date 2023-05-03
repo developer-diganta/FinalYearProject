@@ -13,16 +13,12 @@ function Question() {
   const navigate = useNavigate();
   const { openClose, unvSign } = useSelector((state) => state.counter);
   // const[allQuestions, setAllQuestions] = useState([]);
-  let instance;
-  try {
-    instance = axios.create({
-      headers: {
-        'x-auth-token': teacher__token
-      }
-    });
-  } catch (err) {
-    console.log("OOPS!")
-  }
+  // let instance;
+  // try {
+    
+  // } catch (err) {
+  //   console.log("OOPS!")
+  // }
   const location = useLocation();
   console.log("location.", location);
 
@@ -70,7 +66,12 @@ function Question() {
   async function getQuestions() {
     if (location.state.course.courseType === "public") {
       try {
-        const questions = await instance.post(backend_url + '/moocs/question', { assignmentId: location.state.assignment._id });
+        const instance = axios.create({
+          headers: {
+            'x-auth-token': teacher__token
+          }
+        });
+        const questions = await instance.post(backend_url + '/moocs/question', { assignmentId: location.state.assignment._id, email: teacher__email });
         console.log("questions.", questions);
         setAllQuestions(questions.data.questions);
       } catch (error) {

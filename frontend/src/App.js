@@ -53,6 +53,12 @@ import PublicCourseQuestions from './Components/PublicCourses/PublicCourseQuesti
 import TotalSubmission from './Components/Teacher/Courses/DifferentOptions/TotalSubmission';
 import IndividualStudentAnalysis from './Components/Teacher/Courses/DifferentOptions/IndividualStudentAnalysis';
 import IndividualSubmission from './Components/Teacher/Courses/DifferentOptions/IndividualSubmission';
+import StudentAnalysis from './Components/Student/Courses/IndividualStudentCourse/StudentAnalysis';
+import Admin from './Components/Admin/Admin';
+import AdminSignin from './Components/Admin/AdminSignin';
+import AdminUniversity from './Components/Admin/AdminUniversity';
+import AdminStudent from './Components/Admin/AdminStudent';
+import AdminTeacher from './Components/Admin/AdminTeacher';
 
 function App() {
   return (
@@ -113,12 +119,20 @@ function App() {
             <Route path='/student/courses/:courseid' element={<StudentIndividualCourse /> } />
             <Route path='/student/course/assignment' element={<StudentAssignment />} />
             <Route path='/student/question/solve' element={<Codeeditor />} />
+            <Route path='/student/question/analysis' element={<StudentAnalysis />} />
 
             {/* ******************** Public courses routes ***************************************************************/}
             <Route path='/publiccourses' element={<PublicCourses />} />
             <Route path='/publiccourses/:courseid' element={<SinglePublicCourse />} />
             <Route path='/publiccourses/assignment' element={<PublicCourseAssignment />} />
             <Route path='/publiccourses/assignment/questions' element={<PublicCourseQuestions />} />
+
+            {/* ******************** Public courses routes ***************************************************************/}
+            <Route path='/admin' element={<Admin />} />
+            <Route path='/admin/signin' element={<AdminSignin />} />
+            <Route path='/admin/university' element={<AdminUniversity />} />
+            <Route path='/admin/teacher' element={<AdminTeacher />} />
+            <Route path='/admin/student' element={<AdminStudent />} />
 
             {/* ******************** Error routes ***************************************************************/}
             <Route path='*' element={<ErrorPage />} />

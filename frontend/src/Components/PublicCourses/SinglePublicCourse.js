@@ -44,6 +44,7 @@ function SinglePublicCourse() {
     else{
       alert(response.data.message);
     }
+    navigate('/publiccourses');
   }
 
   function checkIfEnrolled(){
