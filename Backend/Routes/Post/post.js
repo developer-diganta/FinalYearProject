@@ -1,5 +1,6 @@
 const express = require("express");
 const authorise = require("../../middlewares/authorise");
+const authoriseAdmin = require("../../middlewares/authoriseAdmin");
 const authoriseUniversity = require("../../middlewares/authoriseUniversity");
 const controls = require("../../controller/control");
 const { route } = require("../..");
@@ -199,8 +200,9 @@ router.post("/moocs/question/id", controls.getMoocQuestionById);
 router.post("/moocs/question/code/submit", controls.submitCodeToMoocs);
 
 // ADMIN ROUTES
-router.post("/admin/signin", authorise, controls.adminSignIn);
-router.post("/admin/restore/university", controls.restoreUniversity);
+router.post("/admin/signin", controls.adminSignIn);
+router.post("/admin/universities", authoriseAdmin, controls.adminUniversityData)
+router.post("/admin/restore/university", authorise, controls.restoreUniversity);
 router.post("/admin/restore/teacher", authorise, controls.restoreTeacher);
 router.post("/admin/restore/student", authorise, controls.restoreStudent);
 

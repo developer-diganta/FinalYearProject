@@ -231,7 +231,7 @@ const universityAddDepartment = async (req, res) => {
 const addUniversityProgram = async (req, res) => {
     const { programName, departmentId, universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
 
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
@@ -260,7 +260,7 @@ const addUniversityProgram = async (req, res) => {
 const universityVerifyCourse = async (req, res) => {
     const { courseId, universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -284,7 +284,7 @@ const universityVerifyCourse = async (req, res) => {
 const universityRejectCourse = async (req, res) => {
     const { courseId, universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -308,7 +308,7 @@ const getUniversityDetails = async (req, res) => {
     const { universityId } = req.body;
     console.log("I'm here")
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -371,7 +371,7 @@ const getUniversityDetails = async (req, res) => {
 const universityTeacherData = async (req, res) => {
     const { universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -387,7 +387,7 @@ const universityTeacherData = async (req, res) => {
 const universityTeacherCount = async (req, res) => {
     const { universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -403,7 +403,7 @@ const universityTeacherCount = async (req, res) => {
 const getUniversityContract = async (req, res) => {
     const { universityId } = req.body.universityId;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -418,7 +418,7 @@ const getUniversityContract = async (req, res) => {
 const contractExpiryDetails = async (req, res) => {
     const { universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -440,7 +440,7 @@ const contractExpiryDetails = async (req, res) => {
 const getUniversityStudentData = async (req, res) => {
     const { universityId } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -516,7 +516,7 @@ const signupTeacher = async (req, res) => {
             if (err) {
                 res.status(500).json(err);
             } else {
-                const university = await models.University.findById(uniId).exec();
+                const university = await models.University.findById({ _id: uniId, isdeleted: false }).exec();
                 if (!university) {
                     res.status(400).json({ message: "Invalid University Id" });
                     return;
@@ -576,7 +576,7 @@ const addCourse = async (req, res) => {
     } = req.body;
     try {
 
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         console.log({ university })
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
@@ -627,7 +627,7 @@ const addAssignment = async (req, res) => {
     } = req.body;
     console.log({ universityId })
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -671,7 +671,7 @@ const addQuestion = async (req, res) => {
     } = req.body;
     console.log(req.body)
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -821,7 +821,7 @@ const getQuestionsInAssignment = async (req, res) => {
         for (var i = 0; i < students.length; i++) {
             const courses = students[i].courses;
             for (var j = 0; j < courses.length; j++) {
-                if (courses[i].course === courseId) {
+                if (courses[j].course === courseId) {
                     totalStudents.push(students[i]._id);
                 }
             }
@@ -836,7 +836,7 @@ const getCourseDetails = async (req, res) => {
     const { universityId, courseId } = req.body;
     try {
 
-        models.University.find({ _id: universityId }, (err, university) => {
+        models.University.find({ _id: universityId, isdeleted: false }, (err, university) => {
             if (err) {
                 res.status(500).json(err);
             } else {
@@ -1030,7 +1030,7 @@ const studentSignUp = async (req, res) => {
                 res.status(500).json(err);
             else {
                 // check if valid uniId
-                models.University.find({ _id: uniId }, (err, university) => {
+                models.University.find({ _id: uniId, isdeleted: false }, (err, university) => {
                     if (err)
                         res.status(500).json(err);
                     else {
@@ -1145,7 +1145,7 @@ const getQuestionsFromAssignmentForStudent = async (req, res) => {
 const addMoocs = async (req, res) => {
     const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus } = req.body;
     try {
-        const university = await models.University.findById(universityId).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -1896,7 +1896,7 @@ const addCourseTeacher = async (req, res) => {
     } = req.body;
     console.log(req.body)
     try {
-        models.University.find({ _id: universityId }, (err, university) => {
+        models.University.find({ _id: universityId, isdeleted: false }, (err, university) => {
             if (err) {
                 res.status(500).json(err);
             } else {
@@ -1983,7 +1983,7 @@ const getCoursesForTeacher = async (req, res) => {
 const checkUniversityIdValidity = async (universityId) => {
     console.log("CHECK HERE")
     let val = false;
-    models.University.find({ _id: universityId }, (err, university) => {
+    models.University.find({ _id: universityId, isdeleted: false }, (err, university) => {
         if (err)
             return false;
         else {
@@ -2301,7 +2301,7 @@ const getQuestionAnalysis = async (req, res) => {
 const getStudents = async (req, res) => {
     const { universityId } = req.body;
     try {
-        models.University.findById({ _id: universityId }, (err, university) => {
+        models.University.findById({ _id: universityId, isdeleted: false }, (err, university) => {
             if (err) {
                 res.status(500).json(err);
             } else {
@@ -2396,7 +2396,7 @@ const getQuestionForStudent = async (req, res) => {
             return;
         }
 
-        const university = await models.University.findById({ _id: universityId }).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(404).json({ message: "Invalid university id" });
             return;
@@ -2477,7 +2477,7 @@ const showQuestionsToStudent = async (req, res) => {
             return;
         }
 
-        const university = await models.University.findById({ _id: universityId }).exec();
+        const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
             res.status(404).json({ message: "Invalid university id" });
             return;
@@ -2722,15 +2722,13 @@ const getStudentCourseAnalysis = async (req, res) => {
 // ------------------------------------------------------------------ ADMIN SECTION ---------------------------------------------------
 const adminSignIn = async (req, res) => {
     const { username, password } = req.body;
+    console.log(username === process.env.ADMIN_USERNAME)
     try {
         // const validate = await signUpSchema.validateAsync({ username, password });
         if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-            const time = new Date.getTime() / 1000();
+            // const time = new Date.getTime() / 1000();
             const token = generateToken(username);
-            adminLogin = {
-                token: token,
-                ip: req.ip
-            }
+            console.log("here")
             res.status(200).json({ auth: true, token: token });
         }
     }
@@ -2753,7 +2751,7 @@ const adminUniversityData = async (req, res) => {
 const adminGetIndividualUniversityData = async (req, res) => {
     try {
         const { universityId } = req.body;
-        const universityDetails = await models.University.findById(universityId).exec();
+        const universityDetails = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!universityDetails) {
             res.status(404).json({ "message": "No Data Found" });
         }
