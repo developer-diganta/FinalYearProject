@@ -114,7 +114,7 @@ function QuestionDetail() {
       }
       console.log(attemptedArray.size);
       const attemptedLength = attemptedArray.size;
-      const unAttemptedArray = location.state.totalStudents.length - attemptedLength;
+      const unAttemptedArray = location.state.totalStudents ? (location.state.totalStudents.length - attemptedLength) : 0;
       const temp = {
         datasets: [{
           data: [attemptedLength, unAttemptedArray],
