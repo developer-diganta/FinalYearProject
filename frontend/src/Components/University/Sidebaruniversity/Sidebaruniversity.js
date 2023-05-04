@@ -14,6 +14,8 @@ import { VscBook } from "react-icons/vsc";
 import { BiEditAlt } from "react-icons/bi";
 import { BsGraphUp } from "react-icons/bs";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
+import axios from 'axios';
+import { backend_url } from '../../../BackendRoutes';
 
 const Sidebaruniversity = () => {
     const menus = [
@@ -25,13 +27,42 @@ const Sidebaruniversity = () => {
       // {name: ""}
       { name: "edit", link: "/university/edit", icon: BiEditAlt, margin: true },
       { name: "Analyse", link: "/", icon: BsGraphUp },
-      { name: "Setting", link: "/", icon: RiSettings4Line },
     ];
     const [open, setOpen] = useState(true);
     const[smallOpen, setSmallOpen] = useState(false);
     const dispatch = useDispatch();
     const { openClose } = useSelector((state) => state.counter);
     const navigate = useNavigate();
+
+    const unv__id = localStorage.getItem('university__id');
+    const university__token = localStorage.getItem('signup_token');
+    const university__email = localStorage.getItem('university__email');
+
+    async function showAlert() {
+      const result = window.confirm("Do you want to continue?");
+      if (result) {
+        // user clicked the "Continue" button
+        // do something here
+        console.log("continue");
+        try {
+          const instance = axios.create({
+            headers: {
+              'x-auth-token': university__token
+            }
+          });
+          const res = await instance.post(backend_url + '/university/delete', {universityId: unv__id, email: university__email});
+          console.log(res);    
+        } catch (error) {
+          console.log("Something went wrong.");
+          alert("Something went wrong.");
+        }
+      } else {
+        // user clicked the "Cancel" button
+        // do something else here
+        console.log("Cancel");
+      }
+    }
+
     return (
       <div data-testid='sidebar md:w-full'>
         <section className="flex gap-6">
@@ -42,7 +73,7 @@ const Sidebaruniversity = () => {
           >
             <div className="py-3 flex justify-between mn md:bg-[#9900ff] z-50 md:px-2 items-center">
               <div className='text-4xl cursor-pointer' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}} onClick={() => navigate('/')}>Slate</div>
-              <div className='md:hidden'>
+              <div className='hidden'>
                 <HiMenuAlt3
                   size={26}
                   className="cursor-pointer"
@@ -92,13 +123,20 @@ const Sidebaruniversity = () => {
                 </h2>
               </Link>
               ))}
-              <div className='ml-2 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
-                localStorage.removeItem('signup_token');
-                localStorage.removeItem('university__id');
-                localStorage.removeItem('university__email');
-                navigate('/');
-              }}>
-                Log out
+              <div className='md:mx-auto'>
+                <div className='ml-2 md:mx-auto mb-4 md:mb-4 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
+                  localStorage.removeItem('signup_token');
+                  localStorage.removeItem('university__id');
+                  localStorage.removeItem('university__email');
+                  navigate('/');
+                }}>
+                  Log out
+                </div>
+                <div className='ml-2 md:mx-auto md:mb-4 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} 
+                  onClick={showAlert}
+                >
+                  Delete
+                </div>
               </div>
             </div>
           </div>

@@ -15,15 +15,15 @@ function AdminSignin() {
     async function getFormValue(event){
         event.preventDefault();
         console.log(username, password);
-        const admin__login = await axios.post(backend_url + '/admin/signin', {username, password});
-        // console.log("************************************", admin__login);
-        if(admin__login.data.token && admin__login.data._id){
-          console.log("************************************", admin__login.data);
-          localStorage.setItem('teacher__token', admin__login.data.token);
-          localStorage.setItem('teacher__id', admin__login.data._id);
-          localStorage.setItem('teacher__email', username);
-          // dispatch(universitySignup(true));
-          navigate('/admin');
+        try {
+            const admin__login = await axios.post(backend_url + '/admin/signin', {username, password});
+            console.log("************************************", admin__login);
+            localStorage.setItem('admin__token', admin__login.data.token);
+            if(admin__login.data.token){
+              navigate('/admin');
+            }
+        } catch (error) {
+            console.log(error);
         }
       }
 

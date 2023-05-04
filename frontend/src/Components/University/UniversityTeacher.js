@@ -88,7 +88,7 @@ function UniversityTeacher() {
       const accepted__teachers = await instance.post(backend_url + '/university/teacher', {universityId: unv__id, email: unv__email});
       console.log("acceptedTeachers", accepted__teachers);
       setTeacher(accepted__teachers.data.filter((item,index)=>{
-        return item.status === "active"
+        return item.status === "active" && item.isdeleted !== true 
       }));
     } catch (error) {
       console.log(error);
@@ -96,6 +96,33 @@ function UniversityTeacher() {
       navigate('/university/login');
     }
   }
+
+  async function showAlert(teacherId) {
+    const result = window.confirm("Do you want to continue?");
+    if (result) {
+      // user clicked the "Continue" button
+      // do something here
+      console.log("continue");
+      try {
+        const instance = axios.create({
+          headers: {
+            'x-auth-token': token
+          }
+        });
+        const res = await instance.post(backend_url + '/university/delete/teacher', {teacherId: teacherId, email: unv__email});
+        console.log(res);
+        getAllAcceptedTeachers();
+      } catch (error) {
+        console.log("Something went wrong.");
+        alert("Something went wrong.");
+      }
+    } else {
+      // user clicked the "Cancel" button
+      // do something else here
+      console.log("Cancel");
+    }
+  }
+
   useEffect(() => {
     getAllAcceptedTeachers();
   }, [])
@@ -130,6 +157,11 @@ function UniversityTeacher() {
                       </div>
                       <div className='pl-4 w-1/4 text-xs text-[#6c757d] md:text-xxs font-semibold' style={{letterSpacing: "1px"}}>{'@'+item.username}</div>
                       <div className='w-1/4'><p className='md:text-xs text-sm font-bold'>{item.email}</p></div>
+                      <div className='w-1/4 flex justify-end pr-4'>
+                        <button className='bg-[#6b7780] rounded-sm px-2 py-1 text-white' style={{display: op === 'pending' ? "none" : "block"}}
+                          onClick={() => showAlert(item._id)}
+                        >Delete</button>
+                      </div>
                       <button className='w-2/12 bg-[#6b7780] rounded-full h-10 text-white' style={{display: op === 'pending' ? "block" : "none"}}
                         onClick={() => {
                           acceptTeacher(item._id)
