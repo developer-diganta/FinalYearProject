@@ -201,10 +201,13 @@ router.post("/moocs/question/code/submit", controls.submitCodeToMoocs);
 
 // ADMIN ROUTES
 router.post("/admin/signin", controls.adminSignIn);
-router.post("/admin/universities", authoriseAdmin, controls.adminUniversityData)
-router.post("/admin/restore/university", authorise, controls.restoreUniversity);
-router.post("/admin/restore/teacher", authorise, controls.restoreTeacher);
-router.post("/admin/restore/student", authorise, controls.restoreStudent);
+router.post("/admin/universities", authoriseAdmin, controls.adminUniversityData);
+router.post("/admin/university", authoriseAdmin, controls.adminGetIndividualUniversityData);
+router.post("/admin/restore/university", authoriseAdmin, controls.restoreUniversity);
+router.post("/admin/restore/teacher", authoriseAdmin, controls.restoreTeacher);
+router.post("/admin/restore/student", authoriseAdmin, controls.restoreStudent);
 
-
+// Utilities
+router.get("/create-checkout-session", controls.createPayment);
+router.post('/webhook', express.json({ type: 'application/json' }), controls.webhookForStripe);
 module.exports = router; 

@@ -30,6 +30,8 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^7.1.2",
     "string-similarity": "^4.0.4",
+    "stripe": "^12.3.0",
+    "stripe-cli": "^0.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

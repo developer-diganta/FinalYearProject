@@ -14,6 +14,7 @@ const passport = require("passport");
 const session = require("express-session");
 const sessionConig = require("./configs/session-config");
 const authorise = require("./middlewares/authorise");
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 addUptimeLog("Server Status: Start/Restart and UP");
 
@@ -24,7 +25,7 @@ setInterval(() => {
 
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(helmet());
 // app.use(session(sessionConig));
@@ -39,6 +40,5 @@ testConnection(url);
 app.use("/", getRoutes);
 app.use("/", postRoutes);
 app.use("/", patchRoutes);
-// app.use("/getLanguages", getLanguages);
 
 module.exports = app;
