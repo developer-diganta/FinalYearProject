@@ -17,8 +17,9 @@ function AdminSignin() {
         console.log(username, password);
         try {
             const admin__login = await axios.post(backend_url + '/admin/signin', {username, password});
-            console.log("************************************", admin__login);
+            console.log("************************************", admin__login.data);
             localStorage.setItem('admin__token', admin__login.data.token);
+            localStorage.setItem('admin__username', username);
             if(admin__login.data.token){
               navigate('/admin');
             }
