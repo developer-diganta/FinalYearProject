@@ -28,7 +28,7 @@ function UniversityStudents() {
         const res = await instance.post(backend_url + '/university/student', {universityId: university__id, email: university__email});
         console.log(res);
         setStudents(res.data.filter((item,index)=>{
-            return item.status === 'active';
+            return item.status === 'active' && item.isdeleted !== true;
         }));
       } catch (error) {
         console.log(error);
@@ -36,6 +36,32 @@ function UniversityStudents() {
         if(error.response.status === 401){
           navigate('/university/login');
         }
+      }
+    }
+
+    async function showAlert(studentId) {
+      const result = window.confirm("Do you want to continue?");
+      if (result) {
+        // user clicked the "Continue" button
+        // do something here
+        console.log("continue");
+        try {
+          const instance = axios.create({
+            headers: {
+              'x-auth-token': university__token
+            }
+          });
+          const res = await instance.post(backend_url + '/university/delete/student', {studentId: studentId, email: university__email});
+          console.log(res);
+          getAllStudents();
+        } catch (error) {
+          console.log("Something went wrong.");
+          alert("Something went wrong.");
+        }
+      } else {
+        // user clicked the "Cancel" button
+        // do something else here
+        console.log("Cancel");
       }
     }
 
@@ -68,6 +94,11 @@ function UniversityStudents() {
                     <button className='bg-[#A3C7D6] px-2 py-1 text-white rounded-sm' onClick={() => acceptStudent(student._id)}>Accept</button>
                     <button className='bg-[#D3756B] px-2 py-1 text-white rounded-sm' onClick={() => rejectStudent(student._id)}>Reject</button>
                   </div> */}
+                  <div className='w-1/4 flex justify-end pr-4'>
+                      <button className='bg-[#6b7780] rounded-sm px-2 py-1 text-white'
+                        onClick={() => showAlert(student._id)}
+                      >Delete</button>
+                  </div>
                 </div>
               )
             })
