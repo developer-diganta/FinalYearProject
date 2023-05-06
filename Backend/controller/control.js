@@ -402,7 +402,8 @@ const universityTeacherCount = async (req, res) => {
 }
 
 const getUniversityContract = async (req, res) => {
-    const { universityId } = req.body.universityId;
+    const { universityId } = req.body;
+
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -412,6 +413,7 @@ const getUniversityContract = async (req, res) => {
 
         res.status(200).json(university.contract);
     } catch (error) {
+
         res.status(422).json(error);
     }
 }
@@ -448,6 +450,7 @@ const getUniversityStudentData = async (req, res) => {
         }
 
         const students = await models.Student.find({ university: universityId, isdeleted: false }).exec();
+        console.log("LLLLLLLLLLLLLL", students)
         res.status(200).json(students);
     }
 
@@ -3001,6 +3004,5 @@ module.exports = {
     createPayment,
     webhookForStripe
 };
-
 
 

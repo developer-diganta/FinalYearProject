@@ -22,7 +22,8 @@ const author = (req, res, next) => {
                     next();
                 }
                 else {
-                    console.log(req.body.email)
+                    console.log("A", req.body)
+                    console.log("A", decoded.email)
                     res.status(401).json({ message: "Verification Failed" });
                 }
             }

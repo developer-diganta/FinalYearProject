@@ -301,3 +301,501 @@ describe("POST /university/addDepartment", () => {
     expect(response.body.message).toBe("No token detected");
   });
 });
+
+
+describe("POST /university/addProgram", () => {
+  let university, department, token;
+
+  beforeAll(async () => {
+    // Create a test university, department, and generate a JWT token for it
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    department = await models.Department.create({
+      name: "Test Department",
+      school: "test-school-id",
+      university: university._id
+    });
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university, department, and its associated programs
+    await models.University.findByIdAndDelete(university._id);
+    await models.Department.findByIdAndDelete(department._id);
+    await models.Program.deleteMany({ university: university._id });
+  });
+
+  it("should add a new program to a valid department", async () => {
+    const response = await request(app)
+      .post("/university/addProgram")
+      .set("x-auth-token", token)
+      .send({ email: university.email, programName: "Test Program", departmentId: department._id, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Program added successfully");
+
+    const program = await models.Program.findOne({ name: "Test Program" });
+    expect(program).toBeDefined();
+    expect(program.department).toEqual(department._id.toString());
+    expect(program.university).toEqual(university._id.toString());
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/addProgram")
+      .set("x-auth-token", token)
+      .send({ email: university.email, programName: "Test Program", departmentId: department._id, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an invalid department ID", async () => {
+    const response = await request(app)
+      .post("/university/addProgram")
+      .set("x-auth-token", token)
+      .send({ email: university.email, programName: "Test Program", departmentId: sampleId, universityId: university._id });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid Department Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/addProgram")
+      .send({ email: university.email, programName: "Test Program", departmentId: department._id, universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
+
+describe("POST /university/verifyCourse", () => {
+  let university, course, token;
+
+  beforeAll(async () => {
+    // Create a test university, course and generate a JWT token for it
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    const department = await models.Department.create({
+      name: "Test Department",
+      university: university._id,
+    });
+    course = await models.Course.create({
+      name: "Test Course",
+      code: "TC101",
+      description: "Test course description",
+      department: department._id,
+      university: university._id,
+    });
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university, course and its associated departments
+    await models.University.findByIdAndDelete(university._id);
+    await models.Department.deleteMany({ university: university._id });
+    await models.Course.findByIdAndDelete(course._id);
+  });
+
+  it("should verify a course for a valid university", async () => {
+    const response = await request(app)
+      .post("/university/verifyCourse")
+      .set("x-auth-token", token)
+      .send({ email: university.email, courseId: course._id, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Course verified successfully");
+
+    const verifiedCourse = await models.Course.findById(course._id);
+    expect(verifiedCourse.approvalStatus).toEqual("verified");
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/verifyCourse")
+      .set("x-auth-token", token)
+      .send({ email: university.email, courseId: course._id, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an invalid course ID", async () => {
+    const response = await request(app)
+      .post("/university/verifyCourse")
+      .set("x-auth-token", token)
+      .send({ email: university.email, courseId: sampleId, universityId: university._id });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid Course Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/verifyCourse")
+      .send({ email: university.email, courseId: course._id, universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
+
+
+describe("POST /university/rejectCourse", () => {
+  let university, course, token;
+
+  beforeAll(async () => {
+    // Create a test university and course, and generate a JWT token for the university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    const department = await models.Department.create({
+      name: "Test Department",
+      university: university._id,
+    });
+    course = await models.Course.create({
+      name: "Test Course",
+      department: department._id,
+      university: university._id,
+      approvalStatus: "pending",
+    });
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university, department, and course
+    await models.University.findByIdAndDelete(university._id);
+    await models.Department.findByIdAndDelete(course.department);
+    await models.Course.findByIdAndDelete(course._id);
+  });
+
+  it("should reject a course for a valid university and course ID", async () => {
+    const response = await request(app)
+      .post("/university/rejectCourse")
+      .set("x-auth-token", token)
+      .send({ email: university.email, courseId: course._id, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe("Course rejected successfully");
+
+    const updatedCourse = await models.Course.findById(course._id);
+    expect(updatedCourse.approvalStatus).toBe("rejected");
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/rejectCourse")
+      .set("x-auth-token", token)
+      .send({ email: university.email, courseId: course._id, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an invalid course ID", async () => {
+    const response = await request(app)
+      .post("/university/rejectCourse")
+      .set("x-auth-token", token)
+      .send({ email: university.email, courseId: sampleId, universityId: university._id });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid Course Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/rejectCourse")
+      .send({ email: university.email, courseId: course._id, universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
+
+
+describe("POST /university/details", () => {
+  let university, school, department, program, course;
+
+  beforeAll(async () => {
+    // Create a test university, school, department, program, and course
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    school = await models.School.create({
+      name: "Test School",
+      university: university._id,
+    });
+    department = await models.Department.create({
+      name: "Test Department",
+      school: school._id,
+    });
+    program = await models.Program.create({
+      name: "Test Program",
+      department: department._id,
+    });
+    course = await models.Course.create({
+      name: "Test Course",
+      program: program._id,
+      approvalStatus: "approved",
+    });
+  });
+
+  afterAll(async () => {
+    // Delete the test university, school, department, program, and course
+    await models.University.findByIdAndDelete(university._id);
+    await models.School.findByIdAndDelete(school._id);
+    await models.Department.findByIdAndDelete(department._id);
+    await models.Program.findByIdAndDelete(program._id);
+    await models.Course.findByIdAndDelete(course._id);
+  });
+
+  it("should return the details of a university with its schools, departments, programs, and courses", async () => {
+    const response = await request(app)
+      .post("/university/details")
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.universityDetails).toBeDefined();
+    expect(response.body.universityDetails.name).toBe(university.name);
+    expect(response.body.universityDetails.schools.length).toBe(1);
+    expect(response.body.universityDetails.schools[0].name).toBe(school.name);
+    expect(response.body.universityDetails.schools[0].departments.length).toBe(1);
+    expect(response.body.universityDetails.schools[0].departments[0].name).toBe(department.name);
+    expect(response.body.universityDetails.schools[0].departments[0].programs.length).toBe(1);
+    expect(response.body.universityDetails.schools[0].departments[0].programs[0].name).toBe(program.name);
+    expect(response.body.universityDetails.schools[0].departments[0].programs[0].courses.length).toBe(1);
+    expect(response.body.universityDetails.schools[0].departments[0].programs[0].courses[0].name).toBe(course.name);
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/details")
+      .send({ email: university.email, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+});
+
+describe("POST /university/teacher", () => {
+  let university, teachers, token;
+
+  beforeAll(async () => {
+    // Create a test university and teachers, and generate a JWT token for the university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    teachers = await Promise.all([
+      models.Teacher.create({
+        name: "Teacher 1",
+        email: "teacher1@example.com",
+        university: university._id,
+      }),
+      models.Teacher.create({
+        name: "Teacher 2",
+        email: "teacher2@example.com",
+        university: university._id,
+      }),
+    ]);
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university and teachers
+    await models.University.findByIdAndDelete(university._id);
+    await Promise.all(teachers.map((teacher) => models.Teacher.findByIdAndDelete(teacher._id)));
+  });
+
+  it("should return a list of teachers for a valid university ID", async () => {
+    const response = await request(app)
+      .post("/university/teacher")
+      .set("x-auth-token", token)
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
+    expect(response.body[0].name).toBe("Teacher 1");
+    expect(response.body[0].email).toBe("teacher1@example.com");
+    expect(response.body[1].name).toBe("Teacher 2");
+    expect(response.body[1].email).toBe("teacher2@example.com");
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/teacher")
+      .set("x-auth-token", token)
+      .send({ email: university.email, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/teacher")
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+})
+
+describe("POST /university/teacher/count", () => {
+  let university, teacher1, teacher2, token;
+
+  beforeAll(async () => {
+    // Create a test university, two teachers, and generate a JWT token for the university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    teacher1 = await models.Teacher.create({
+      name: "Test Teacher 1",
+      university: university._id,
+    });
+    teacher2 = await models.Teacher.create({
+      name: "Test Teacher 2",
+      university: university._id,
+    });
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university and teachers
+    await models.University.findByIdAndDelete(university._id);
+    await models.Teacher.deleteMany({ university: university._id });
+  });
+
+  it("should return the correct count for a valid university ID", async () => {
+    const response = await request(app)
+      .post("/university/teacher/count")
+      .set("x-auth-token", token)
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.count).toBe(2);
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/teacher/count")
+      .set("x-auth-token", token)
+      .send({ email: university.email, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/teacher/count")
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+})
+
+describe("post /university/contract", () => {
+  let university, token;
+
+  beforeAll(async () => {
+    // Create a test university and generate a JWT token for the university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+  });
+
+  afterAll(async () => {
+    // Delete the test university
+    await models.University.findByIdAndDelete(university._id);
+  });
+
+  it("should return the contract for a valid university", async () => {
+    console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT", university._id)
+    const response = await request(app)
+      .post("/university/contract")
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(university.contract);
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/contract")
+      .send({ email: university.email, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+});
+
+describe("POST /university/student", () => {
+  let university, token;
+
+  beforeAll(async () => {
+    // Create a test university and generate a JWT token for the university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university
+    await models.University.findByIdAndDelete(university._id);
+  });
+
+  it("should return the students for a valid university", async () => {
+    // Create some test students for the university
+    const students = [{ name: "John Doe", email: "johndoe@example.com", isdeleted: "false", university: university._id }, { name: "Jane Smith", email: "janesmith@example.com", university: university._id, isdeleted: "false" },];
+    await models.Student.create(students);
+
+    // Send a request to get the students for the university
+    const response = await request(app)
+      .post("/university/student")
+      .set("x-auth-token", token)
+      .send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response._body.length).toBe(2);
+
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/student")
+      .set("x-auth-token", token)
+      .send({ email: university.email, universityId: sampleId });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app).post("/university/student").send({ email: university.email, universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
