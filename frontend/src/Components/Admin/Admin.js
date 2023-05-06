@@ -3,7 +3,7 @@ import AdminHeading from './AdminHeading'
 import axios from 'axios';
 import { backend_url } from '../../BackendRoutes';
 import { useNavigate } from 'react-router-dom';
-
+import './Admin.css';
 function Admin() {
   const[universities, setUniversities] = useState([]);
   const token = localStorage.getItem('admin__token');
@@ -65,9 +65,9 @@ function Admin() {
         <div>
           <div className='w-11/12 mx-auto my-8'>
             <table className='border-[1px] border-[#dededf] my-4 rounded-lg'>
-              <thead className='bg-[#f9fafb] border-b-[1px] border-b-[#dededf]'>
+              <thead className='bg-[#f9fafb] border-b-[1px] border-b-[#dededf] rounded-lg'>
                 <tr>
-                  <th className='w-1/5'>_id</th>
+                  <th className='w-1/5'>Id</th>
                   <th className='w-1/5'>Name</th>
                   <th className='w-1/5'>Email</th>
                   <th className='w-1/5'>Phone</th>
@@ -81,7 +81,7 @@ function Admin() {
                     <td className='w-1/5'>{item.name}</td>
                     <td className='w-1/5'>{item.email}</td>
                     <td className='w-1/5 text-center'>{item.phone}</td>
-                    <td className='w-1/5 text-center'>{item.isdeleted ? <div className='bg-[#9900ffff] text-white font-semibold w-28 mx-auto py-1 rounded-sm' onClick={() => restoreUniversity(item._id)}>restore</div> : 'active'}</td>
+                    <td className='w-1/5 text-center'>{item.isdeleted ? <div className='bg-[#9900ffff] text-white font-semibold w-28 mx-auto py-1 rounded-sm cursor-pointer' onClick={() => restoreUniversity(item._id)}>restore</div> : 'active'}</td>
                   </tr>
                 ))}
               </tbody>
