@@ -79,7 +79,7 @@ function AdminTeacher() {
         <AdminHeading />
         <div className='px-16 mt-8'> 
             <h1 className='uppercase text-3xl text-start pb-6' style={{fontWeight: "bolder"}}>Teachers</h1>
-            <p className='font-semibold' style={{letterSpacing: "1px"}}>Search teachers details by university</p>
+            <p className='font-semibold' style={{letterSpacing: "1px"}}>Search teachers detail by university</p>
             <form className='text-center my-8' action="" onSubmit={getUniversityDetail}>
                 <input className='border-[1px] border-[#efefef] px-4 text-sm py-2 min-w-[40vw] rounded-sm' type="text" placeholder='Enter university Id' onChange={(ev) => setUniversityId(ev.target.value)} />
                 <button className='bg-[#dcdcdcff] py-2 mx-2 px-2 text-sm roundded-sm'>Search</button>
@@ -89,7 +89,7 @@ function AdminTeacher() {
             <table className='border-[1px] border-[#dededf] my-4 rounded-lg'>
               <thead className='bg-[#f9fafb] border-b-[1px] border-b-[#dededf]'>
                 <tr>
-                  <th className='w-1/5'>_id</th>
+                  <th className='w-1/5'>Id</th>
                   <th className='w-1/5'>Name</th>
                   <th className='w-1/5'>Email</th>
                   <th className='w-1/5'>Username</th>

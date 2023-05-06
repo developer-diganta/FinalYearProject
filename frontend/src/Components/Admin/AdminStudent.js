@@ -81,16 +81,16 @@ function AdminStudent() {
         <AdminHeading />
         <div className='px-16 mt-8'> 
             <h1 className='uppercase text-3xl text-start pb-6' style={{fontWeight: "bolder"}}>Students</h1>
-            <p className='font-semibold' style={{letterSpacing: "1px"}}>Search students details by university</p>
+            <p className='font-semibold' style={{letterSpacing: "1px"}}>Search students detail by university</p>
             <form className='text-center my-8' action="" onSubmit={getUniversityDetail}>
                 <input className='border-[1px] border-[#efefef] px-4 text-sm py-2 min-w-[40vw] rounded-sm' type="text" placeholder='Enter university Id' onChange={(ev) => setUniversityId(ev.target.value)} />
                 <button className='bg-[#dcdcdcff] py-2 mx-2 px-2 text-sm roundded-sm'>Search</button>
             </form>
-            <div className={`w-11/12 mx-auto my-8 ${universities.length === 0 ? 'hidden' : 'block'}`}>
+            <div className={`w-full mx-auto my-8 ${universities.length === 0 ? 'hidden' : 'block'}`}>
             <table className='border-[1px] border-[#dededf] my-4 rounded-lg mx-auto'>
               <thead className='bg-[#f9fafb] border-b-[1px] border-b-[#dededf]'>
                 <tr>
-                  <th className='w-1/3'>_id</th>
+                  <th className='w-1/3'>Id</th>
                   <th className='w-1/3'>Name</th>
                   <th className='w-1/3'>status</th>
                 </tr>
