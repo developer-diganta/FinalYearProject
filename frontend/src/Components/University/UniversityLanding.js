@@ -15,10 +15,6 @@ function UniversityLanding() {
             <div className='flex justify-center'>
 
               <div className='w-4/12 relative -top-8 sm:hidden md:top-0 md:w-3/4 md:overflow-hidden md:mb-8 hidden md:block'>
-                  {/* <div className='a a1 shadow-2xl'></div>
-                  <div className='a b shadow-lg'></div>
-                  <div className='a c shadow-lg'></div> */}
-                  {/* <div className='a d shadow-lg'></div> */}
                   <img className='unv_img mx-auto left-10' src="/unv_grp_pic.svg" alt="" />
               </div>
             </div>
@@ -29,20 +25,15 @@ function UniversityLanding() {
                     <div className="buy w-36 flex justify-center gap-2 items-center py-4 mt-10 rounded-sm text-lg text-white font-bold tracking-widest cursor-pointer md:w-2/5 md:text-sm" onClick={() => navigate('/university/dashboard')}>
                         Dashboard
                     </div>
-                    <div className="buy w-36 flex justify-center gap-2 items-center py-4 mt-10 rounded-sm text-lg text-white font-bold tracking-widest cursor-pointer md:w-2/5 md:text-sm" onClick={() => navigate('/university/signup')}>
+                    <div className="buy w-36 flex justify-center gap-2 items-center py-4 mt-10 rounded-sm text-lg text-white font-bold tracking-widest cursor-pointer md:w-2/5 md:text-sm" onClick={() => navigate('/university/purchase')}>
                         Buy
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                     </div>
                   </div>
               </div>
               <div className='w-4/12 relative md:hidden'>
-                  {/* <div className='a a1 shadow-2xl'></div>
-                  <div className='a b shadow-lg'></div>
-                  <div className='a c shadow-lg'></div> */}
-                  {/* <div className='a d shadow-lg'></div> */}
                   <img className='unv_img left-10' src="/unv_grp_pic.svg" alt="" />
               </div>
           </div>

@@ -59,6 +59,7 @@ import AdminSignin from './Components/Admin/AdminSignin';
 import AdminUniversity from './Components/Admin/AdminUniversity';
 import AdminStudent from './Components/Admin/AdminStudent';
 import AdminTeacher from './Components/Admin/AdminTeacher';
+import Purchase from './Components/Purchase/Purchase';
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
             <Route path='/university' element={<UniversityLanding />} />
             <Route path='/university/signup' element={<UniversitySignup />} />
             <Route path='/university/login' element={<UniversityLogin />} />
+            <Route path='/university/purchase' element={<Purchase />} />
             <Route path='/university/dashboard' element={<UniversityDashboard />} />
             <Route path='/university/teachers' element={<UniversityTeacher />} />
             <Route path='/university/pendingstudents' element={<UniversityPendingStudents />} />
