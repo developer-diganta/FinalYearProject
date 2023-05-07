@@ -122,9 +122,17 @@ const universitySignUp = async (req, res) => {
                             email: email,
                             password: hash,
                             phone: phone,
-                            contract: [
-                                { status: "waitlist" }
-                            ]
+                            contract: {
+                                contract_id: "",
+                                contract_type: "",
+                                contract_receipt: "",
+                                contract_amount: "",
+                                contract_status: "",
+                                contract_billing_details: "",
+                                contract_start_date: null,
+                                contract_end_date: null
+                            },
+                            isdeleted: false,
                         });
                         console.log(newUniversity);
                         newUniversity.save((err) => {
@@ -550,6 +558,7 @@ const signupTeacher = async (req, res) => {
                     university: uniId,
                     department: departmentId,
                     status: 'waitlist',
+                    isdeleted: false
                 });
 
                 const savedTeacher = await teacher.save();
@@ -1029,7 +1038,7 @@ const teacherDelete = async (req, res) => {
 
 
 const studentSignUp = async (req, res) => {
-    const { name, email, password, uniId, programId } = req.body;
+    const { name, email, password, uniId, programId, registrationNumber, rollNumber, gender } = req.body;
     console.log(uniId)
     try {
         bcrypt.hash(password, 10, (err, hash) => {
@@ -1061,7 +1070,12 @@ const studentSignUp = async (req, res) => {
                                             password: hash,
                                             university: uniId,
                                             status: "waitlist",
-                                            program: programId
+                                            program: programId,
+                                            registrationNumber: registrationNo,
+                                            rollNumber: rollNo,
+                                            gender: gender,
+                                            submissions: [],
+                                            isdeleted: false
                                         });
                                         student.save((err) => {
                                             if (err)
@@ -2840,6 +2854,7 @@ const restoreStudent = async (req, res) => {
 // Payment
 
 const createPayment = async (req, res) => {
+    console.log("HERERERE")
     const line_items = [
         {
             price: 'price_1N457vSIgS8Gcj6RTz8JFYwR',
@@ -2859,18 +2874,21 @@ const createPayment = async (req, res) => {
         success_url: 'https://gracious-keller-08b8f9.netlify.app/success',
         cancel_url: 'https://gracious-keller-08b8f9.netlify.app/fail',
     });
-    // console.log(session)
-    res.redirect(303, session.url);
+    console.log(session.url)
+    res.json({ url: session.url })
 };
 
 const webhookForStripe = async (request, response) => {
     const event = request.body;
+    console.log("I AM HERE")
     switch (event.type) {
         case 'charge.succeeded' || 'payment_intent.succeeded':
             const chargeSucceeded = event.data.object;
             const email = chargeSucceeded.billing_details.email;
             console.log(chargeSucceeded)
+            console.log({ email })
             const university = await models.University.find({ email: email }).exec();
+            console.log({ university })
             if (!university) {
                 res.status(400).json({ message: "Error! Invalid Payment! Please contact admin asap." })
                 return;
@@ -2879,19 +2897,23 @@ const webhookForStripe = async (request, response) => {
             const newDate = new Date(originalDate.getTime()); // Create a new Date object with the same time value as the original date
 
             newDate.setFullYear(newDate.getFullYear() + 2); // Add 2 years to the new date
-
+            const newContract = {
+                contract_id: chargeSucceeded.id,
+                contract_type: "bi-yearly",
+                contract_receipt: chargeSucceeded.receipt_url,
+                contract_amount: chargeSucceeded.contract_amount,
+                contract_status: chargeSucceeded.status,
+                contract_billing_details: JSON.stringify(chargeSucceeded.billing_details),
+                contract_start_date: originalDate,
+                contract_end_date: newDate
+            }
+            console.log(chargeSucceeded)
             const updateUniversity = await models.University.updateOne({ _id: university[0]._id },
                 {
-                    contract_id: chargeSucceeded.id,
-                    contract_type: "bi-yearly",
-                    contract_receipt: chargeSucceeded.receipt_url,
-                    contract_amount: chargeSucceeded.contract_amount,
-                    contract_status: chargeSucceeded.status,
-                    contract_billing_details: chargeSucceeded.billing_details,
-                    contract_start_date: originalDate,
-                    contract_end_date: newDate
+                    contract: newContract
                 }
             )
+
             break;
         case 'payment_method.attached':
             const paymentMethod = event.data.object;

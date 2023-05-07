@@ -208,6 +208,6 @@ router.post("/admin/restore/teacher", authoriseAdmin, controls.restoreTeacher);
 router.post("/admin/restore/student", authoriseAdmin, controls.restoreStudent);
 
 // Utilities
-router.get("/create-checkout-session", controls.createPayment);
+router.post("/create-checkout-session", controls.createPayment);
 router.post('/webhook', express.json({ type: 'application/json' }), controls.webhookForStripe);
 module.exports = router; 
