@@ -536,14 +536,17 @@ const signupTeacher = async (req, res) => {
 
                 const teacherSearch = await models.Teacher.find({ $or: [{ username: username }, { email: email }] }).exec();
                 if (teacherSearch.length > 0) {
-                    res.status(400).json({ message: "Username or Email already exists" });
-                    return;
-                }
-                if (teacherSearch[0].isdeleted === true) {
-                    res.status(403).json({ "message": "Teacher Currently Moved To Trash. Please contact administrator" });
-                    return;
-                }
+                    if (teacherSearch[0].isdeleted === true) {
+                        res.status(403).json({ "message": "Teacher Currently Moved To Trash. Please contact administrator" });
+                        return;
+                    }
+                    else {
+                        res.status(400).json({ message: "Username or Email already exists" });
+                        return;
 
+                    }
+
+                }
                 const department = await models.Department.findById(departmentId).exec();
                 if (!department) {
                     res.status(400).json({ message: "Invalid department Id" });
@@ -562,7 +565,7 @@ const signupTeacher = async (req, res) => {
                 });
 
                 const savedTeacher = await teacher.save();
-                const token = generateToken(teacher[0].email);
+                const token = generateToken(teacher.email);
                 res.status(200).json({
                     _id: savedTeacher._id,
                     email: savedTeacher.email,
@@ -1071,8 +1074,8 @@ const studentSignUp = async (req, res) => {
                                             university: uniId,
                                             status: "waitlist",
                                             program: programId,
-                                            registrationNumber: registrationNo,
-                                            rollNumber: rollNo,
+                                            registrationNumber: registrationNumber,
+                                            rollNumber: rollNumber,
                                             gender: gender,
                                             submissions: [],
                                             isdeleted: false
