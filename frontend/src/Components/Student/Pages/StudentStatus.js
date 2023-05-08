@@ -19,7 +19,7 @@ function StudentStatus() {
             'x-auth-token': student__token,
         },
     });
-    const res = await axios.post(backend_url + '/student/data', {studentId: localStorage.getItem('student__id'), email: student__email});
+    const res = await instance.post(backend_url + '/student/data', {studentId: localStorage.getItem('student__id'), email: student__email});
     console.log(res);
     if(res.data.status == 'active'){
       navigate('/student/dashboard');

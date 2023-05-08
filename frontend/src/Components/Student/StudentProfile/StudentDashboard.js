@@ -94,6 +94,13 @@ function StudentDashboard() {
             });
             const all__courses = await instance.post(backend_url + `/student/data`, {studentId: student__id, email: student__email});
             console.log(all__courses.data);
+            if(all__courses.data.isdeleted === true){
+                alert("Account has been deleted. To restore it back, contact admin");
+                localStorage.removeItem('student__token');
+                localStorage.removeItem('student__id');
+                localStorage.removeItem('student__email');
+                navigate('/');
+            }
             const programData = all__courses.data.program;
             setStudent(all__courses.data);
             setTotalCourses(all__courses.data.courses.length);
@@ -200,7 +207,7 @@ function StudentDashboard() {
                             <div className='my-2 mx-2'>
                                 <div className='flex items-center text-xs'>
                                     <p className='w-2/5'>Easy</p>
-                                    <p>{questions ? questions.easyAccepted : null} / {questions ? questions.easy : null}</p>
+                                    <p>{questions ? questions.easyAccepted : 0} / {questions ? questions.easy : 0}</p>
                                 </div>
                                 <div style={{ '--value-color': '#2a9d8f' }}>
                                     <ProgressBar value={easy} bgColor="#e3e2e3" />
@@ -209,7 +216,7 @@ function StudentDashboard() {
                             <div className='my-6 mx-2'>
                                 <div className='flex items-center text-xs'>
                                     <p className='w-2/5'>Medium</p>
-                                    <p>{questions ? questions.mediumAccepted : null} / {questions ? questions.medium : null}</p>
+                                    <p>{questions ? questions.mediumAccepted : 0} / {questions ? questions.medium : 0}</p>
                                 </div>
                                 <div style={{ '--value-color': '#e9c46a' }}>
                                     <ProgressBar value={medium} bgColor="#e3e2e3" />
@@ -218,7 +225,7 @@ function StudentDashboard() {
                             <div className='my-6 mx-2'>
                                 <div className='flex items-center text-xs'>
                                     <p className='w-2/5'>Hard</p>
-                                    <p>{questions ? questions.hardAccepted : null} / {questions ? questions.hard : null}</p>
+                                    <p>{questions ? questions.hardAccepted : 0} / {questions ? questions.hard : 0}</p>
                                 </div>
                                 <div style={{ '--value-color': '#e76f51' }}>
                                     <ProgressBar value={hard} bgColor="#e3e2e3" />
@@ -228,7 +235,7 @@ function StudentDashboard() {
                         </div>
                     </div>
                 </div>
-                <div className='w-2/6 pt-2 flex items-center bg-white rounded-md shadow-lg flex-col min-h-[94vh]'>
+                <div className='w-2/6 pt-2 pb-8 flex items-center bg-white rounded-md shadow-lg flex-col min-h-[94vh]'>
                     <div className='mt-8' style={{objectFit: 'cover'}}>
                     <div className='profile__pic w-28 h-28 text-4xl'>{student ? (student.name.charAt(0) + student.name.charAt(1)) : null}</div>
                     </div>

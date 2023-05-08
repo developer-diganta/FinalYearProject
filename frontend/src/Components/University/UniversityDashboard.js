@@ -31,6 +31,10 @@ function UniversityDashboard() {
             })
             const universityDetails = await instance.post(backend_url + '/university/details', {universityId: unv__id, email: email});
             console.log(universityDetails);
+            const today = new Date();
+            // if(universityDetails.data.universityDetails.contract.contract_end_date === null || universityDetails.data.universityDetails.contract.contract_end_date < today){
+            //   navigate('/university/purchase');
+            // }
             if(universityDetails.data.universityDetails.isdeleted === true){
                 alert("Account has been deleted. To restore it back, contact admin");
                 localStorage.removeItem('signup_token');

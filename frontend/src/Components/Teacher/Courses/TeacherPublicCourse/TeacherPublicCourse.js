@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import SidebarTEacher from '../../Sidebar/SidebarTEacher';
 import { CgChevronDoubleRight } from 'react-icons/cg';
@@ -43,14 +43,20 @@ function TeacherPublicCourse() {
                 //     return course.expectedCourseDuration >= diffDays;
                 // });
                 const dateObj = new Date(all__courses);
+                const publicCourseOfTeacher = [];
+                for(let i=0; i<all__courses.data.moocs.length; i++){
+                    if(all__courses.data.moocs[i].teacher === teacherId){
+                        publicCourseOfTeacher.push(all__courses.data.moocs[i]);
+                    }
+                }
     
-                setPreviousCourses(all__courses.data.moocs);
+                setPreviousCourses(publicCourseOfTeacher);
             } catch (error) {
                 console.log(error);
                 alert('Something went wrong');
             }
         }
-        useState(() => {
+        useEffect(() => {
             getPreviousCourses();
         }, [])
 

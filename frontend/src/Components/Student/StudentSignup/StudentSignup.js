@@ -25,21 +25,29 @@ function StudentSignup() {
   const[allDepartments, setAllDepartments] = useState([]);
   const[allprograms, setAllPrograms] = useState([]);
   const[passwordVisibility, setPasswordVisibility] = useState(false);
+  const[registrationNumber, setRegistrationNumber] = useState();
+  const[rollNumber, setRollNumber] = useState();
+  const[gender, setGender] = useState();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   async function getFormValue(event){
     event.preventDefault();
-    console.log(name, email, password, university);
-    const res = await axios.post(backend_url + '/student/signup', {name: name, email: email, password: password, uniId: university, programId: program});
-    console.log("hvjvjvjvjvj", res, res.data._id);
-    localStorage.setItem('student__token', res.data.token);
-    localStorage.setItem('student__id', res.data._id);
-    localStorage.setItem('student__email', email);
-    localStorage.setItem('university', res.data.university);
-    if(res.data.auth == true){
-      navigate('/student/status');
+    try {
+      console.log(name, email, password, university);
+      const res = await axios.post(backend_url + '/student/signup', {name: name, email: email, password: password, uniId: university, programId: program, registrationNumber, rollNumber, gender});
+      console.log("hvjvjvjvjvj", res, res.data._id);
+      localStorage.setItem('student__token', res.data.token);
+      localStorage.setItem('student__id', res.data._id);
+      localStorage.setItem('student__email', email);
+      localStorage.setItem('university', res.data.university);
+      if(res.data.auth == true){
+        navigate('/student/status');
+      }
+    } catch (error) {
+      console.log(error);
+      alert('Something went wrong');
     }
   }
 
@@ -85,7 +93,7 @@ function StudentSignup() {
         </div>
 
         <div className="signup_right w-1/2 lg:w-full flex flex-col items-center">
-          <h1 className='heading text-2xl font-semibold pt-8'>CREATE YOUR ACCOUNT</h1>
+          <h1 className='heading text-2xl font-semibold pt-8 pb-4'>CREATE YOUR ACCOUNT</h1>
           <div className='w-full h-full flex flex-col items-center justify-center'>
           <form className='flex flex-col w-4/5 items-center' onSubmit={getFormValue}>
             {/* put icon inside inputbox */}
@@ -165,8 +173,25 @@ function StudentSignup() {
               </select>
             </div>
 
-              <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
-              <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/student/login')}>login</span> </h1></div>
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 gap-2 my-2' >
+              <input required type="text" placeholder="Enter your Registration no." onChange={(ele) => setRegistrationNumber(ele.target.value)} />
+            </div>
+
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 gap-2 my-2' >
+              <input required type="text" placeholder="Enter your Roll no." onChange={(ele) => setRollNumber(ele.target.value)} />
+            </div>
+
+            <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
+              <select className='w-full' name="university" id="program" onChange={(ele) => setGender(ele.target.value)}>
+                <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your Gender</option>
+                <option key={'Male'} value={'Male'}>Male</option>
+                <option key={'Female'} value={'Female'}>Female</option>
+                <option key={'Other'} value={'Other'}>Other</option>
+              </select>
+            </div>
+
+            <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
+            <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/student/login')}>login</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>

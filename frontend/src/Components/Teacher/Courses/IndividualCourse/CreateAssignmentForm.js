@@ -41,7 +41,7 @@ function CreateAssignmentForm() {
                 });
                 console.log(new__course);
                 if (new__course.status === 200) {
-                    alert("course created successfully");
+                    alert("Assignment created successfully.");
                     navigate('/teacher/courses');
                 }
 
