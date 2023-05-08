@@ -10,6 +10,7 @@ function UnvAddDepartment() {
     const[department, setDepartment] = useState()
     const unvId = localStorage.getItem('university__id');
     const unvToken = localStorage.getItem('signup_token');
+    const unvEmail = localStorage.getItem('university__email');
     const navigate = useNavigate();
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const location = useLocation();
@@ -26,7 +27,7 @@ function UnvAddDepartment() {
                 'x-auth-token': unvToken,
             },
         });
-        const getResponse = await instance.post(backend_url + '/university/addDepartment', {departmentName: department, schoolId: location.state.id, universityId: unvId});
+        const getResponse = await instance.post(backend_url + '/university/addDepartment', {departmentName: department, schoolId: location.state.id, universityId: unvId, email: unvEmail});
         console.log(getResponse);
         alert(getResponse.data.message);
         if(getResponse.data.message === "Department added successfully"){

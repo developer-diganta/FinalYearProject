@@ -10,6 +10,7 @@ function AddUnvProgram() {
     const[unvProgram, setUnvProgram] = useState();
     const unvToken = localStorage.getItem('signup_token');
     const unvId = localStorage.getItem('university__id');
+    const unvEmail = localStorage.getItem('university__email');
     const navigate = useNavigate();
     const { openClose, unvSign } = useSelector((state) => state.counter);
     const location = useLocation();
@@ -22,7 +23,7 @@ function AddUnvProgram() {
                 'x-auth-token': unvToken,
             },
         });
-        const getResponse = await instance.post(backend_url + '/university/addProgram', {programName: unvProgram, departmentId: location.state.department.id, universityId: unvId});
+        const getResponse = await instance.post(backend_url + '/university/addProgram', {programName: unvProgram, departmentId: location.state.department.id, universityId: unvId, email: unvEmail});
         console.log(getResponse);
         alert(getResponse.data.message);
         if(getResponse.data.message === "Program added successfully"){

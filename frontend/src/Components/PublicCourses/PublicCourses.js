@@ -132,8 +132,10 @@ function PublicCourses() {
 
     const response = await instance.post(backend_url + '/moocs/get', {email: student__email, id: student__id});
     console.log(response.data);
-    setCourses(response.data.moocs);
-    setStoreAllCourses(response.data.moocs);
+    const verifiedPublicCourses = response.data.moocs.filter(course => course.approvalStatus === 'verified');
+    console.log(verifiedPublicCourses);
+    setCourses(verifiedPublicCourses);
+    setStoreAllCourses(verifiedPublicCourses);
   }
 
   async function getStudentsDetail(){
