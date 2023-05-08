@@ -1060,11 +1060,11 @@ const studentSignUp = async (req, res) => {
                                     res.status(500).json(err);
                                 else {
                                     if (student.length > 0) {
+                                        if (student[0].isdeleted === false) {
+                                            res.status(403).json({ "message": "Student moved to Trash" });
+                                            return;
+                                        }
                                         res.status(200).json({ message: "Student already exists" });
-                                    }
-                                    if (student[0].isdeleted === false) {
-                                        res.status(403).json({ "message": "Student moved to Trash" });
-                                        return;
                                     }
                                     else {
                                         const student = new models.Student({
