@@ -93,18 +93,9 @@ function StudentAnalysis() {
             if(student === student__id){
                 myIndex = submissionAccuricy.length;
                 setSubmissions(allSub[student]);
-                console.log(submissionAccuricy);
+                console.log(allSub[student]);
             }
         }
-
-        
-        // let arr = [];
-        // for(let i=0; i<100; i++){
-        //     const randomNumber = Math.floor(Math.random() * 100) + 1;
-        //     arr.push(randomNumber);
-        // }
-        // submissionAccuricy = arr;
-        // console.log(arr);
 
         let labels = [submissionAccuricy.length];
         
@@ -205,7 +196,10 @@ function StudentAnalysis() {
                 <div className='w-11/12'>
                     <div className='px-4'>
                         <table className='border-[1px] border-[#dededf] my-4 rounded-lg'>
-                            <thead className='bg-[#f9fafb] border-b-[1px] border-b-[#dededf]'>
+                            <thead className={`${submissions.length <= 0 ? 'hidden' : 'block'} bg-[#f9fafb] border-b-[1px] border-b-[#dededf] w-full`}>
+                                {
+                                    console.log("**************.", submissions, submissions.length)
+                                }
                                 <tr className='text-[#555555]'>
                                     <th className='w-1/4'>Time</th>
                                     <th className='w-1/4'>Lang</th>

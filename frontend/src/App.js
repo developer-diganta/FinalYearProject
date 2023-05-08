@@ -60,6 +60,7 @@ import AdminUniversity from './Components/Admin/AdminUniversity';
 import AdminStudent from './Components/Admin/AdminStudent';
 import AdminTeacher from './Components/Admin/AdminTeacher';
 import Purchase from './Components/Purchase/Purchase';
+import PurchaseSuccess from './Components/Purchase/PurchaseSuccess';
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
             <Route path='/university/signup' element={<UniversitySignup />} />
             <Route path='/university/login' element={<UniversityLogin />} />
             <Route path='/university/purchase' element={<Purchase />} />
+            <Route path='/university/purchase/success' element={<PurchaseSuccess />} />
             <Route path='/university/dashboard' element={<UniversityDashboard />} />
             <Route path='/university/teachers' element={<UniversityTeacher />} />
             <Route path='/university/pendingstudents' element={<UniversityPendingStudents />} />
@@ -94,11 +96,8 @@ function App() {
             <Route path='/teacher/signup' element={<TeacherSignup />} />
             <Route path='/teacher/login' element={<TeacherLogin />} />
             <Route path='/teacher/status' element={<Status />} />
-            {/* <Route path='/teacher/:id' element={<TeacherProf />} /> */}
             <Route path='/teacher/dashboard' element={<Dashboard />} />
             <Route path='/teacher/courses' element={<Courses />} />
-            {/* <Route path='/teacher/currentcourse' element={<CurrentCourse />} /> */}
-            {/* <Route path='/teacher/previouscourse/:options' element={<CourseOfTeacher />} /> */}
             <Route path='/teacher/courses/:courseId' element={<IndividualCourse />} />
             <Route path='/teacher/createquestion' element={<CreateQuestionForm />} />
             <Route path='/teacher/cretatecourse' element={<CourseCreateForm />} />
