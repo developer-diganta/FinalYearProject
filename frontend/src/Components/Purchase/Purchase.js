@@ -26,7 +26,7 @@ function Purchase() {
   }
 
   return (
-    <div className="payme">
+    <div className="payme min-h-[104vh]">
       <LandingHeader />
       <div>
         <h1 className='text-3xl pt-4 pb-2 pl-10 md:px-6' style={{color: "#9900ff"}}>Complete Your Purchase</h1>

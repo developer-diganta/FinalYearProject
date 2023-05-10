@@ -69,7 +69,7 @@ function UniversityTeacher() {
       console.log(teacher__id, unv__id);
       const teacher__acceptance = await instance.post(backend_url + '/university/teacher/waitlist/accept/' + teacher__id, {teacherId: teacher__id, universityId: unv__id, email: unv__email});
       console.log("teacher__acceptance", teacher__acceptance);
-      alert(teacher__acceptance.data.message);
+      alert("Teacher accepted");
       getPendingTeachers();
     } catch (error) {
       console.log(error);
@@ -134,12 +134,12 @@ function UniversityTeacher() {
         </div>
         <div className={`bg-white ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
           <div className='flex gap-4 bg-[#f7f7f7] items-center justify-center'>
-            <h1 className={`${btnActive === 1 ? 'active__btn' : ''} border-[1px] border-[#6b7780ff] bg-[#dcdcdc] px-4 cursor-pointer py-2 my-4 text-sm text-center text-[#6b7780] font-semibold uppercase tracking-wider rounded-full shadow-xl md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center`} onClick={() => {
+            <h1 id="accepted__teachers" className={`${btnActive === 1 ? 'active__btn' : ''} border-[1px] border-[#6b7780ff] bg-[#dcdcdc] px-4 cursor-pointer py-2 my-4 text-sm text-center text-[#6b7780] font-semibold uppercase tracking-wider rounded-full shadow-xl md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center`} onClick={() => {
               setOP('teacher')
               getAllAcceptedTeachers()
               setBtnActive(1)
               }}>University Teachers</h1>
-            <h1 className={`${btnActive === 2 ? 'active__btn' : ''} border-[1px] border-[#6b7780ff] bg-[#dcdcdc] px-4 cursor-pointer py-2 my-4 text-sm text-center text-[#6b7780] font-semibold uppercase tracking-wider rounded-full shadow-xl md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center md:px-2`} onClick={() => {
+            <h1 id="pending__teachers" className={`${btnActive === 2 ? 'active__btn' : ''} border-[1px] border-[#6b7780ff] bg-[#dcdcdc] px-4 cursor-pointer py-2 my-4 text-sm text-center text-[#6b7780] font-semibold uppercase tracking-wider rounded-full shadow-xl md:text-sm sm:text-xs md:w-48 md:flex md:items-center md:justify-center md:px-2`} onClick={() => {
               setOP('pending')
               getPendingTeachers()
               setBtnActive(2)
@@ -149,7 +149,7 @@ function UniversityTeacher() {
             {
               (op === 'teacher' ? teacher : pending).map((item, index) => {
                 return (
-                  <div className='flex items-center mb-4 pl-1 py-1 border-[1px] border-[#6b7780ff] rounded-full shadow-sm'>
+                  <div id={item._id} className='flex items-center mb-4 pl-1 py-1 border-[1px] border-[#6b7780ff] rounded-full shadow-sm'>
                     <div className="index w-10 h-10 bg-[#8e9aaf] flex justify-center items-center text-lg font-semibold rounded-full md:hidden text-white">{index+1}</div>
                     <div className='flex items-center gap-2 w-full justify-between pl-2 pr-2 md:flex-col md:pb-2 md:shadow-sm'>
                       <div className='font-semibold w-1/4'>
@@ -158,11 +158,11 @@ function UniversityTeacher() {
                       <div className='pl-4 w-1/4 text-xs text-[#6c757d] md:text-xxs font-semibold' style={{letterSpacing: "1px"}}>{'@'+item.username}</div>
                       <div className='w-1/4'><p className='md:text-xs text-sm font-bold'>{item.email}</p></div>
                       <div className='w-1/4 flex justify-end pr-4'>
-                        <button className='bg-[#6b7780] rounded-sm px-2 py-1 text-white' style={{display: op === 'pending' ? "none" : "block"}}
+                        <button id="delete" className='bg-[#6b7780] rounded-sm px-2 py-1 text-white' style={{display: op === 'pending' ? "none" : "block"}}
                           onClick={() => showAlert(item._id)}
                         >Delete</button>
                       </div>
-                      <button className='w-2/12 bg-[#6b7780] rounded-full h-10 text-white' style={{display: op === 'pending' ? "block" : "none"}}
+                      <button id="accept" className='w-2/12 bg-[#6b7780] rounded-full h-10 text-white' style={{display: op === 'pending' ? "block" : "none"}}
                         onClick={() => {
                           acceptTeacher(item._id)
                         }}
