@@ -1508,27 +1508,10 @@ const submitCodeToMoocs = async (req, res) => {
         console.log(getSubmissionData)
         console.log("5.Retrieved submission data from DB");
 
-        const checker = new PlagiarismChecker(getSubmissionData, student_id);
-        const plagarismCheck = checker.check();
-
-        question.plagarismAnalysis = plagarismCheck;
-
-        if (plagarismCheck[plagarismCheck.length - 1].isPlagiarized) {
-            plagarized = true;
-        }
-
         const questionSave = await question.save();
 
         console.log("6.Saved to Question DB");
 
-
-        if (plagarized) {
-            const submissionByIdUpdate = await models.Submission.findByIdAndUpdate(submissionToDB._id, { plagarized: true }).exec();
-            console.log("Plagarism Detected");
-            if (!submissionByIdUpdate) {
-                res.status(500).json({ message: "Error updating submission" });
-            }
-        }
         console.log("7.Updated submission DB");
         res.status(200).json(submissionResponse.data);
     }
@@ -2169,6 +2152,8 @@ const submitStudent = async (req, res) => {
     }
 
 }
+
+
 
 
 
