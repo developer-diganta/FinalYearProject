@@ -134,7 +134,7 @@ function UniversitySignup() {
               //   navigate('/university/dashboard')
               //   }}
                 >continue</button>
-              <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/login')}>login</span> </h1></div>
+              <div><h1>Already have an account ? <span id="university__login" className='university__login text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/login')}>login</span> </h1></div>
           </form>
           <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
             <div className="line md:hidden"></div>

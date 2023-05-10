@@ -104,6 +104,7 @@ const Sidebaruniversity = () => {
               >
                 <div>{React.createElement(menu?.icon, { size: "20" })}</div>
                 <h2
+                  id={menu?.name}
                   style={{
                     transitionDelay: `${i + 3}00ms`,
                     textTransform: "capitalize",

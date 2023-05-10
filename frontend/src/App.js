@@ -61,6 +61,7 @@ import AdminStudent from './Components/Admin/AdminStudent';
 import AdminTeacher from './Components/Admin/AdminTeacher';
 import Purchase from './Components/Purchase/Purchase';
 import PurchaseSuccess from './Components/Purchase/PurchaseSuccess';
+import PurchaseFail from './Components/Purchase/PurchaseFail';
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
             <Route path='/university/login' element={<UniversityLogin />} />
             <Route path='/university/purchase' element={<Purchase />} />
             <Route path='/university/purchase/success' element={<PurchaseSuccess />} />
+            <Route path='/university/purchase/fail' element={<PurchaseFail />} />
             <Route path='/university/dashboard' element={<UniversityDashboard />} />
             <Route path='/university/teachers' element={<UniversityTeacher />} />
             <Route path='/university/pendingstudents' element={<UniversityPendingStudents />} />

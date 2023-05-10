@@ -31,12 +31,13 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-split-pane": "^2.0.3",
+    "selenium-webdriver": "^4.9.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "mocha",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
