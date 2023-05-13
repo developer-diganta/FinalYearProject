@@ -2910,6 +2910,30 @@ const webhookForStripe = async (request, response) => {
     }
     response.json({ received: true });
 };
+
+
+const emailSender = async (req, res) => {
+    const { to, from, subject, text, html } = req.body;
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+        to: to,
+        from: from,
+        subject: subject,
+        text: text,
+        html: html,
+    };
+    (async () => {
+        try {
+            await sgMail.send(msg);
+        } catch (error) {
+            console.error(error);
+
+            if (error.response) {
+                console.error(error.response.body)
+            }
+        }
+    })();
+}
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
 
@@ -3012,7 +3036,8 @@ module.exports = {
     restoreStudent,
     adminGetIndividualUniversityData,
     createPayment,
-    webhookForStripe
+    webhookForStripe,
+    emailSender
 };
 
 
