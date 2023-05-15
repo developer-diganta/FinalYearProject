@@ -33,9 +33,9 @@ function UniversityDashboard() {
             const universityDetails = await instance.post(backend_url + '/university/details', {universityId: unv__id, email: email});
             console.log(universityDetails);
             const today = new Date();
-            if(universityDetails.data.universityDetails.contract.contract_status !== "succeeded"){
-              navigate('/university/purchase');
-            }
+            // if(universityDetails.data.universityDetails.contract.contract_status !== "succeeded"){
+            //   navigate('/university/purchase');
+            // }
             if(universityDetails.data.universityDetails.isdeleted === true){
                 alert("Account has been deleted. To restore it back, contact admin");
                 localStorage.removeItem('signup_token');
@@ -142,7 +142,7 @@ function UniversityDashboard() {
         </div>
         <div className={`pt-4 pl-6 bg-[#f8f9fa] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-[104vh]`} style={{float: "right"}}>
             <div className='text-2xl border-b-2 border-b-[#9900ff] w-full flex justify-between sm:flex-col sm:items-center sm:gap-4'>
-                <h1 className='text-3xl' style={{letterSpacing: "1px"}}>{university ? university.name : ''} DASHBOARD</h1>
+                <h1 className='text-2xl uppercase' style={{letterSpacing: "1px"}}>{university ? university.name : ''} DASHBOARD</h1>
                 <h1 className='text-lg'>🖐 Hello <span className='text-[#9900ff] font-semibold'>@Admin</span></h1>
             </div>
             <div className='flex justify-center text-xl py-4'>

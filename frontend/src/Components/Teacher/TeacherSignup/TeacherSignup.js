@@ -156,7 +156,7 @@ async function getUniversityDepartment(unId){
                 <option value="IIT Hyderabad">IIT Hyderabad</option> */}
                 {
                     departments ? departments.map((dept, index) => {
-                        return <option key={index} value={dept.id}>{dept.name}</option>
+                        return <option id={dept.id} key={index} value={dept.id}>{dept.name}</option>
                     }) : null
                 }
               </select>
