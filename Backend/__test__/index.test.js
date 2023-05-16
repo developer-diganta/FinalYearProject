@@ -799,3 +799,215 @@ describe("POST /university/student", () => {
     expect(response.body.message).toBe("No token detected");
   });
 });
+
+describe("POST /university/teacher/waitlist", () => {
+  let token, university, teacher;
+
+  beforeAll(async () => {
+    // Create a test university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+
+    // Create a test teacher
+    teacher = await models.Teacher.create({
+      name: "Test Teacher",
+      university: university._id,
+      status: "waitlist",
+      isdeleted: false,
+    });
+
+    // Generate a JWT token for the university
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university and teacher
+    await models.University.findByIdAndDelete(university._id);
+    await models.Teacher.findByIdAndDelete(teacher._id);
+  });
+
+  it("should return the waitlisted teachers for a valid university", async () => {
+    const response = await request(app)
+      .post("/university/teacher/waitlist")
+      .set("x-auth-token", token)
+      .send({ email: university.email,universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(1);
+    expect(response.body[0]._id).toEqual(teacher._id);
+    expect(response.body[0].name).toEqual(teacher.name);
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/teacher/waitlist")
+      .set("x-auth-token", token)
+      .send({ email: university.email,universityId: "invalidId" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/teacher/waitlist")
+      .send({ email: university.email,universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
+
+
+describe("POST /university/delete", () => {
+  let university, token;
+
+  beforeAll(async () => {
+    // Create a test university and generate a JWT token for the university
+    university = await models.University.create({
+      email: "testuniversity@example.com",
+      password: "password",
+      name: "Test University",
+    });
+    token = jwt.sign({ email: university.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test university
+    await models.University.findByIdAndDelete(university._id);
+  });
+
+  it("should delete a university and related data", async () => {
+    const response = await request(app)
+      .post("/university/delete")
+      .set("x-auth-token", token)
+      .send({ email: university.email,universityId: university._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.university).not.toBeNull();
+    expect(response.body.teachers).not.toBeNull();
+    expect(response.body.students).not.toBeNull();
+    expect(response.body.program).not.toBeNull();
+    expect(response.body.moocs).not.toBeNull();
+    expect(response.body.department).not.toBeNull();
+    expect(response.body.course).not.toBeNull();
+  });
+
+  it("should return an error for an invalid university ID", async () => {
+    const response = await request(app)
+      .post("/university/delete")
+      .set("x-auth-token", token)
+      .send({ email: university.email,universityId: "invalidId" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe("Invalid University Id");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app).post("/university/delete").send({ email: university.email,universityId: university._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
+
+
+describe("POST /university/delete/teacher", () => {
+  let teacher, token;
+
+  beforeAll(async () => {
+    // Create a test teacher and generate a JWT token for the university
+    teacher = await models.Teacher.create({
+      email: "testteacher@example.com",
+      password: "password",
+      name: "Test Teacher",
+      university: "testuniversity@example.com",
+      status: "active"
+    });
+    token = jwt.sign({ email: teacher.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test teacher
+    await models.Teacher.findByIdAndDelete(teacher._id);
+  });
+
+  it("should delete the teacher for a valid teacher ID", async () => {
+    const response = await request(app)
+      .post("/university/delete/teacher")
+      .set("x-auth-token", token)
+      .send({ email: university.email,teacherId: teacher._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.teacher.isdeleted).toBe(true);
+  });
+
+  it("should return an error for an invalid teacher ID", async () => {
+    const response = await request(app)
+      .post("/university/delete/teacher")
+      .set("x-auth-token", token)
+      .send({ email: university.email,teacherId: "invalidId" });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty("message");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app).post("/university/delete/teacher").send({ email: university.email, teacherId: teacher._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});
+
+describe("POST /university/delete/student", () => {
+  let student, token;
+
+  beforeAll(async () => {
+    // Create a test student and generate a JWT token for the university
+    student = await models.Student.create({
+      email: "teststudent@example.com",
+      password: "password",
+      name: "Test Student",
+      university: "test-university-id"
+    });
+    token = jwt.sign({ email: student.email }, process.env.SESSION_KEY);
+  });
+
+  afterAll(async () => {
+    // Delete the test student
+    await models.Student.findByIdAndDelete(student._id);
+  });
+
+  it("should delete the student for a valid student ID", async () => {
+    const response = await request(app)
+      .post("/university/delete/student")
+      .set("x-auth-token", token)
+      .send({ email: university.email, studentId: student._id });
+
+    expect(response.status).toBe(200);
+    expect(response.body.student.isdeleted).toBe(true);
+  });
+
+  it("should return an error for an invalid student ID", async () => {
+    const response = await request(app)
+      .post("/university/delete/student")
+      .set("x-auth-token", token)
+      .send({ email: university.email, studentId: "invalidId" });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty("message");
+  });
+
+  it("should return an error for an unauthenticated user", async () => {
+    const response = await request(app)
+      .post("/university/delete/student")
+      .send({ email: university.email, studentId: student._id });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("No token detected");
+  });
+});

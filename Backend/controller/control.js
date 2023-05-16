@@ -626,7 +626,8 @@ const addCourse = async (req, res) => {
             program: programId,
             university: universityId,
             teacher: teacherId,
-            approvalStatus: "pending"
+            approvalStatus: "pending",
+            rating:[]
         });
 
         const savedCourse = await course.save();
@@ -1203,7 +1204,8 @@ const addMoocs = async (req, res) => {
             program: programId,
             university: universityId,
             teacher: teacherId,
-            approvalStatus: "pending"
+            approvalStatus: "pending",
+            rating:[]
         });
 
         const savedMoocs = await moocs.save();
@@ -2934,6 +2936,75 @@ const emailSender = async (req, res) => {
         }
     })();
 }
+
+const addRatings = async (req,res) => {
+    const {courseId, studentId, rating, type} = req.body;
+
+    try{
+        let course;
+        if(type==0){
+            course = await models.Course.findById(courseId).exec();
+        }
+        else{
+            course = await models.Moocs.findById(courseId).exec();
+        }
+
+        if(!course){
+            res.status(404).json({"message":"Course Not Found"});
+            return;
+        }
+        const student = await models.Student.findById(studentId).exec();
+        if(!student){
+            res.status(404).json({"message":"Student Not Found"});
+            return;
+        }
+
+        const newRating = {
+            studentId: studentId,
+            rating: rating,
+          };
+        
+        const index = course.rating.findIndex((r) => r.studentId === studentId);
+
+        if (index === -1) {
+            course.rating.push(newRating);
+        } else {
+            course.rating[index].rating = rating;
+        }
+
+        await course.save();
+
+        res.status(200).json({ message: "Rating Added/Changed Successfully" });
+    
+    }
+    catch{
+        res.status(500).json(err);
+    }
+}
+
+const getAverageRatings = async (req,res) => {
+    const {courseId,type} = req.body;
+    try{
+        let course;
+        if(type==0){
+            course=await models.Course.findById(courseId).exec();
+        }else{
+            course=await models.Moocs.findById(courseId).exec();
+        }
+        if(!course){
+            res.status(404).json({"message":"Course Not Found"});
+            return;
+        }
+
+        const totalRatings = course.rating.reduce((total, rating) => total + rating.rating, 0);
+        const totalRaters = course.rating.length;
+        const averageRatings = totalRatings/totalRaters;
+        const roundedAverage = averageRatings.toFixed(2);
+        res.status(200).json({"Average Ratings":roundedAverage});
+    }catch(err){
+        res.status(500).json(err);
+    }
+}
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
 
@@ -3037,7 +3108,9 @@ module.exports = {
     adminGetIndividualUniversityData,
     createPayment,
     webhookForStripe,
-    emailSender
+    emailSender,
+    addRatings,
+    getAverageRatings
 };
 
 

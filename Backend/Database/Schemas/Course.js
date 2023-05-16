@@ -11,7 +11,8 @@ course = {
     approvalStatus: String,
     teacher: String,
     isdeleted: Boolean,
-    deletionTime: Date
+    deletionTime: Date,
+    rating:Array
 }
 
 module.exports = course;
