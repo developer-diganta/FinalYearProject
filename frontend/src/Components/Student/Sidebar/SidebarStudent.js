@@ -46,7 +46,7 @@ function SidebarStudent() {
           >
             <div className="py-3 flex justify-between mn md:bg-[#9900ff] z-50 md:px-2 items-center">
               <div className='text-4xl cursor-pointer' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}} onClick={() => navigate('/')}>Slate</div>
-              <div className='md:hidden'>
+              <div className='hidden'>
                 <HiMenuAlt3
                   size={26}
                   className="cursor-pointer"
@@ -96,7 +96,7 @@ function SidebarStudent() {
                 </h2>
               </Link>
               ))}
-              <div className='ml-2 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
+              <div className='ml-2 py-1 w-3/5 text-center rounded-sm text-base shadow-xl cursor-pointer md:mb-4 md:w-48' style={{letterSpacing: "1px", backgroundColor: "rgba(255, 255, 255, 0.4)"}} onClick={() => {
                 localStorage.removeItem('student__token');
                 localStorage.removeItem('student__id');
                 localStorage.removeItem('student__email');

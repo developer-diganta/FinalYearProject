@@ -58,7 +58,7 @@ function UniversityTeacher() {
     }
   }
 
-  async function acceptTeacher(teacher__id){
+  async function acceptTeacher(teacher__id, teacher__email){
     try {
       const instance = axios.create({
         headers: {
@@ -70,6 +70,13 @@ function UniversityTeacher() {
       const teacher__acceptance = await instance.post(backend_url + '/university/teacher/waitlist/accept/' + teacher__id, {teacherId: teacher__id, universityId: unv__id, email: unv__email});
       console.log("teacher__acceptance", teacher__acceptance);
       alert("Teacher accepted");
+      const mailResponse = await axios.post(backend_url + '/email', {
+        to: teacher__email, 
+        from: unv__email, 
+        subject: 'Joining Request Accepted!', 
+        text: `Congratulations! Your request to join our university has been accepted. Welcome!`, 
+        html: ''
+      })
       getPendingTeachers();
     } catch (error) {
       console.log(error);
@@ -164,7 +171,7 @@ function UniversityTeacher() {
                       </div>
                       <button id="accept" className='w-2/12 bg-[#6b7780] rounded-full h-10 text-white' style={{display: op === 'pending' ? "block" : "none"}}
                         onClick={() => {
-                          acceptTeacher(item._id)
+                          acceptTeacher(item._id, item.email)
                         }}
                       >Accept</button>
                     </div>

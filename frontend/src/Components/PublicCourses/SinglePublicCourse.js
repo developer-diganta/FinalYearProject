@@ -14,6 +14,8 @@ function SinglePublicCourse() {
   const[enrolled, setEnrolled] = useState(false);
   const[university, setUniversity] = useState();
   const[teacher, setTeacher] = useState();
+  const[rating, setRating] = useState(1);
+
   const { openClose } = useSelector((state) => state.counter);
   const location = useLocation().state;
   console.log(location);
@@ -87,6 +89,10 @@ function SinglePublicCourse() {
     }
   }
 
+  async function submitRating(){
+    console.log(rating);
+  }
+
   useEffect(() => {
     setUniversityDetail();
     getTeacherDetail();
@@ -139,14 +145,27 @@ function SinglePublicCourse() {
                   <FaUniversity className='text-[#7C7D7D] text-xl' />
                   <p className='text-lg' style={{fontStyle: "italic"}}>{university}</p>
                 </div>
-                <div className='flex items-center gap-1'>
-                    <HiStar className='text-[#ffd200] text-xl mt-4' />
-                    <HiStar className='text-[#ffd200] text-xl mt-4' />
-                    <HiStar className='text-[#ffd200] text-xl mt-4' />
-                    <HiStar className='text-[#ffd200] text-xl mt-4' />
-                    <HiStar className='text-[#ffd200] text-xl mt-4' />
-                    <p className='mt-4 font-sans text-sm font-semibold'>4.5</p>
+                <div>
+                  <div className='flex items-center gap-1 border-[1px] border-[#adb5bdff] justify-center w-16 my-4 rounded-md py-1'>
+                      <HiStar className='text-[#ffd200] text-xl' />
+                      <p className='font-sans text-sm font-semibold'>4.5</p>
+                  </div>
+                  <div className={`${enrolled ? 'block' : 'hidden'} mb-4`}>
+                    <p className='text-lg font-bold font-sans text-[#5b6064] pb-2'>Rate this course between 1 to 5</p>
+                    <div className='flex items-center'>
+                      <select className='themeSelector w-28 px-1 py-1 rounded-sm border-[1px] font-sans border-[#d1d5db] text-[#6b7780] font-semibold' onChange={(e) => setRating(e.target.value)}>
+                        <option key={1} value={1}>1 star</option>
+                        <option key={2} value={2}>2 star</option>
+                        <option key={3} value={3}>3 star</option>
+                        <option key={4} value={4}>4 star</option>
+                        <option key={5} value={5}>5 star</option>
+                      </select>
+                      <button className='bg-[#dededfff] ml-2 px-2 py-1 rounded-sm text-sm font-semibold font-sans text-[#5b6064]' type='submit' onClick={submitRating}>Submit</button>
+                    </div>
+                  </div>
+
                 </div>
+                <p className='text-lg font-bold font-sans border-b-[1px] text-[#5b6064] border-[#5b6064] pb-1'>Course created by</p>
                 <div className="course__instructor flex items-center font-sans gap-2 mt-4">
                     <div className='uppercase bg-[#6b7780ff] h-10 w-10 rounded-full flex items-center justify-center text-white text-lg font-bold'>{teacher ? teacher.charAt(0) : null}</div>
                     <p className='font-semibold text-[#5b6064]' style={{letterSpacing: "1px"}}>{teacher}</p>
