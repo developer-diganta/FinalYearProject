@@ -32,7 +32,7 @@ function LandingHeader() {
                 <div className="landing_header_right md:hidden flex gap-10 items-center pr-8">
                     <div className='nav_link home' style={{color: "#9900ff"}} onClick={() => navigate('/')}>Home</div>
                     <div className='nav_link about'>About</div>
-                    <div className='nav_link contactus' onClick={() => navigate('/university')}>For University</div>
+                    <div className='contactus bg-[#2937f0ff] px-4 py-1 rounded-full text-white flex items-center justify-center cursor-pointer' onClick={() => navigate('/signupoptions')}>Sign Up</div>
                     
                 </div>
                 <div className="md_page hidden md:block pr-8 py-2">
@@ -45,11 +45,10 @@ function LandingHeader() {
             </div>
         </div>
         <div className={`w-full ${smallHeader === false ? 'hidden' : 'block'} shadow-lg absolute z-50 bg-white`} style={{borderTop: "1px solid #7F8C9D"}}>
-            <div className='flex flex-col items-center gap-4 py-2'>
-                <div className='home'>Home</div>
+            <div className='flex flex-col items-center gap-4 py-4'>
+                <div className='home' onClick={() => navigate('/')}>Home</div>
                 <div className='about'>About</div>
-                <div className='contactus'>Contact</div>
-                
+                <div className='contactus bg-[#2937f0ff] px-4 py-1 rounded-full text-white flex items-center justify-center cursor-pointer' onClick={() => navigate('/signupoptions')}>Sign Up</div>                
             </div>
         </div>
     </div>

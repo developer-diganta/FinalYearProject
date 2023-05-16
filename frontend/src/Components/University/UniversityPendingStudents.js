@@ -17,7 +17,7 @@ function UniversityPendingStudents() {
   const university__email = localStorage.getItem('university__email');
   const navigate = useNavigate();
 
-  async function acceptStudent(studentId){
+  async function acceptStudent(studentId, studentEmail){
     try {
       const instance = axios.create({
         headers: {
@@ -28,6 +28,13 @@ function UniversityPendingStudents() {
       const res = await instance.post(backend_url + '/university/student/waitlist/accept/byId', {studentId: studentId, universityId: university__id, email: university__email});
       console.log(res);
       alert(res.data.message);
+      const mailResponse = await axios.post(backend_url + '/email', {
+        to: studentEmail, 
+        from: university__email, 
+        subject: 'Joining Request Accepted!', 
+        text: `Your request to join our university has been accepted. Welcome!`, 
+        html: ''
+      })
       if(res.status === 200){
         navigate('/university/students')
       } 
@@ -101,7 +108,7 @@ function UniversityPendingStudents() {
                   </div>
                   <div className='w-1/4 text-center md:text-xs sm:text-[10px] text-sm' style={{fontFamily: "sans-serif", letterSpacing: "1px"}}>{student.email}</div>
                   <div className='flex gap-4'>
-                    <button className='bg-[#A3C7D6] px-2 py-1 text-white rounded-sm' onClick={() => acceptStudent(student._id)}>Accept</button>
+                    <button className='bg-[#A3C7D6] px-2 py-1 text-white rounded-sm' onClick={() => acceptStudent(student._id, student.email)}>Accept</button>
                     <button className='bg-[#D3756B] px-2 py-1 text-white rounded-sm' onClick={() => rejectStudent(student._id)}>Reject</button>
                   </div>
                 </div>

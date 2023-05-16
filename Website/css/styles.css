@@ -90,6 +90,21 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+.public__course__title{
+  overflow: hidden;
+  font-size: 40px !important;
+}
+
+.public__course__description{
+  overflow: hidden;
+  /* Add these properties to show ellipsis after two lines */
+  max-height: calc(2em * 2); /* Two lines of text */
+  line-height: 1.5em; /* Line height of the text */
+  /* overflow: hidden; Hide the overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis for the overflow */
+  white-space: nowrap; /* Prevent wrapping of text */
+}
+
 *,
 *::before,
 *::after {
