@@ -592,7 +592,7 @@ const addCourse = async (req, res) => {
         courseStartDate,
         programId,
         teacherId,
-        material
+
     } = req.body;
     try {
 
@@ -629,7 +629,7 @@ const addCourse = async (req, res) => {
             teacher: teacherId,
             approvalStatus: "pending",
             rating:[],
-            material:material
+            material:""
         });
 
         const savedCourse = await course.save();
@@ -1174,7 +1174,7 @@ const getQuestionsFromAssignmentForStudent = async (req, res) => {
 // ---------------------------------------------------------------------------------------------Moocs Controllers --------------------------------------------------------------------------------------------- //
 
 const addMoocs = async (req, res) => {
-    const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus, material } = req.body;
+    const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus } = req.body;
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -1208,7 +1208,7 @@ const addMoocs = async (req, res) => {
             teacher: teacherId,
             approvalStatus: "pending",
             rating:[],
-            material:material
+            material:""
         });
 
         const savedMoocs = await moocs.save();
@@ -1882,7 +1882,7 @@ const teacherLogin = async (req, res) => {
                             res.status(500).json(err);
                         else {
                             if (result) {
-                                if (result[0].isdeleted === false) {
+                                if (teacher[0].isdeleted === true) {
                                     res.status(403).json({ "message": "Teacher moved to trash" })
                                 }
                                 const token = generateToken(teacher[0].email);
@@ -2368,8 +2368,8 @@ const studentLogin = async (req, res) => {
                         if (err)
                             res.status(500).json(err);
                         else {
-                            if (result.length>0) {
-                                if (result[0].isdeleted === false) {
+                            if (result) {
+                                if (student[0].isdeleted === true) {
                                     res.status(403).json({ "message": "Student moved to trash" });
                                     return;
                                 }
@@ -3072,6 +3072,53 @@ const resetPassword = async(req,res)=>{
         res.status(500).json({"message":"Internal Server Error"});
     }
 }
+
+const addResource = async (req,res)=>{
+    try{
+        const {courseId, resource, type} = req.body;
+        let course; 
+        if(type==='course'){
+            course=await models.Course.updateOne({_id:courseId},{material:resource}).exec();
+        }else{
+            course=await models.Moocs.updateOne({_id:courseId},{material:resource}).exec();
+ 
+        }
+
+        if(!course){
+            res.status(404).json({"message":"forbidden"});
+            return;
+        }else{
+            res.status(200).json({"message":"resource added successfully"});
+            return;
+        }
+    }catch(err){
+        res.status(500).json({"message":"Internal Server Error"});
+    }
+}
+
+const getResource = async (req,res)=>{
+    try{
+        const {courseId, type} = req.body;
+        let course,resource=''; 
+        if(type==='course'){
+            course=await models.Course.findById({_id:courseId}).exec();
+            resource+=course[0].material;
+        }else{
+            course=await models.Moocs.updateOne({_id:courseId},{material:resource}).exec();
+            resource+=course[0].material;
+        }
+
+        if(!course){
+            res.status(404).json({"message":"forbidden"});
+            return;
+        }else{
+            res.status(200).json({"resource":resource});
+            return;
+        }
+    }catch(err){
+        res.status(500).json({"message":"Internal Server Error"});
+    }
+}
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
 
@@ -3179,6 +3226,8 @@ module.exports = {
     addRatings,
     getAverageRatings,
     resetPassword, 
-    resetRequest
+    resetRequest,
+    addResource,
+    getResource
 };
 
