@@ -592,6 +592,7 @@ const addCourse = async (req, res) => {
         courseStartDate,
         programId,
         teacherId,
+        material
     } = req.body;
     try {
 
@@ -627,7 +628,8 @@ const addCourse = async (req, res) => {
             university: universityId,
             teacher: teacherId,
             approvalStatus: "pending",
-            rating:[]
+            rating:[],
+            material:material
         });
 
         const savedCourse = await course.save();
@@ -1172,7 +1174,7 @@ const getQuestionsFromAssignmentForStudent = async (req, res) => {
 // ---------------------------------------------------------------------------------------------Moocs Controllers --------------------------------------------------------------------------------------------- //
 
 const addMoocs = async (req, res) => {
-    const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus } = req.body;
+    const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus, material } = req.body;
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -1205,7 +1207,8 @@ const addMoocs = async (req, res) => {
             university: universityId,
             teacher: teacherId,
             approvalStatus: "pending",
-            rating:[]
+            rating:[],
+            material:material
         });
 
         const savedMoocs = await moocs.save();
@@ -2365,7 +2368,7 @@ const studentLogin = async (req, res) => {
                         if (err)
                             res.status(500).json(err);
                         else {
-                            if (result) {
+                            if (result.length>0) {
                                 if (result[0].isdeleted === false) {
                                     res.status(403).json({ "message": "Student moved to trash" });
                                     return;
@@ -3174,6 +3177,8 @@ module.exports = {
     webhookForStripe,
     emailSender,
     addRatings,
-    getAverageRatings
+    getAverageRatings,
+    resetPassword, 
+    resetRequest
 };
 

@@ -12,7 +12,8 @@ moocs = {
     teacher: String,
     isdeleted: Boolean,
     deletionTime: Date,
-    rating:Array
+    rating:Array,
+    material:String
 }
 
 module.exports = moocs;
