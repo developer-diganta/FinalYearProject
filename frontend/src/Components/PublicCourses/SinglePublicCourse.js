@@ -15,6 +15,7 @@ function SinglePublicCourse() {
   const[university, setUniversity] = useState();
   const[teacher, setTeacher] = useState();
   const[rating, setRating] = useState(1);
+  const[averageRating, setAverageRating] = useState(0);
 
   const { openClose } = useSelector((state) => state.counter);
   const location = useLocation().state;
@@ -68,9 +69,12 @@ function SinglePublicCourse() {
       });
       const universityData = await axios.post(backend_url + `/university/details`, {universityId: location.course.university, email: student__email});
       console.log(universityData);
-      setUniversity(universityData.data.universityDetails.name)
+      setUniversity(universityData.data.universityDetails.name);
+      const courseRating = await instance.post(backend_url + `/rating/get`, {courseId: location.course._id, type: 1, email: student__email});
+      console.log(courseRating);
+      setAverageRating(courseRating.data.AverageRatings);
     } catch (error) {
-      
+      console.log(error);
     }
   }
 
@@ -91,6 +95,18 @@ function SinglePublicCourse() {
 
   async function submitRating(){
     console.log(rating);
+    try {
+      const instance = axios.create({
+          headers: {
+              'x-auth-token': student__token,
+          },
+      });
+      const teacherData = await instance.post(backend_url + `/rating`, {courseId: location.course._id, studentId: student__id, rating: rating, type: 1, email: student__email});
+      console.log(teacherData);
+      alert(teacherData.data.message);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -146,9 +162,9 @@ function SinglePublicCourse() {
                   <p className='text-lg' style={{fontStyle: "italic"}}>{university}</p>
                 </div>
                 <div>
-                  <div className='flex items-center gap-1 border-[1px] border-[#adb5bdff] justify-center w-16 my-4 rounded-md py-1'>
+                  <div className='flex items-center gap-1 border-[1px] border-[#adb5bdff] justify-center w-20 my-4 rounded-md py-1 px-1'>
                       <HiStar className='text-[#ffd200] text-xl' />
-                      <p className='font-sans text-sm font-semibold'>4.5</p>
+                      <p className='font-sans text-sm font-semibold' style={{letterSpacing: "1px"}}>{averageRating}</p>
                   </div>
                   <div className={`${enrolled ? 'block' : 'hidden'} mb-4`}>
                     <p className='text-lg font-bold font-sans text-[#5b6064] pb-2'>Rate this course between 1 to 5</p>
