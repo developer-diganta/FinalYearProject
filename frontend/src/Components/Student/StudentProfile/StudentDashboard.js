@@ -185,21 +185,21 @@ function StudentDashboard() {
         </div>
         <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <StudentHeader />
-            <div className='flex gap-2 mx-4 my-4'>
-                <div className='w-4/6 pr-4 py-0'>
-                    <div className='flex items-start justify-between gap-4'>
-                        <div className='flex items-center bg-white w-1/2 flex-col rounded-md shadow-lg'>
+            <div className='flex gap-2 mx-4 my-4 sm:flex-col sm:mx-10 xxs:mx-4'>
+                <div className='w-4/6 pr-4 py-0 md:w-3/6 sm:w-full sm:pr-0'>
+                    <div className='flex items-start justify-between gap-4 md:flex-col'>
+                        <div className='flex items-center bg-white w-1/2 flex-col rounded-md shadow-lg md:w-full'>
                         <Doughnut 
                             data={data}
                         />
                         <p className='my-4'>
-                            Total Questions: {totalQuestion}
+                            Total Questions: {totalQuestion ? totalQuestion : 0}
                         </p>
                         </div>
-                        <div className='flex flex-col w-1/2 gap-4'>
+                        <div className='flex flex-col w-1/2 gap-4 md:w-full'>
                         <div className="total__courses bg-white py-4 rounded-md shadow-lg">
                             <div className='text-xs bg-white rounded-full w-28 h-28 mx-auto flex flex-col items-center justify-center' style={{border: "2px solid #f77f00"}}>
-                            <p className='text-[#f77f00] text-2xl font-bold'>{totalCourses ? totalCourses : null}</p>
+                            <p className='text-[#f77f00] text-2xl font-bold'>{totalCourses ? totalCourses : 0}</p>
                             <p className='text-2xs' style={{fontSize: "10px"}}>Total Courses</p>
                             </div>
                         </div>
@@ -207,7 +207,8 @@ function StudentDashboard() {
                             <div className='my-2 mx-2'>
                                 <div className='flex items-center text-xs'>
                                     <p className='w-2/5'>Easy</p>
-                                    <p>{questions ? questions.easyAccepted : 0} / {questions ? questions.easy : 0}</p>
+                                    {console.log(questions)}
+                                    <p>{questions ? questions.easyAccepted ? questions.easyAccepted : 0 : 0} / {questions ? questions.easy ? questions.easy: 0 : 0}</p>
                                 </div>
                                 <div style={{ '--value-color': '#2a9d8f' }}>
                                     <ProgressBar value={easy} bgColor="#e3e2e3" />
@@ -216,7 +217,7 @@ function StudentDashboard() {
                             <div className='my-6 mx-2'>
                                 <div className='flex items-center text-xs'>
                                     <p className='w-2/5'>Medium</p>
-                                    <p>{questions ? questions.mediumAccepted : 0} / {questions ? questions.medium : 0}</p>
+                                    <p>{questions ? questions.mediumAccepted ? questions.mediumAccepted : 0 : 0} / {questions ? questions.medium ? questions.medium : 0 : 0}</p>
                                 </div>
                                 <div style={{ '--value-color': '#e9c46a' }}>
                                     <ProgressBar value={medium} bgColor="#e3e2e3" />
@@ -225,7 +226,7 @@ function StudentDashboard() {
                             <div className='my-6 mx-2'>
                                 <div className='flex items-center text-xs'>
                                     <p className='w-2/5'>Hard</p>
-                                    <p>{questions ? questions.hardAccepted : 0} / {questions ? questions.hard : 0}</p>
+                                    <p>{questions ? questions.hardAccepted ? questions.hardAccepted : 0 : 0} / {questions ? questions.hard ? questions.hard : 0 : 0}</p>
                                 </div>
                                 <div style={{ '--value-color': '#e76f51' }}>
                                     <ProgressBar value={hard} bgColor="#e3e2e3" />
@@ -235,9 +236,9 @@ function StudentDashboard() {
                         </div>
                     </div>
                 </div>
-                <div className='w-2/6 pt-2 pb-8 flex items-center bg-white rounded-md shadow-lg flex-col min-h-[94vh]'>
+                <div className='w-2/6 md:w-3/6 sm:w-full pt-2 pb-8 flex items-center bg-white rounded-md shadow-lg flex-col min-h-[94vh]'>
                     <div className='mt-8' style={{objectFit: 'cover'}}>
-                    <div className='profile__pic w-28 h-28 text-4xl'>{student ? (student.name.charAt(0) + student.name.charAt(1)) : null}</div>
+                    <div className='profile__pic w-28 h-28 text-4xl'>{student ? (student.name.charAt(0)) : null}</div>
                     </div>
                     <div className='flex flex-col items-center'>
                     <h4 className='text-2xl font-bold pt-3 pb-1'>{student?.name}</h4>

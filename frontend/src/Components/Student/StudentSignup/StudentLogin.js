@@ -21,6 +21,7 @@ function StudentLogin() {
     event.preventDefault();
     const student__login = await axios.post(backend_url + '/student/signin', {email: email, password: password});
     console.log("21.", student__login);
+    setMessage(student__login.data.message);
     
     if(student__login.data.token && student__login.data._id){
       localStorage.setItem('student__token', student__login.data.token);

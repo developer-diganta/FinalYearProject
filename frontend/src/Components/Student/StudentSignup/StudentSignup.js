@@ -28,6 +28,7 @@ function StudentSignup() {
   const[registrationNumber, setRegistrationNumber] = useState();
   const[rollNumber, setRollNumber] = useState();
   const[gender, setGender] = useState();
+  const[universityEmail, setUniversityEmail] = useState();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,6 +43,13 @@ function StudentSignup() {
       localStorage.setItem('student__id', res.data._id);
       localStorage.setItem('student__email', email);
       localStorage.setItem('university', res.data.university);
+      const mailResponse = await axios.post(backend_url + '/email', {
+        to: 'finalyearprojectide@gmail.com', 
+        from: 'surdana2001@gmail.com',
+        subject: 'Student Joining Request - Pending Approval', 
+        text: `Student, ${name} (${email}) has requested to join. Kindly review and accept the pending request.`, 
+        html: ''
+      })
       if(res.data.auth == true){
         navigate('/student/status');
       }
@@ -55,6 +63,7 @@ function StudentSignup() {
     console.log("jgfwjegfkw", backend_url);
     const res = await axios.post(backend_url + '/university/details', {universityId: unId});
     console.log(res);
+    setUniversityEmail(res.data.universityDetails.email);
     dispatch(setUniversityDetail(res.data.universityDetails._id));
     let deptArray = [];
     res.data.universityDetails.schools.map((item) => item.departments.map((item) => deptArray.push(item)));

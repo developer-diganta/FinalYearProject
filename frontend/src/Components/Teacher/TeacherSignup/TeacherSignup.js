@@ -19,11 +19,11 @@ const[unId, setUnId] = useState();
 const[UnvDept, setUnvDept] = useState();
 const[departments, setDepartments] = useState();
 const[passwordVisibility, setPasswordVisibility] = useState(false);
+const[universityEmail, setUniversityEmail] = useState();
 
 const navigate = useNavigate();
 const teacher__token = localStorage.getItem('teacher__token');
 const teacher__id = localStorage.getItem('teacher__id');
-const unvEmail = localStorage.getItem('university__email');
 
 async function getFormValue(event){
   event.preventDefault();
@@ -35,6 +35,13 @@ async function getFormValue(event){
       localStorage.setItem('teacher__id', res.data._id);
       localStorage.setItem('teacher__email', email);
       localStorage.setItem('university', unId);
+      const mailResponse = await axios.post(backend_url + '/email', {
+        to: universityEmail, 
+        from: 'finalyearprojectide@gmail.com', 
+        subject: 'Teacher Joining Request - Pending Approval', 
+        text: `Teacher, ${name} (${email}) has requested to join. Kindly review and accept the pending request.`, 
+        html: ''
+      })
       navigate('/teacher/status');
     }
     else{
@@ -48,7 +55,8 @@ async function getFormValue(event){
 
 async function getUniversityDepartment(unId){
   const res = await axios.post(backend_url + '/university/details', {universityId: unId});
-  console.log(res);
+  console.log(res.data);
+  setUniversityEmail(res.data.universityDetails.email);
   let deptArray = [];
   res.data.universityDetails.schools.map((item) => item.departments.map((item) => deptArray.push(item)));
   console.log(deptArray);
