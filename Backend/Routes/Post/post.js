@@ -213,6 +213,8 @@ router.post('/webhook', express.json({ type: 'application/json' }), controls.web
 router.post("/email", controls.emailSender)
 router.post("/resetRequest", controls.resetRequest)
 router.post("/resetPassword", controls.resetPassword)
-router.post("/addResource", controls.addResource)
-router.post("/getResource", controls.getResource)
+router.post("/rating", controls.addRatings);
+router.post("/rating/get", controls.getAverageRatings);
+router.post("/addResource", controls.addResource);
+router.post("/getResource", controls.getResource);
 module.exports = router; 
