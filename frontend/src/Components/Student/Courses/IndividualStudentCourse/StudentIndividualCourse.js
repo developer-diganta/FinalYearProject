@@ -11,7 +11,8 @@ import SidebarStudent from '../../Sidebar/SidebarStudent';
 
 function StudentIndividualCourse() {
     const[assignments, setAssignments] = useState([]);
-    const[dropDown, setDropDown] = useState(false);
+    const[show, setShow] = useState(false);
+    const[resources, setResources] = useState();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -46,8 +47,16 @@ function StudentIndividualCourse() {
         }
     }
 
+    async function getLinks(){
+      const links = "https://www.example.com,https://www.google.com,https://www.openai.com,https://www.wikipedia.org,https://www.github.com";
+      const linkArray = links.split(',');
+      console.log(linkArray);
+      setResources(linkArray);
+    }
+
     useEffect(() => {
         getAssignments();
+        getLinks();
     }, [])
 
   return (
@@ -63,22 +72,16 @@ function StudentIndividualCourse() {
             </div>
             <div className="assignments">
             <div className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3'>
-          <h1 className='text-xl font-bold' style={{letterSpacing: "1px"}}>Assignments</h1>
+          <h1 className='text-xl font-bold cursor-pointer' style={{letterSpacing: "1px"}}  onClick={() => setShow(!show)}>Assignments</h1>
           <div className="flex items-center gap-4">
               <div className='relative'>
-                  <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setDropDown(!dropDown)}>Sort By 
-                      <IoIosArrowDown className='text-lg ml-2' /> 
-                  </div>
-                  <div className={`option__div bg-[#6b7780ff] text-white absolute -left-4 mt-1 z-50 ${!dropDown ? 'hidden' : 'block'}`} >
-                      <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Date</div>
-                      <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Type</div>
-                      {/* <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Pending Courses</div> */}
+                  <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setShow(!show)}>Resources
                   </div>
               </div>
           </div>
       </div>
       <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
-      <div>
+      <div className={`${show === false ? 'block' : 'hidden'}`}>
         {
           assignments.length > 0 ? 
           <table className="courses mx-auto my-8 w-11/12">
@@ -110,7 +113,18 @@ function StudentIndividualCourse() {
           </div>
         }
       </div>
-            </div>
+      <div className={`${show === true ? 'block' : 'hidden'}`}>
+          <div className='border-[1px] border-[#cdcbcdff] rounded-lg my-4 py-2 px-4 bg-[#f9fafbff] mx-4'>
+            {
+              resources?.map((link, index) => (
+                <p key={index} className='py-2'>
+                  <a className='text-[#2937f0ff]' target='none' href={link}>{link}</a>
+                </p>
+              ))
+            }
+          </div>
+      </div>
+      </div>
         </div>
     </div>
   )
