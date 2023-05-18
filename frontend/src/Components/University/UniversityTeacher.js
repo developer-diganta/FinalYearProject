@@ -71,8 +71,8 @@ function UniversityTeacher() {
       console.log("teacher__acceptance", teacher__acceptance);
       alert("Teacher accepted");
       const mailResponse = await axios.post(backend_url + '/email', {
-        to: teacher__email, 
-        from: unv__email, 
+        to: 'finalyearprojectide@gmail.com', 
+        from: 'souryadeeppodder@gmail.com', 
         subject: 'Joining Request Accepted!', 
         text: `Congratulations! Your request to join our university has been accepted. Welcome!`, 
         html: ''
