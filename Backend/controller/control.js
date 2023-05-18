@@ -3133,6 +3133,15 @@ const getResource = async (req,res)=>{
         res.status(500).json({"message":"Internal Server Error"});
     }
 }
+
+const UptimeLogs = async(req,res)=>{
+    try{
+        const uptime = await models.UptimeLogs.find().exec();
+        res.status(200).json({uptime});
+    }catch(err){
+        res.status(500).json({"message":"Internal Server Error"})
+    }
+}
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
 
@@ -3242,6 +3251,7 @@ module.exports = {
     resetPassword, 
     resetRequest,
     addResource,
-    getResource
+    getResource,
+    UptimeLogs
 };
 
