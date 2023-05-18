@@ -211,4 +211,6 @@ router.post("/admin/restore/student", authoriseAdmin, controls.restoreStudent);
 router.post("/create-checkout-session", controls.createPayment);
 router.post('/webhook', express.json({ type: 'application/json' }), controls.webhookForStripe);
 router.post("/email", controls.emailSender)
+router.post("/resetRequest", controls.resetRequest)
+router.post("/resetPassword", controls.resetPassword)
 module.exports = router; 
