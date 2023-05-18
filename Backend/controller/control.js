@@ -14,11 +14,11 @@ const { model } = require("mongoose");
 const PlagiarismChecker = require("../utils/PlagarismChecker/plagarismChecker");
 const sgMail = require('@sendgrid/mail');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
+const otp = require("../utils/OTP/otp");
 // const passport = require("passport");
 let languageIds = null;
 
-
+const OTP= new Map();
 const adminLogin = {}
 
 const getProgrammingLanguageIds = async () => {
@@ -3005,6 +3005,70 @@ const getAverageRatings = async (req,res) => {
         res.status(500).json(err);
     }
 }
+
+const resetRequest = async (req,res)=>{
+    const {id,to,from} = req.body;
+    const newOTP = new otp();
+    OTP.set(id,newOTP);
+    setTimeout(()=>{
+        OTP.delete(id);
+    },600000);
+    const subject='Password Reset Request';
+    const text=`Your OTP to reset password is ${newOTP}. It expires in 10 minutes`;
+    const html='<span></span>'
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+        to: to,
+        from: from,
+        subject: subject,
+        text: text,
+        html: html,
+    };
+    (async () => {
+        try {
+            await sgMail.send(msg);
+        } catch (error) {
+            console.error(error);
+
+            if (error.response) {
+                console.error(error.response.body)
+            }
+        }
+    })();
+    res.status(200).json({"message":"OTP sent!"})
+}
+
+
+const resetPassword = async(req,res)=>{
+    try{
+        const {id,otp,type,password} = req.body;
+        if(OTP.has(id)){
+            if(OTP.get(id)===otp){
+                if(type==='University'){
+                    await models.University.updateOne({_id:id},{
+                        password:password
+                    }).exec();
+                }
+                else if(type==='Teacher'){
+                    await models.Teacher.updateOne({_id:id},{
+                        password:password
+                    }).exec();
+                }
+                else if(type==='Student'){
+                    await models.Teacher.updateOne({_id:id},{
+                        password:password
+                    }).exec();
+                }
+            }else{
+                res.status(404).json({"message":"OTP expired"});
+                return;
+            }
+        }
+        return res.status(200).json({"message":"done"})
+    }catch(err){
+        res.status(500).json({"message":"Internal Server Error"});
+    }
+}
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
 
 
@@ -3112,5 +3176,4 @@ module.exports = {
     addRatings,
     getAverageRatings
 };
-
 

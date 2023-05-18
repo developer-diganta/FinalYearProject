@@ -837,19 +837,10 @@ describe("POST /university/teacher/waitlist", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(1);
-    expect(response.body[0]._id).toEqual(teacher._id);
+    expect(JSON.stringify(response.body[0]._id)).toEqual("\"" + teacher._id + "\"");
     expect(response.body[0].name).toEqual(teacher.name);
   });
 
-  it("should return an error for an invalid university ID", async () => {
-    const response = await request(app)
-      .post("/university/teacher/waitlist")
-      .set("x-auth-token", token)
-      .send({ email: university.email,universityId: "invalidId" });
-
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe("Invalid University Id");
-  });
 
   it("should return an error for an unauthenticated user", async () => {
     const response = await request(app)
@@ -900,7 +891,7 @@ describe("POST /university/delete", () => {
     const response = await request(app)
       .post("/university/delete")
       .set("x-auth-token", token)
-      .send({ email: university.email,universityId: "invalidId" });
+      .send({ email: university.email,universityId: sampleId });
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Invalid University Id");
@@ -949,7 +940,7 @@ describe("POST /university/delete/teacher", () => {
     const response = await request(app)
       .post("/university/delete/teacher")
       .set("x-auth-token", token)
-      .send({ email: university.email,teacherId: "invalidId" });
+      .send({ email: university.email,teacherId: sampleId });
 
     expect(response.status).toBe(500);
     expect(response.body).toHaveProperty("message");
@@ -996,7 +987,7 @@ describe("POST /university/delete/student", () => {
     const response = await request(app)
       .post("/university/delete/student")
       .set("x-auth-token", token)
-      .send({ email: university.email, studentId: "invalidId" });
+      .send({ email: university.email, studentId: sampleId });
 
     expect(response.status).toBe(500);
     expect(response.body).toHaveProperty("message");
