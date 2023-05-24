@@ -18,7 +18,7 @@ const generateOTP = require("../utils/OTP/otp");
 // const passport = require("passport");
 let languageIds = null;
 
-const OTP= new Map();
+const OTP = new Map();
 const adminLogin = {}
 
 const getProgrammingLanguageIds = async () => {
@@ -46,7 +46,6 @@ const languages = async (req, res) => {
 
 // for running a code from the client
 const submit = async (req, res) => {
-    console.log(req.body.sourceCode)
     let encoded = base64encode(req.body.sourceCode);
     const options = {
         method: 'POST',
@@ -98,7 +97,6 @@ const submit = async (req, res) => {
 
 
 const universitySignUp = async (req, res) => {
-    console.log(req.body);
     const { name, email, password, phone } = req.body;
     try {
         // const validate = await signUpSchema.validateAsync({ username, password, email });
@@ -110,7 +108,6 @@ const universitySignUp = async (req, res) => {
                     if (err) {
                         res.status(500).json(err);
                     } else if (university.length) {
-                        console.log(university);
                         if (university[0].isdeleted === true) {
                             res.status(403).json({ "message": "University Currently Moved To Trash. Please contact administrator" });
                             return;
@@ -134,7 +131,6 @@ const universitySignUp = async (req, res) => {
                             },
                             isdeleted: false,
                         });
-                        console.log(newUniversity);
                         newUniversity.save((err) => {
                             if (err)
                                 res.status(500).json(err);
@@ -153,12 +149,10 @@ const universitySignUp = async (req, res) => {
 }
 
 const universityLogin = async (req, res) => {
-    console.log(req.body.password)
     const { email, password } = req.body;
     try {
         // const validate = await signUpSchema.validateAsync({ username, password });
         models.University.find({ email: email }, async (err, university) => {
-            console.log(university)
             if (err) {
                 res.status(500).json(err);
             } else if (university.length) {
@@ -166,7 +160,6 @@ const universityLogin = async (req, res) => {
                     if (err) {
                         res.status(500).json(err);
                     } else if (result) {
-                        console.log("RRR", university)
                         if (university[0].isdeleted === true) {
                             res.status(403).json({ "message": "University Currently Moved To Trash. Please contact administrator" });
                             return;
@@ -189,7 +182,6 @@ const universityLogin = async (req, res) => {
 
 const universityAddSchool = async (req, res) => {
     const { schoolName, universityId } = req.body;
-    console.log({ schoolName })
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -315,7 +307,6 @@ const universityRejectCourse = async (req, res) => {
 
 const getUniversityDetails = async (req, res) => {
     const { universityId } = req.body;
-    console.log("I'm here")
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -324,7 +315,6 @@ const getUniversityDetails = async (req, res) => {
         }
 
         const schools = await models.School.find({ university: universityId }).exec();
-        console.log({ schools })
         const schoolArray = [];
         for (let i = 0; i < schools.length; i++) {
             const departments = await models.Department.find({ school: schools[i]._id }).exec();
@@ -367,11 +357,9 @@ const getUniversityDetails = async (req, res) => {
             ...university._doc,
             schools: schoolArray
         }
-        console.log(universityDetails)
 
         res.status(200).json({ universityDetails });
     } catch (error) {
-        console.log(error)
         res.status(422).json(error);
     }
 }
@@ -458,7 +446,6 @@ const getUniversityStudentData = async (req, res) => {
         }
 
         const students = await models.Student.find({ university: universityId, isdeleted: false }).exec();
-        console.log("LLLLLLLLLLLLLL", students)
         res.status(200).json(students);
     }
 
@@ -597,7 +584,6 @@ const addCourse = async (req, res) => {
     try {
 
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
-        console.log({ university })
         if (!university) {
             res.status(400).json({ message: "Invalid University Id" });
             return;
@@ -628,8 +614,8 @@ const addCourse = async (req, res) => {
             university: universityId,
             teacher: teacherId,
             approvalStatus: "pending",
-            rating:[],
-            material:""
+            rating: [],
+            material: ""
         });
 
         const savedCourse = await course.save();
@@ -647,7 +633,6 @@ const addAssignment = async (req, res) => {
         name,
         description
     } = req.body;
-    console.log({ universityId })
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -691,7 +676,6 @@ const addQuestion = async (req, res) => {
         tags,
         score
     } = req.body;
-    console.log(req.body)
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -775,7 +759,6 @@ const addStudentToCourse = async (req, res) => {
 
 const getCoursesOfTeacher = async (req, res) => {
     const { teacherId } = req.body;
-    console.log({ teacherId })
     try {
         const teacher = await models.Teacher.findById({ _id: teacherId, isdeleted: false }).exec();
         if (!teacher) {
@@ -783,7 +766,6 @@ const getCoursesOfTeacher = async (req, res) => {
             return;
         }
         const courses = await models.Course.find({ teacher: teacherId }).exec();
-        console.log({ courses })
         res.status(200).json({ courses })
     } catch (err) {
         res.status(500).json({ message: "ERROR" });
@@ -838,7 +820,6 @@ const getQuestionsInAssignment = async (req, res) => {
         const questions = await models.Question.find({ assignment: assignmentId }).exec();
         const { university, courseId } = req.body;
         const students = await models.Student.find({ university: university, isdeleted: false }).exec();
-        // console.log(students)
         let totalStudents = [];
         for (var i = 0; i < students.length; i++) {
             const courses = students[i].courses;
@@ -999,7 +980,6 @@ const teacherAnalysisGetStudentTotal = async (req, res) => {
     try {
         const { university, courseId } = req.body;
         const students = await models.Student.find({ university: university, isdeleted: false }).exec();
-        // console.log(students)
         let totalStudents = [];
         for (var i = 0; i < students.length; i++) {
             const courses = students[i].courses;
@@ -1045,7 +1025,6 @@ const teacherDelete = async (req, res) => {
 
 const studentSignUp = async (req, res) => {
     const { name, email, password, uniId, programId, registrationNumber, rollNumber, gender } = req.body;
-    console.log(uniId)
     try {
         bcrypt.hash(password, 10, (err, hash) => {
             if (err)
@@ -1096,7 +1075,6 @@ const studentSignUp = async (req, res) => {
                             });
                         }
                         else {
-                            console.log("here")
                             res.status(200).json({ message: "Invalid university id" });
 
                         }
@@ -1174,7 +1152,7 @@ const getQuestionsFromAssignmentForStudent = async (req, res) => {
 // ---------------------------------------------------------------------------------------------Moocs Controllers --------------------------------------------------------------------------------------------- //
 
 const addMoocs = async (req, res) => {
-    const { universityId, teacherId, program, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus } = req.body;
+    const { universityId, teacherId, programId, name, description, courseCode, courseType, expectedCourseDuration, courseCompilers, courseStartDate, approvalStatus } = req.body;
     try {
         const university = await models.University.findById({ _id: universityId, isdeleted: false }).exec();
         if (!university) {
@@ -1207,15 +1185,15 @@ const addMoocs = async (req, res) => {
             university: universityId,
             teacher: teacherId,
             approvalStatus: "pending",
-            rating:[],
-            material:""
+            rating: [],
+            material: ""
         });
 
         const savedMoocs = await moocs.save();
         res.status(200).json({ message: "Public Lab added successfully" });
 
     } catch (err) {
-        res.status(500).json({ "message": "internal server error" })
+        res.status(500).json({ message: "internal server error" })
     }
 }
 
@@ -1448,7 +1426,6 @@ const submitCodeToMoocs = async (req, res) => {
     try {
 
         const question = await models.MoocsQuestion.findById(question_id).exec();
-        console.log("1.Retrieved question");
         let encoded = base64encode(code);
         const options = {
             method: 'POST',
@@ -1469,7 +1446,6 @@ const submitCodeToMoocs = async (req, res) => {
         };
 
         const response = await axios.request(options);
-        console.log("2.Received response from compiler");
         const { token } = response.data;
         const getSubmissionOptions = {
             method: 'GET',
@@ -1482,8 +1458,6 @@ const submitCodeToMoocs = async (req, res) => {
         };
 
         const submissionResponse = await axios.request(getSubmissionOptions);
-        // console.log(submissionResponse)
-        console.log("3.Received submission response from compiler");
 
         addSubmissionLog(submissionResponse.data.token);
 
@@ -1499,7 +1473,6 @@ const submitCodeToMoocs = async (req, res) => {
 
 
         const submissionToDB = await newSubmission.save();
-        console.log("4.Saved to Submission DB");
 
         question.studentsAttempted.push(student_id);
 
@@ -1510,18 +1483,13 @@ const submitCodeToMoocs = async (req, res) => {
         }
 
         const getSubmissionData = await models.Submission.find({ question: question_id }).exec();
-        console.log(getSubmissionData)
-        console.log("5.Retrieved submission data from DB");
 
         const questionSave = await question.save();
 
-        console.log("6.Saved to Question DB");
 
-        console.log("7.Updated submission DB");
         res.status(200).json(submissionResponse.data);
     }
     catch (error) {
-        console.log(error)
         res.status(500).json(error);
     }
 
@@ -1563,7 +1531,6 @@ const getRemainingStudents = async (req, res) => {
         res.status(200).json(results);
     }
     catch (error) {
-        console.log(error)
         res.status(500).json(error);
     }
 }
@@ -1850,14 +1817,12 @@ const getUniversityCourseByTeacherId = async (req, res) => {
 
 
 const getAllUniversities = async (req, res) => {
-    console.log("I'm here")
     try {
         models.University.find({}, { _id: 1, name: 1 }, (err, universities) => {
             if (err) {
                 res.status(500).json(err);
             }
             else {
-                console.log(universities)
                 res.status(200).json(universities);
 
             }
@@ -1913,7 +1878,6 @@ const addCourseTeacher = async (req, res) => {
         courseId,
         teacherId,
     } = req.body;
-    console.log(req.body)
     try {
         models.University.find({ _id: universityId, isdeleted: false }, (err, university) => {
             if (err) {
@@ -1926,21 +1890,17 @@ const addCourseTeacher = async (req, res) => {
                         else {
                             if (course.length > 0) {
                                 if (course[0].university == universityId) {
-                                    console.log("ETT")
                                     models.Teacher.find({ _id: teacherId, isdeleted: false }, (err, teacher) => {
                                         if (err)
                                             res.status(500).json(err);
                                         else {
                                             if (teacher.length > 0) {
-                                                console.log('12421421')
                                                 models.Teacher.updateOne({ _id: teacherId, isdeleted: false }, { $push: { courses: courseId } }, (err) => {
                                                     if (err) {
-                                                        console.log(err)
                                                         res.status(500).json(err);
 
                                                     }
                                                     else {
-                                                        console.log("HERERE")
                                                         res.status(200).json({ message: "Course added successfully" });
                                                     }
                                                 });
@@ -1981,7 +1941,6 @@ const getCoursesForTeacher = async (req, res) => {
                         if (err)
                             res.status(500).json(err);
                         else {
-                            console.log(courses.length)
                             res.status(200).json(courses);
                         }
                     });
@@ -2000,14 +1959,12 @@ const getCoursesForTeacher = async (req, res) => {
 
 
 const checkUniversityIdValidity = async (universityId) => {
-    console.log("CHECK HERE")
     let val = false;
     models.University.find({ _id: universityId, isdeleted: false }, (err, university) => {
         if (err)
             return false;
         else {
             if (university.length > 0) {
-                console.log("IIIIIIIIIIIIIIIIII")
                 val = true;
             }
             else
@@ -2019,7 +1976,6 @@ const checkUniversityIdValidity = async (universityId) => {
 
 const checkCourseIdValidity = async (universityId, courseId) => {
     const checkUniId = await checkUniversityIdValidity(universityId);
-    console.log({ checkUniId })
     if (checkUniId) {
         models.Course.find({ _id: courseId }, (err, course) => {
             if (err)
@@ -2061,7 +2017,6 @@ const submitStudent = async (req, res) => {
     try {
 
         const question = await models.Question.findById(question_id).exec();
-        console.log("1.Retrieved question");
         let encoded = base64encode(code);
         const options = {
             method: 'POST',
@@ -2082,7 +2037,6 @@ const submitStudent = async (req, res) => {
         };
 
         const response = await axios.request(options);
-        console.log("2.Received response from compiler");
         const { token } = response.data;
         const getSubmissionOptions = {
             method: 'GET',
@@ -2095,9 +2049,6 @@ const submitStudent = async (req, res) => {
         };
 
         const submissionResponse = await axios.request(getSubmissionOptions);
-        console.log(submissionResponse)
-        // console.log(submissionResponse)
-        console.log("3.Received submission response from compiler");
 
         addSubmissionLog(submissionResponse.data.token);
 
@@ -2111,13 +2062,10 @@ const submitStudent = async (req, res) => {
             dateCreated: new Date().toISOString(),
             plagarized: false
         });
-        console.log({ newSubmission })
 
         const submissionToDB = await newSubmission.save();
-        console.log("4.Saved to Submission DB");
 
         question.studentsAttempted.push(student_id);
-        console.log(submissionResponse.data)
         if (submissionResponse.data.status.id === 3) {
             question.studentsCorrect.push(student_id);
         } else {
@@ -2125,7 +2073,6 @@ const submitStudent = async (req, res) => {
         }
 
         const getSubmissionData = await models.Submission.find({ question: question_id }).exec();
-        console.log("5.Retrieved submission data from DB");
 
         const checker = new PlagiarismChecker(getSubmissionData, student_id);
         const plagarismCheck = checker.check();
@@ -2138,21 +2085,17 @@ const submitStudent = async (req, res) => {
 
         const questionSave = await question.save();
 
-        console.log("6.Saved to Question DB");
 
 
         if (plagarized) {
             const submissionByIdUpdate = await models.Submission.findByIdAndUpdate(submissionToDB._id, { plagarized: true }).exec();
-            console.log("Plagarism Detected");
             if (!submissionByIdUpdate) {
                 res.status(500).json({ message: "Error updating submission" });
             }
         }
-        console.log("7.Updated submission DB");
         res.status(200).json(submissionResponse.data);
     }
     catch (error) {
-        console.log(error)
         res.status(500).json(error);
     }
 
@@ -2164,7 +2107,6 @@ const submitStudent = async (req, res) => {
 
 const getTeacherData = async (req, res) => {
     const { teacherId } = req.body;
-    console.log("HERE I AM")
     try {
         models.Teacher.find({ _id: teacherId, isdeleted: false }, (err, teacher) => {
             if (err) {
@@ -2234,24 +2176,19 @@ const removeCourseStudent = async (req, res) => {
 
 const getMultiCourses = async (req, res) => {
     const { teacherId, courseIds } = req.body;
-    console.log(teacherId);
     try {
 
         const checkTeacherId = true
         const courses = [];
         if (checkTeacherId) {
             const y = JSON.parse(courseIds);
-            console.log("HELLO")
-            console.log(y);
             for (let i = 0; i < courseIds.length; i++) {
                 models.Course.find({
                     _id: new ObjectId(courseIds[i]),
                 }, (err, course) => {
                     if (err) {
-                        console.log(err);
                     } else {
                         if (course.length > 0) {
-                            console.log("LLLLL")
                             courses.push(course[0]);
                             if (i === courseIds.length - 1) {
                                 res.status(200).json(courses);
@@ -2393,7 +2330,6 @@ const studentLogin = async (req, res) => {
 
 const getStudentData = async (req, res) => {
     const { studentId } = req.body;
-    console.log("HEREX2")
     try {
         models.Student.find({ _id: studentId, isdeleted: false }, (err, student) => {
             if (err) {
@@ -2428,8 +2364,6 @@ const getQuestionForStudent = async (req, res) => {
         }
 
         if (student.university !== universityId) {
-            console.log("line 1576");
-            console.log(student.university);
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
@@ -2438,13 +2372,11 @@ const getQuestionForStudent = async (req, res) => {
         const course = await models.Course.findById({ _id: courseId }).exec();
 
         if (!course) {
-            console.log("line 1584");
             res.status(404).json({ message: "Invalid course id" });
             return;
         }
 
         if (course.university !== universityId) {
-            console.log("line 1590");
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
@@ -2453,13 +2385,11 @@ const getQuestionForStudent = async (req, res) => {
 
         for (var courseOfStudent of student.courses) {
             if (courseOfStudent.course_id === courseId) {
-                console.log("line 1596");
                 enrolled = true;
             }
         }
 
         if (!enrolled) {
-            console.log("line 1600");
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
@@ -2467,11 +2397,9 @@ const getQuestionForStudent = async (req, res) => {
         const question = await models.Question.findById({ _id: questionId }).exec();
 
         if (question.course !== courseId) {
-            console.log("line 1604");
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
-        console.log({ questionId });
 
         const questionForStudent = await models.Question.findById(questionId, {
             title: 1,
@@ -2509,8 +2437,6 @@ const showQuestionsToStudent = async (req, res) => {
         }
 
         if (student.university !== universityId) {
-            console.log("line 1576");
-            console.log(student.university);
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
@@ -2519,13 +2445,11 @@ const showQuestionsToStudent = async (req, res) => {
         const course = await models.Course.findById({ _id: courseId }).exec();
 
         if (!course) {
-            console.log("line 1584");
             res.status(404).json({ message: "Invalid course id" });
             return;
         }
 
         if (course.university !== universityId) {
-            console.log("line 1590");
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
@@ -2534,13 +2458,11 @@ const showQuestionsToStudent = async (req, res) => {
 
         for (var courseOfStudent of student.courses) {
             if (courseOfStudent.course_id === courseId) {
-                console.log("line 1596");
                 enrolled = true;
             }
         }
 
         if (!enrolled) {
-            console.log("line 1600");
             res.status(403).json({ message: "FORBIDDEN" });
             return;
         }
@@ -2579,7 +2501,6 @@ const getStudentPerformance = async (req, res) => {
             res.status(200).json({ message: "No submissions found" });
             return;
         }
-        // console.log(studentSubmissions);
         const question = await models.Question.find({}).exec();
         const questionMap = new Map();
 
@@ -2601,7 +2522,6 @@ const getStudentPerformance = async (req, res) => {
         studentDataMap.set("rejected", [])
         studentSubmissions.forEach((submission) => {
 
-            console.log(questionMap.get(JSON.stringify(submission.question)).title);
 
             if (submission.status.id === 3) {
                 switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
@@ -2726,7 +2646,6 @@ const getStudentAnalysisSingleQuestion = async (req, res) => {
         }
         res.status(200).json({ allSubmissions });
     } catch (err) {
-        console.log(err)
         res.status(500).json(err);
     }
 }
@@ -2747,13 +2666,11 @@ const getStudentCourseAnalysis = async (req, res) => {
 // ------------------------------------------------------------------ ADMIN SECTION ---------------------------------------------------
 const adminSignIn = async (req, res) => {
     const { username, password } = req.body;
-    console.log(username === process.env.ADMIN_USERNAME)
     try {
         // const validate = await signUpSchema.validateAsync({ username, password });
         if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
             // const time = new Date.getTime() / 1000();
             const token = generateToken(username);
-            console.log("here")
             res.status(200).json({ auth: true, token: token });
         }
     }
@@ -2847,7 +2764,6 @@ const restoreStudent = async (req, res) => {
 // Payment
 
 const createPayment = async (req, res) => {
-    console.log("HERERERE")
     const line_items = [
         {
             price: 'price_1N457vSIgS8Gcj6RTz8JFYwR',
@@ -2867,21 +2783,16 @@ const createPayment = async (req, res) => {
         success_url: 'https://gracious-keller-08b8f9.netlify.app/success',
         cancel_url: 'https://gracious-keller-08b8f9.netlify.app/fail',
     });
-    console.log(session.url)
     res.json({ url: session.url })
 };
 
 const webhookForStripe = async (request, response) => {
     const event = request.body;
-    console.log("I AM HERE")
     switch (event.type) {
         case 'charge.succeeded' || 'payment_intent.succeeded':
             const chargeSucceeded = event.data.object;
             const email = chargeSucceeded.billing_details.email;
-            console.log(chargeSucceeded)
-            console.log({ email })
             const university = await models.University.find({ email: email }).exec();
-            console.log({ university })
             if (!university) {
                 res.status(400).json({ message: "Error! Invalid Payment! Please contact admin asap." })
                 return;
@@ -2900,7 +2811,6 @@ const webhookForStripe = async (request, response) => {
                 contract_start_date: originalDate,
                 contract_end_date: newDate
             }
-            console.log(chargeSucceeded)
             const updateUniversity = await models.University.updateOne({ _id: university[0]._id },
                 {
                     contract: newContract
@@ -2919,56 +2829,75 @@ const webhookForStripe = async (request, response) => {
 
 const emailSender = async (req, res) => {
     const { to, from, subject, text, html } = req.body;
-    console.log(text)
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    // const msg = {
+    //     to: to,
+    //     from: from,
+    //     subject: subject,
+    //     text: text,
+    //     html: html,
+    // };
+    // (async () => {
+    //     try {
+    //         await sgMail.send(msg);
+    //     } catch (error) {
+    //         console.error(error);
+
+    //         if (error.response) {
+    //             console.error(error.response.body)
+    //         }
+    //     }
+    // })();
+
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
-        to: to,
-        from: from,
+        to: to, // Change to your recipient
+        from: from, // Change to your verified sender
         subject: subject,
         text: text,
         html: html,
-    };
-    (async () => {
-        try {
-            await sgMail.send(msg);
-        } catch (error) {
-            console.error(error);
-
+    }
+    sgMail
+        .send(msg)
+        .then(() => {
+            res.status(200).json({ message: "Email sent" });
+        })
+        .catch((error) => {
+            console.error(error)
             if (error.response) {
-                console.error(error.response.body)
             }
-        }
-    })();
-    res.status(200).json({"message":"report sent!"})
+            res.status(400).json({ message: "Something went wrong" });
+        })
 }
 
-const addRatings = async (req,res) => {
-    const {courseId, studentId, rating, type} = req.body;
+const addRatings = async (req, res) => {
+    const { courseId, studentId, rating, type } = req.body;
 
-    try{
+    try {
         let course;
-        if(type==0){
+        if (type == 0) {
             course = await models.Course.findById(courseId).exec();
         }
-        else{
+        else {
             course = await models.Moocs.findById(courseId).exec();
         }
 
-        if(!course){
-            res.status(404).json({"message":"Course Not Found"});
+        if (!course) {
+            res.status(404).json({ "message": "Course Not Found" });
             return;
         }
         const student = await models.Student.findById(studentId).exec();
-        if(!student){
-            res.status(404).json({"message":"Student Not Found"});
+        if (!student) {
+            res.status(404).json({ "message": "Student Not Found" });
             return;
         }
 
         const newRating = {
             studentId: studentId,
             rating: rating,
-          };
-        
+        };
+
         const index = course.rating.findIndex((r) => r.studentId === studentId);
 
         if (index === -1) {
@@ -2980,49 +2909,49 @@ const addRatings = async (req,res) => {
         await course.save();
 
         res.status(200).json({ message: "Rating Added/Changed Successfully" });
-    
+
     }
-    catch{
+    catch {
         res.status(500).json(err);
     }
 }
 
-const getAverageRatings = async (req,res) => {
-    const {courseId,type} = req.body;
-    try{
+const getAverageRatings = async (req, res) => {
+    const { courseId, type } = req.body;
+    try {
         let course;
-        if(type==0){
-            course=await models.Course.findById(courseId).exec();
-        }else{
-            course=await models.Moocs.findById(courseId).exec();
+        if (type == 0) {
+            course = await models.Course.findById(courseId).exec();
+        } else {
+            course = await models.Moocs.findById(courseId).exec();
         }
-        if(!course){
-            res.status(404).json({"message":"Course Not Found"});
+        if (!course) {
+            res.status(404).json({ "message": "Course Not Found" });
             return;
         }
 
         const totalRatings = course.rating.reduce((total, rating) => total + rating.rating, 0);
         const totalRaters = course.rating.length;
-        const averageRatings = totalRatings/totalRaters;
+        const averageRatings = totalRatings / totalRaters;
         const roundedAverage = averageRatings.toFixed(2);
-        res.status(200).json({"Average Ratings":roundedAverage});
-    }catch(err){
+        res.status(200).json({ "AverageRatings": roundedAverage });
+    } catch (err) {
         res.status(500).json(err);
     }
 }
 
-const resetRequest = async (req,res)=>{
-    const {id,to,from} = req.body;
+const resetRequest = async (req, res) => {
+    const { id, to, from } = req.body;
     const newOTP = generateOTP();
-    OTP.set(id,newOTP);
-    setTimeout(()=>{
+    OTP.set(id, newOTP);
+    setTimeout(() => {
         OTP.delete(id);
-    },600000);
-    const subject='Password Reset Request';
-    const text=`Your OTP to reset password is ${newOTP}. It expires in 10 minutes`;
-    console.log(newOTP)
-    const html=`<span>Your OTP to reset password is ${newOTP}. It expires in 10 minutes</span>`;
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    }, 600000);
+    const subject = 'Password Reset Request';
+    const text = `Your OTP to reset password is ${newOTP}. It expires in 10 minutes`;
+    const html = `<span>Your OTP to reset password is ${newOTP}. It expires in 10 minutes</span>`
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
         to: to,
         from: from,
@@ -3030,116 +2959,103 @@ const resetRequest = async (req,res)=>{
         text: text,
         html: html,
     };
-    (async () => {
-        try {
-            await sgMail.send(msg);
-        } catch (error) {
-            console.error(error);
-
+    sgMail
+        .send(msg)
+        .then(() => {
+            res.status(200).json({ message: "OTP sent!" });
+        })
+        .catch((error) => {
+            console.error(error)
             if (error.response) {
-                console.error(error.response.body)
             }
-        }
-    })();
-    res.status(200).json({"message":"OTP sent!"})
+            res.status(400).json({ message: "Something went wrong" });
+        })
 }
 
 
-const resetPassword = async(req,res)=>{
-    try{
-        const {id,otp,type,password} = req.body;
-        console.log(password)
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
-            if (err) {
-                console.log(err)
-                res.status(500).json(err);
-            } else{
-                if(OTP.has(id)){
-                    if(OTP.get(id)===otp){
-                        if(type==='University'){
-                            await models.University.updateOne({_id:id},{
-                                password:hash
-                            }).exec();
-                        }
-                        else if(type==='Teacher'){
-                            await models.Teacher.updateOne({_id:id},{
-                                password:hash
-                            }).exec();
-                        }
-                        else if(type==='Student'){
-                            console.log(OTP);
-                            let x = await models.Student.updateOne({_id:id},{
-                                password:hash
-                            }).exec();
-                            console.log(x)
-                        }
-                    }else{
-                        res.status(404).json({"message":"OTP expired"});
-                        return;
-                    }
+const resetPassword = async (req, res) => {
+    try {
+        const { id, otp, type, password } = req.body;
+        if (OTP.has(id)) {
+            if (OTP.get(id) === otp) {
+                if (type === 'University') {
+                    await models.University.updateOne({ email: id }, {
+                        password: password
+                    }).exec();
                 }
-                return res.status(200).json({"message":"done"})
+                else if (type === 'Teacher') {
+                    await models.Teacher.updateOne({ email: id }, {
+                        password: password
+                    }).exec();
+                }
+                else if (type === 'Student') {
+                    await models.Student.updateOne({ email: id }, {
+                        password: password
+                    }).exec();
+                }
+            } else {
+                res.status(404).json({ "message": "OTP expired" });
+                return;
             }
-    })
-    }catch(err){
-        console.log(err)
-        res.status(500).json({"message":"Internal Server Error"});
+        }
+        return res.status(200).json({ "message": "done" })
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
     }
 }
 
-const addResource = async (req,res)=>{
-    try{
-        const {courseId, resource, type} = req.body;
-        let course; 
-        if(type==='course'){
-            course=await models.Course.updateOne({_id:courseId},{material:resource}).exec();
-        }else{
-            course=await models.Moocs.updateOne({_id:courseId},{material:resource}).exec();
- 
+const addResource = async (req, res) => {
+    try {
+        const { courseId, resource, type } = req.body;
+        let course;
+        if (type === 'course') {
+            course = await models.Course.updateOne({ _id: courseId }, { material: resource }).exec();
+        } else {
+            course = await models.Moocs.updateOne({ _id: courseId }, { material: resource }).exec();
         }
 
-        if(!course){
-            res.status(404).json({"message":"forbidden"});
+        if (!course) {
+            res.status(404).json({ "message": "forbidden" });
             return;
-        }else{
-            res.status(200).json({"message":"resource added successfully"});
+        } else {
+            res.status(200).json({ "message": "resource added successfully" });
             return;
         }
-    }catch(err){
-        res.status(500).json({"message":"Internal Server Error"});
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
     }
 }
 
-const getResource = async (req,res)=>{
-    try{
-        const {courseId, type} = req.body;
-        let course,resource=''; 
-        if(type==='course'){
-            course=await models.Course.findById({_id:courseId}).exec();
-            resource+=course[0].material;
-        }else{
-            course=await models.Moocs.findById({_id:courseId},{material:resource}).exec();
-            resource+=course[0].material;
+const getResource = async (req, res) => {
+    try {
+        const { courseId, type } = req.body;
+        let course, resource = '';
+        if (type === 'course') {
+            course = await models.Course.findById({ _id: courseId }).exec();
+            resource += course.material;
+        } else {
+            course = await models.Moocs.findById({ _id: courseId }).exec();
+            resource += course.material;
         }
 
-        if(!course){
-            res.status(404).json({"message":"forbidden"});
+        if (!course) {
+            res.status(404).json({ "message": "forbidden" });
             return;
-        }else{
-            res.status(200).json({"resource":resource});
+        } else {
+            res.status(200).json({ "resource": resource });
             return;
         }
-    }catch(err){
-        res.status(500).json({"message":"Internal Server Error"});
+    } catch (err) {
+        res.status(500).json({ "message": "Internal Server Error" });
     }
 }
 
-const UptimeLogs = async(req,res)=>{
-    try{
-        const uptime = await models.UptimeLogs.find().exec();
-        res.status(200).json({uptime});
-    }catch(err){
-        res.status(500).json({"message":"Internal Server Error"})
+const UptimeLogs = async (req, res) => {
+    try {
+        const uptime = await models.UptimeLogs.find({}).exec();
+        res.status(200).json({ uptime });
+    } catch (err) {
+        res.status(500).json({ message: "Internal Server Error" })
     }
 }
 // ------------------------------------------------------------------ END ADMIN SECTION ---------------------------------------------------
@@ -3248,7 +3164,7 @@ module.exports = {
     emailSender,
     addRatings,
     getAverageRatings,
-    resetPassword, 
+    resetPassword,
     resetRequest,
     addResource,
     getResource,

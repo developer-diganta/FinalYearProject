@@ -206,7 +206,7 @@ router.post("/admin/university", authoriseAdmin, controls.adminGetIndividualUniv
 router.post("/admin/restore/university", authoriseAdmin, controls.restoreUniversity);
 router.post("/admin/restore/teacher", authoriseAdmin, controls.restoreTeacher);
 router.post("/admin/restore/student", authoriseAdmin, controls.restoreStudent);
-router.post("/admin/uptimelogs", authoriseAdmin, controls.UptimeLogs);
+router.post("/admin/uptimelogs", controls.UptimeLogs);
 
 // Utilities
 router.post("/create-checkout-session", controls.createPayment);
