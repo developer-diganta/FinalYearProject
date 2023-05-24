@@ -3,7 +3,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { backend_url } from '../../../BackendRoutes';
+import { backend_url, sending_mail } from '../../../BackendRoutes';
 import Header from '../../AppHeader/Header';
 import LandingHeader from '../../Landing/LandingHeader';
 import './Signup.css';
@@ -33,29 +33,60 @@ function StudentSignup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const validateForm = () => {
+    // Regular expressions for field validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  
+    let isValid = true;
+  
+    if (!name.trim()) {
+      isValid = false;
+      console.log('Invalid name');
+    }
+  
+    if (!emailRegex.test(email)) {
+      isValid = false;
+      console.log('Invalid email');
+    }
+  
+    if (!passwordRegex.test(password)) {
+      isValid = false;
+      console.log('Invalid password');
+    }
+  
+    return isValid;
+  };
+
   async function getFormValue(event){
     event.preventDefault();
-    try {
-      console.log(name, email, password, university);
-      const res = await axios.post(backend_url + '/student/signup', {name: name, email: email, password: password, uniId: university, programId: program, registrationNumber, rollNumber, gender});
-      console.log("hvjvjvjvjvj", res, res.data._id);
-      localStorage.setItem('student__token', res.data.token);
-      localStorage.setItem('student__id', res.data._id);
-      localStorage.setItem('student__email', email);
-      localStorage.setItem('university', res.data.university);
-      const mailResponse = await axios.post(backend_url + '/email', {
-        to: 'finalyearprojectide@gmail.com', 
-        from: 'surdana2001@gmail.com',
-        subject: 'Student Joining Request - Pending Approval', 
-        text: `Student, ${name} (${email}) has requested to join. Kindly review and accept the pending request.`, 
-        html: ''
-      })
-      if(res.data.auth == true){
-        navigate('/student/status');
+    if(validateForm()){
+      try {
+        console.log(name, email, password, university);
+        const res = await axios.post(backend_url + '/student/signup', {name: name, email: email, password: password, uniId: university, programId: program, registrationNumber, rollNumber, gender});
+        console.log("hvjvjvjvjvj", res, res.data._id);
+        localStorage.setItem('student__token', res.data.token);
+        localStorage.setItem('student__id', res.data._id);
+        localStorage.setItem('student__email', email);
+        localStorage.setItem('university', res.data.university);
+        const mailResponse = await axios.post(backend_url + '/email', {
+          to: 'finalyearprojectide@gmail.com', 
+          from: sending_mail,
+          subject: 'Student Joining Request - Pending Approval', 
+          text: `Student, ${name} (${email}) has requested to join. Kindly review and accept the pending request.`, 
+          html: `<strong>Student, ${name} (${email}) has requested to join. Kindly review and accept the pending request.</strong>`
+        })
+        console.log(mailResponse);
+        if(res.data.auth == true){
+          navigate('/student/status');
+        }
+      } catch (error) {
+        console.log(error);
+        alert('Something went wrong');
       }
-    } catch (error) {
-      console.log(error);
-      alert('Something went wrong');
+    }
+    else{
+      alert("Please enter valid input.");
     }
   }
 
@@ -140,14 +171,6 @@ function StudentSignup() {
                 getUniversityDepartment(ele.target.value)
               }}>
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your university</option>
-                {/* <option value="IIT Bombay">IIT Bombay</option>
-                <option value="IIT Delhi">IIT Delhi</option>
-                <option value="IIT Kanpur">IIT Kanpur</option>
-                <option value="IIT Kharagpur">IIT Kharagpur</option>
-                <option value="IIT Madras">IIT Madras</option>
-                <option value="IIT Roorkee">IIT Roorkee</option>
-                <option value="IIT Guwahati">IIT Guwahati</option>
-                <option value="IIT Hyderabad">IIT Hyderabad</option> */}
                 {
                     allUniversity ? allUniversity.map((uni, index) => {
                         return <option key={index} value={uni._id}>{uni.name}</option>
@@ -202,15 +225,6 @@ function StudentSignup() {
             <button className='sign_up_btn px-4 py-2 my-4'>continue</button>
             <div><h1>Already have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/student/login')}>login</span> </h1></div>
           </form>
-          <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
-            <div className="line md:hidden"></div>
-            <p>or</p>
-            <div className="line md:hidden"></div>
-          </div>
-          <div className="google flex items-center rounded-md bg-white" style={{border: "1px solid #0E2A47"}}>
-            <div className='bg-primary text-2xl font-bold rounded-md px-3 py-1' style={{color: "#FFF"}}>G</div>
-            <p className='pl-2 pr-2'>Continue with Google</p>
-          </div>
           </div>
         </div>
     </div>

@@ -93,7 +93,7 @@ function StudentDashboard() {
                 },
             });
             const all__courses = await instance.post(backend_url + `/student/data`, {studentId: student__id, email: student__email});
-            console.log(all__courses.data);
+            console.log("************************.", all__courses.data);
             if(all__courses.data.isdeleted === true){
                 alert("Account has been deleted. To restore it back, contact admin");
                 localStorage.removeItem('student__token');
@@ -142,7 +142,7 @@ function StudentDashboard() {
                 },
             });
             const question__details = await instance.post(backend_url + `/student/performance`, {studentId: student__id, email: student__email});
-            console.log(question__details.data);
+            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&.", question__details.data);
             setQuestions(question__details.data);
             let totalQuestion = question__details.data.easy+question__details.data.medium+question__details.data.hard;
             let accepted = question__details.data.easyAccepted+question__details.data.mediumAccepted+question__details.data.hardAccepted;
@@ -249,7 +249,7 @@ function StudentDashboard() {
                     <div className='w-full'>
                         <div className='my-4 flex flex-col items-start pl-4'>
                             <p>School</p>
-                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{program}</h4>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{school}</h4>
                         </div>
                         <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
                         <div className="university my-4 pt-2 flex flex-col items-start pl-4">
@@ -259,7 +259,7 @@ function StudentDashboard() {
                         <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
                         <div className="stream flex flex-col items-start pl-4">
                             <p className='pt-4 pb-2'>Program</p>
-                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{school}</h4>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{program}</h4>
                         </div>
                     </div>
                     {/* <div className="divider bg-[#D1D2D2] my-4" style={{minWidth: "100%", minHeight: "1px"}}></div> */}

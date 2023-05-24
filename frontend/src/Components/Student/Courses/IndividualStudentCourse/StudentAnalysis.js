@@ -196,10 +196,7 @@ function StudentAnalysis() {
                 <div className='w-11/12'>
                     <div className='px-4'>
                         <table className='border-[1px] border-[#dededf] my-4 rounded-lg'>
-                            <thead className={`${submissions.length <= 0 ? 'hidden' : 'block'} bg-[#f9fafb] border-b-[1px] border-b-[#dededf] w-full`}>
-                                {
-                                    console.log("**************.", submissions, submissions.length)
-                                }
+                            <thead className={`${submissions.length <= 0 ? 'hidden' : null} bg-[#f9fafb] border-b-[1px] border-b-[#dededf]`}>
                                 <tr className='text-[#555555]'>
                                     <th className='w-1/4'>Time</th>
                                     <th className='w-1/4'>Lang</th>

@@ -8,6 +8,10 @@ import { useEffect } from 'react'
 import { AiOutlineClose } from "react-icons/ai";
 import SidebarTEacher from '../Sidebar/SidebarTEacher'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { backend_url } from '../../../BackendRoutes'
+import { MdOutlineArrowForwardIos } from 'react-icons/md'
 
 var activity = [
     {
@@ -102,38 +106,89 @@ var activity = [
 ]
 
 function Dashboard() {
-    const[value, onChange] = useState(new Date());
-    const[date, setDate] = useState('')
-    const[dateClick, setDateClick] = useState(false)
-    const { openClose, unvSign } = useSelector((state) => state.counter);
+    const[teacher, setTeacher] = useState();
+    const[department, setDepartment] = useState();
+    const[school, setSchool] = useState();
+    const[currentCourses, setCurrentCourses] = useState();
+    const[previousCourses, setPreviousCourses] = useState();
 
-    function getDayActivity(date) {
-        // format date in yyyy-mm-dd format
-        var d = new Date(date);
-        var month = '' + (d.getMonth() + 1);
-        var day = '' + d.getDate();
-        var year = d.getFullYear();
-        console.log(month.length);
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-        console.log([year, month, day].join('-'));
-        console.log(activity.filter(item => item.date == [year, month, day].join('-')));
-        // console.log(tasks);
-        setDate([year, month, day].join('-'));
+    const { openClose, unvSign } = useSelector((state) => state.counter);
+    const teacher__id = localStorage.getItem('teacher__id');
+    const teacher__token = localStorage.getItem('teacher__token');
+    const teacher__email = localStorage.getItem('teacher__email');
+    const universityDetail = localStorage.getItem('university');
+    const navigate = useNavigate();
+
+    const options = {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+        };
+
+    function getDayDifference(target){
+        const currentDate = new Date(); // Get the current date
+
+        const targetDate = new Date(target); // Set the target date
+
+        // Calculate the difference in milliseconds
+        const differenceInMilliseconds = currentDate - targetDate;
+
+        // Convert the difference to days
+        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+        return differenceInDays;
+    }
+
+    async function getTeacherDetails(){
+        try {
+            const instance = axios.create({
+                headers: {
+                  'x-auth-token': teacher__token,
+                },
+            });
+            const response = await instance.post(backend_url + '/teacher/data', {email: teacher__email, teacherId: teacher__id});
+            console.log(response);
+            setTeacher(response.data);
+            const programData = response.data.department;
+            const universityData = await axios.post(backend_url + `/university/details`, {universityId: universityDetail, email: teacher__email});
+            console.log(universityData);
+            const sch = universityData.data.universityDetails.schools;
+    
+            for(let i=0; i<sch.length; i++){
+                const dept =  sch[i].departments;
+                for(let j=0; j<dept.length; j++){
+                    if(dept[j].id === programData){
+                        setSchool(sch[i].name);
+                        setDepartment(dept[j].name);
+                        console.log(dept[j]);
+                    }
+                }
+            }
+
+            const all__courses = await instance.post(backend_url + `/teacher/courses/getAll`, {teacherId: teacher__id, email: teacher__email});
+            console.log(all__courses);
+            let temp1 = [];
+            let temp2 = [];
+            for(let i=0; i<all__courses.data.courses.length; i++){
+                let day = getDayDifference(all__courses.data.courses[i].courseStartDate);
+                console.log(day);
+                if(day > all__courses.data.courses[i].expectedCourseDuration){
+                    temp2.push(all__courses.data.courses[i]);
+                }
+                else{
+                    temp1.push(all__courses.data.courses[i]);
+                }
+            }
+            setCurrentCourses(temp1);
+            setPreviousCourses(temp2);
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong.");
+        }
     }
 
     useEffect(() => {
-        var d = new Date();
-        var month = '' + (d.getMonth() + 1);
-        var day = '' + d.getDate();
-        var year = d.getFullYear();
-        console.log(month.length);
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-        console.log([year, month, day].join('-'));
-        console.log(activity.filter(item => item.date == [year, month, day].join('-')));
-        // console.log(tasks);
-        setDate([year, month, day].join('-'));
+        getTeacherDetails();
     }, [])
 
   return (
@@ -143,47 +198,85 @@ function Dashboard() {
         </div>
         <div className={`dashboard_1 bg-[#fbfbfb] ${openClose ? 'w-4/5' : 'w-full'} md:w-full min-h-screen`} style={{float: "right"}}>
             <TeacherHeader />
-            <div className='flex gap-2 mx-6 mt-10 '>
-                <div className="calender w-2/4 rounded-lg shadow-2xl p-4 bg-white">
-                    <Calendar onChange={onChange} value={value} 
-
-                        // activeStartDate={new Date()}
-                        allowPartialRange={true}
-                        onClickDay={(value, event) => {
-                            // console.log(value, event)
-                            getDayActivity(value)
-                            setDateClick(true)
-                        }}
-                    />
-                </div>
-                <div className={`${dateClick ? 'task' : ''} w-2/4 bg-[#2D3436] ${dateClick === true ? '' : 'hidden'}`}>
-                    <div className='flex justify-center items-center relative bg-[#733ef0] pl-1' style={{paddingTop: "14px", paddingBottom: "14px"}}>
-                        <AiOutlineClose className='text-2xl cursor-pointer text-white absolute left-2' onClick={() => setDateClick(!dateClick)} />
-                        <h1 className='text-[#FFF] font-bold'>{date ? date : ''}</h1>
+            <div className='m-4 flex gap-6 sm:flex-col'>
+                <div className='w-2/6 md:w-3/6 sm:w-full pt-2 pb-8 flex items-center bg-white rounded-md shadow-lg flex-col min-h-[94vh]'>
+                    <div className='mt-8' style={{objectFit: 'cover'}}>
+                    <div className='profile__pic w-28 h-28 text-4xl'>{teacher ? (teacher.name.charAt(0)) : null}</div>
                     </div>
-                    {
-                        activity.filter(item => item.date == date).length === 0 ? 
-                        <div className='flex justify-center items-center h-96 flex-col gap-4'>
-                            <img className='w-32 h-32 bg-white rounded-full shadow-md' src="/empty_bird.svg" alt="" />
-                            <h4 className='text-white font-semibold' style={{letterSpacing: "1px"}}>nothing for today!!</h4>
+                    <div className='flex flex-col items-center'>
+                    <h4 className='text-2xl font-bold pt-3 pb-1'>{teacher?.name}</h4>
+                    <h4 className='text-sm text-[#7C7D7D] pb-6' style={{letterSpacing: "1px"}}>{teacher?.email}</h4>
+                    <button className='w-56 bg-[#E8DEFF] py-2 rounded-md text-[#5F6161] text-sm font-semibold' style={{letterSpacing: "1px"}}>Edit Profile</button>
+                    </div>
+                    <div className="divider bg-[#D1D2D2] my-6" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                    <div className='w-full'>
+                        <div className='my-4 flex flex-col items-start pl-4'>
+                            <p>School</p>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{school}</h4>
                         </div>
-                        :
-                        activity.filter(item => item.date == date).map((item, key) => (
-                            <div className='task_1 rounded-lg shadow-2xl p-4 mt-10'>
-                                <div className='flex justify-between'>
-                                    <div className='flex gap-2 items-center'>
-                                        <div className='flex flex-col'>
-                                            <h1 className='text-[#FFF] font-bold'>{item.title}</h1>
-                                            <p className='text-[#FFF]'>{item.description}</p>
+                        <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                        <div className="university my-4 pt-2 flex flex-col items-start pl-4">
+                            <p>Department</p>
+                            <h4 className='text-[#7C7D7D] text-sm font-semibold'>{department}</h4>
+                        </div>
+                        <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                        <div className="stream flex flex-col items-start pl-4">
+                            {/* <p className='pt-4 pb-2'>Program</p> */}
+                            {/* <h4 className='text-[#7C7D7D] text-sm font-semibold'>{school}</h4> */}
+                        </div>
+                    </div>
+                    {/* <div className="divider bg-[#D1D2D2] my-4" style={{minWidth: "100%", minHeight: "1px"}}></div> */}
+                </div>
+                <div className='w-4/6 pr-4 py-0 md:w-3/6 sm:w-full sm:pr-0 bg-[white] shadow-lg rounded-md'>
+                    <div className="current__courses">
+                        <h1 className='text-2xl font-bold text-center py-2'>Current Courses</h1>
+                        <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                        {
+                            currentCourses?.map((course, index) => (
+                                <div className='' onClick={() => navigate('/teacher/courses/' + course._id, {state: {course, coursestate: 'current'}})}>
+                                    <div className="course mr-4 my-4 sm:mx-2 flex text-[#515a61] duration-200" key={course._id} style={{}}>
+                                        <div className='p-3 mx-auto w-10/12' style={{
+                                                border: "1px solid #9ea7ae"
+                                            }}>
+                                            <div className="course__title flex justify-between items-center text-lg font-semibold pb-2">
+                                                <h3 className='teacher__course__title__h capitalize max-w-[200px]' style={{maxWidth: "240px !important"}}>{course.name}</h3>
+                                                <p className='text-xs'>{new Date(course.courseStartDate).toLocaleDateString("en-US", options)}</p>
+                                            </div>
+                                            <div className="course__description text-sm flex justify-between gap-4 items-center">
+                                                <p className='capitalize course__description__p'>{course.description}</p>
+                                                <p className='course__status'>{Math.ceil(new Date() - new Date(course.courseStartDate))/(1000 * 3600 * 24) > course.expectedCourseDuration ? 'Completed' : 'Ongoing'}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='flex flex-col'>
-                                        <p className='text-[#FFF]'>{item.time}</p>
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className="current__courses">
+                        <h1 className='text-2xl font-bold text-center py-2'>Previous Courses</h1>
+                        <div className="divider bg-[#D1D2D2] mx-auto" style={{minWidth: "90%", minHeight: "1px", maxWidth: "90%"}}></div>
+                        {
+                            previousCourses?.map((course, index) => (
+                                <div className='' onClick={() => navigate('/teacher/courses/' + course._id, {state: {course, coursestate: 'current'}})}>
+                                    <div className="course mr-4 my-4 sm:mx-2 flex text-[#515a61] duration-200" key={course._id} style={{}}>
+                                        <div className='p-3 mx-auto w-10/12' style={{
+                                                border: "1px solid #9ea7ae"
+                                            }}>
+                                            <div className="course__title flex justify-between items-center text-lg font-semibold pb-2">
+                                                <h3 className='teacher__course__title__h capitalize max-w-[200px]' style={{maxWidth: "240px !important"}}>{course.name}</h3>
+                                                <p className='text-xs'>{new Date(course.courseStartDate).toLocaleDateString("en-US", options)}</p>
+                                            </div>
+                                            <div className="course__description text-sm flex justify-between gap-4 items-center">
+                                                <p className='capitalize course__description__p'>{course.description}</p>
+                                                <p className='course__status'>{Math.ceil(new Date() - new Date(course.courseStartDate))/(1000 * 3600 * 24) > course.expectedCourseDuration ? 'Completed' : 'Ongoing'}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    }
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </div>

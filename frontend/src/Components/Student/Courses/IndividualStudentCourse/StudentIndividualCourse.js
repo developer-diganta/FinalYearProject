@@ -13,6 +13,7 @@ function StudentIndividualCourse() {
     const[assignments, setAssignments] = useState([]);
     const[show, setShow] = useState(false);
     const[resources, setResources] = useState();
+    const[resourcesToBeAdded, setResourcesToBeAdded] = useState();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -54,6 +55,19 @@ function StudentIndividualCourse() {
       setResources(linkArray);
     }
 
+    async function getLinks(){
+      try {
+        const typeValue = location.state.courseType === "public" ? 'moocs' : 'course';
+        let links = location.state.material;
+        const linkArray = links.split(", ").map(link => link.trim());
+        console.log(linkArray);
+        setResources(linkArray);
+      } catch (error) {
+        console.log(error);
+        alert("Something went wrong");
+      }
+    }
+
     useEffect(() => {
         getAssignments();
         getLinks();
@@ -72,10 +86,10 @@ function StudentIndividualCourse() {
             </div>
             <div className="assignments">
             <div className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3'>
-          <h1 className='text-xl font-bold cursor-pointer' style={{letterSpacing: "1px"}}  onClick={() => setShow(!show)}>Assignments</h1>
+          <h1 className='text-xl font-bold cursor-pointer' style={{letterSpacing: "1px"}}  onClick={() => setShow(false)}>Assignments</h1>
           <div className="flex items-center gap-4">
               <div className='relative'>
-                  <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setShow(!show)}>Resources
+                  <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setShow(true)}>Resources
                   </div>
               </div>
           </div>

@@ -24,64 +24,60 @@ function UniversitySignup() {
 
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    // Regular expressions for field validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^(\+\d{1,3})?[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    let isValid = true;
+
+    if (!name.trim()) {
+      isValid = false;
+      console.log('Invalid name');
+    }
+
+    if (!emailRegex.test(email)) {
+      isValid = false;
+      console.log('Invalid email');
+    }
+
+    if (!phoneRegex.test(phone)) {
+      isValid = false;
+      console.log('Invalid phone number');
+    }
+
+    if (!passwordRegex.test(password)) {
+      isValid = false;
+      console.log('Invalid password');
+    }
+
+    return isValid;
+  };
+
   async function getFormValue(event){
     event.preventDefault();
-    // check for empty fields
-    var check = true;
-    if(name === undefined || email === undefined || password === undefined || phone === undefined){
-      setMessage("Please fill all the fields");
-      check = false;
-      return;
-    }
-    // check for valid email
-    if(!email.includes("@")){
-      setMessage("Please enter a valid email");
-      check = false;
-      return;
-    }
-    // check for valid phone number
-    if(phone.length !== 10){
-      setMessage("Please enter a valid phone number");
-      check = false;
-      return;
-    }
-    // check for valid password
-    if (!(password.match(/[a-z]/g) && password.match(/[A-Z]/g) && password.match(/[0-9]/g) && password.match(/[^a-zA-Z\d]/g) && password.length >= 8)){
-      setMessage("Please enter a valid password");
-      check = false;
-      return;
-    }
-    if(check){
-      setMessage();
-    }
-    try {
-      const unv_signup_res = await axios.post(backend_url+'/university/signup', {name, email, password, phone});
-      console.log("************************************", unv_signup_res, unv_signup_res.data.token);
-      if(unv_signup_res.data.token){
-        localStorage.setItem('signup_token', unv_signup_res.data.token);
-        localStorage.setItem('university__id', unv_signup_res.data._id);
-        localStorage.setItem('university__email', email);
-        dispatch(universitySignup(true));
-        navigate('/university/dashboard');
+    if(validateForm()){
+      try {
+        const unv_signup_res = await axios.post(backend_url+'/university/signup', {name, email, password, phone});
+        console.log("************************************", unv_signup_res, unv_signup_res.data.token);
+        if(unv_signup_res.data.token){
+          localStorage.setItem('signup_token', unv_signup_res.data.token);
+          localStorage.setItem('university__id', unv_signup_res.data._id);
+          localStorage.setItem('university__email', email);
+          dispatch(universitySignup(true));
+          navigate('/university/dashboard');
+        }
+      } catch (error) {
+        console.log(error);
+        setMessage("Something went wrong");
       }
-    } catch (error) {
-      console.log(error);
-      setMessage("Something went wrong");
     }
-    
-    console.log(name, email, password, phone);
+    else{
+      alert("Please enter valid input.");
+    }
   }
 
-  // const signup_token = localStorage.getItem('signup_token');
-
-  // useEffect(() => {
-  //   if(register){
-  //     navigate('/purchase/university/payment');
-  //   }
-  //   if(signup_token){
-  //     navigate('/university/dashboard');
-  //   }
-  // }, [])
 
   return (
     <div className='min-h-[104vh]'>
@@ -136,15 +132,6 @@ function UniversitySignup() {
                 >continue</button>
               <div><h1>Already have an account ? <span id="university__login" className='university__login text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/login')}>login</span> </h1></div>
           </form>
-          <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
-            <div className="line md:hidden"></div>
-            <p>or</p>
-            <div className="line md:hidden"></div>
-          </div>
-          <div className="google flex items-center rounded-md bg-white" style={{border: "1px solid #0E2A47"}}>
-            <div className='bg-primary text-2xl font-bold rounded-md px-3 py-1' style={{color: "#FFF"}}>G</div>
-            <p className='pl-2 pr-2'>Continue with Google</p>
-          </div>
           </div>
         </div>
     </div>

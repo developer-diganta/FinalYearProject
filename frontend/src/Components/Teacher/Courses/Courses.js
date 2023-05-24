@@ -101,16 +101,6 @@ function Courses() {
                 <h1 className='text-xl font-bold sm:py-4 sm:uppercase'>All Courses</h1>
                 <div className='divider bg-divider min-h-[1px] min-w-[95%] max-w-[95%] mx-auto hidden sm:block'></div>
                 <div className="flex items-center gap-4 sm:pt-4 sm:pb-1">
-                    <div className='relative'>
-                        <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm xxs:text-xs text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setDropDown(!dropDown)}>Sort By 
-                            <IoIosArrowDown className='text-lg ml-2' /> 
-                        </div>
-                        <div className={`option__div bg-[#6b7780ff] text-white absolute -left-4 mt-1 z-50 ${!dropDown ? 'hidden' : 'block'}`} >
-                            <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Active Courses</div>
-                            <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Completed Courses</div>
-                            <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Pending Courses</div>
-                        </div>
-                    </div>
                     <div className='bg-[#6b7780] px-4 xxs:hidden rounded-3xl cursor-pointer py-1 text-sm xxs:text-xs text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>Create Course <span className='text-lg pl-2'>+</span> </div>
                     <div className='bg-[#6b7780] hidden xxs:flex xxs:items-center xxs:justify-center h-8 w-8 cursor-pointer py-1 text-sm xxs:text-xl rounded-full text-white items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => navigate('/teacher/cretatecourse')}>+</div>
                 </div>

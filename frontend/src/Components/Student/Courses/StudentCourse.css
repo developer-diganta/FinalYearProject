@@ -23,7 +23,7 @@
     text-overflow: ellipsis;
 }
 
-.course__title__h{
+.student__course__title__h{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

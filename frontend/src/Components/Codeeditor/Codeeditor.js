@@ -29,6 +29,7 @@ function Codeeditor() {
   const [opScreen, setOpScreen] = useState(false);
   const [thin, setThin] = useState(false);
   const [slide, setSlide] = useState(false);
+  const [run, setRun] = useState(false);
   const arr = [dracula, githubDark, sublime, xcodeDark];
   const themeName = ['Dracula', 'GithubDark', 'Sublime', 'XcodeDark'];
   const lang = ['C++', 'JavaScript', 'C', 'Java', 'HTML'];
@@ -56,7 +57,9 @@ function Codeeditor() {
             console.log(code);
             const sub_res = await axios.post(backend_url + '/moocs/question/code/submit', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
             console.log(sub_res.data);
-            setOutput(base64.decode(sub_res.data.stdout));
+            // setOutput(base64.decode(sub_res.data.stdout));
+            setRun(false);
+            setOutput(sub_res.data.status.description);
           }catch(err){
             console.log(err);
             alert('Something went wrong');
@@ -69,7 +72,9 @@ function Codeeditor() {
             console.log(code);
             const sub_res = await axios.post(backend_url + '/submit/student', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
             console.log(sub_res.data);
-            setOutput(base64.decode(sub_res.data.stdout));
+            // setOutput(base64.decode(sub_res.data.stdout));
+            setRun(false);
+            setOutput(sub_res.data.status.description);
           }catch(err){
             console.log(err);
             alert('Something went wrong');
@@ -83,7 +88,9 @@ function Codeeditor() {
     console.log(code);
     console.log(location);
     const res = await axios.post(backend_url + '/submit', { sourceCode: code, languageId: language, sampleInput: location.state.question.sampleInput, sampleOutput: location.state.question.sampleOutput});
-    setOutput(res.data.status.description);
+    // setOutput(res.data.status.description);
+    setRun(true);
+    setOutput(base64.decode(res.data.stdout));
     console.log(res.data);
   }
 
@@ -208,7 +215,7 @@ function Codeeditor() {
                     </div>
                   </div>
                   <div className='output_box'>
-                    <div className={`p-2 font-semibold scroll ${output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center flex-col items-center'><img style={{height: "100px"}} src="/loading1.gif" alt="" /><p className='text-[#000000] text-xs -top-4 relative'>compiling....</p></div>}</div>
+                    <div className={`p-2 font-semibold scroll ${run === true ? 'text-[#6b7780ff]' : output === 'Accepted' ? 'text-success' : 'text-[red]'}`}>{output !== '' ? output : <div className='flex justify-center flex-col items-center'><img style={{height: "100px"}} src="/loading1.gif" alt="" /><p className='text-[#000000] text-xs -top-4 relative'>compiling....</p></div>}</div>
                   </div>
                 </div>
             </div>
