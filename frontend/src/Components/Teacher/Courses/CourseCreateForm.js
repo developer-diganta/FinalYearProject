@@ -40,8 +40,6 @@ function CourseCreateForm() {
               'x-auth-token': teacher__token,
             },
         });
-        console.log(date1.toISOString(date1));
-        // make the date1 in this format 2021-05-01T00:00:00.000Z
 
         if(courseType === "public"){
             try {
@@ -141,6 +139,7 @@ function CourseCreateForm() {
             console.log(teacher__data);
         } catch (error) {
             console.log(error);
+            navigate('/teacher/login');
         }
         let university__detail;
         const {university} = teacher__data.data;

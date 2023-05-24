@@ -3,7 +3,7 @@ import React from 'react'
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { backend_url } from '../../../BackendRoutes';
+import { backend_url, sending_mail } from '../../../BackendRoutes';
 import { setUniversityDetail } from '../../../Redux/Counter';
 import LandingHeader from '../../Landing/LandingHeader'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
@@ -33,8 +33,18 @@ function StudentLogin() {
     }
   }
 
+  async function cllForgotPassword(){
+    const response = await axios.post(backend_url + '/resetRequest', {id: 1, to: email, from: sending_mail});
+    if(response.data.message === "OTP sent!"){
+      navigate('/reset/password', {state: 'university'});
+    }
+    else{
+      alert("Something went wrong. Please try again.");
+    }
+  }
+
   return (
-    <div>
+    <div className='min-h-[104vh]'>
       <LandingHeader />
         <div className="signup flex justify-center">
         <div className="student_signup_left w-1/2 lg:w-0 flex items-center justify-center">
@@ -59,7 +69,7 @@ function StudentLogin() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgba(77, 85, 89, 0.8)" class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
-              <input required type="email" placeholder="Enter official email" onChange={(ele) => setEmail(ele.target.value)} />
+              <input required type="email" placeholder="Enter your email" onChange={(ele) => setEmail(ele.target.value)} />
             </div>
             {/* <div className='input_box w-3/5 sm:w-4/5 xxs:w-11/12 xs:my-4 flex items-center border-2 p-2 mx-10 my-2 gap-2' >
               <BiPhone style={{color: "rgba(77, 85, 89, 0.8)"}} />
@@ -78,18 +88,10 @@ function StudentLogin() {
               }
               </div>
             </div>
-              <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
-              <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/teacher/signup')}>create</span> </h1></div>
+            <p className="text-sm">Forgot password? <span className='text-[#8374ff] border-b-[1px] border-[#8374ff]' onClick={() => navigate('/reset/password', {state: 'Student'})}>click here</span></p>
+            <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
+            <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/student/signup')}>create</span> </h1></div>
           </form>
-          <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
-            <div className="line md:hidden"></div>
-            <p>or</p>
-            <div className="line md:hidden"></div>
-          </div>
-          <div className="google flex items-center rounded-md bg-white" style={{border: "1px solid #0E2A47"}}>
-            <div className='bg-primary text-2xl font-bold rounded-md px-3 py-1' style={{color: "#FFF"}}>G</div>
-            <p className='pl-2 pr-2'>Continue with Google</p>
-          </div>
           </div>
         </div>
       </div>

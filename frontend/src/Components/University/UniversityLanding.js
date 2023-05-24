@@ -6,7 +6,7 @@ import './University.css'
 function UniversityLanding() {
     const navigate = useNavigate();
   return (
-    <div className="v min-h-screen">
+    <div className="v min-h-[104vh]">
         <LandingHeader />
         <div className='sm:flex sm:flex-col sm:items-center sm:justify-center sm:min-h-screen'>
           <h1 className='text-3xl pt-4 pb-2 pl-16 md:px-6' style={{color: "#9900ff"}}><span className='font-bold text-3xl'>Slate</span> for Universities</h1>

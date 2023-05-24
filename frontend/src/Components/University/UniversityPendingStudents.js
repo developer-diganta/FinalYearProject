@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { backend_url } from '../../BackendRoutes';
+import { backend_url, sending_mail } from '../../BackendRoutes';
 import Sidebaruniversity from './Sidebaruniversity/Sidebaruniversity';
 
 function UniversityPendingStudents() {
@@ -29,12 +29,13 @@ function UniversityPendingStudents() {
       console.log(res);
       alert(res.data.message);
       const mailResponse = await axios.post(backend_url + '/email', {
-        to: studentEmail, 
-        from: university__email, 
-        subject: 'Joining Request Accepted!', 
-        text: `Your request to join our university has been accepted. Welcome!`, 
-        html: ''
+        to: studentEmail,
+        from: sending_mail,
+        subject: 'Joining Request Accepted!',
+        text: `Your request to join our university has been accepted. Welcome!`,
+        html: '<strong>Your request to join our university has been accepted. Welcome!</strong>'
       })
+      console.log(mailResponse);
       if(res.status === 200){
         navigate('/university/students')
       } 

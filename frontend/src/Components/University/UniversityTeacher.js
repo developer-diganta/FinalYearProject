@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { backend_url } from '../../BackendRoutes';
+import { backend_url, sending_mail } from '../../BackendRoutes';
 import Sidebaruniversity from './Sidebaruniversity/Sidebaruniversity';
 import './University.css';
 import { MdTry } from 'react-icons/md';
@@ -71,12 +71,13 @@ function UniversityTeacher() {
       console.log("teacher__acceptance", teacher__acceptance);
       alert("Teacher accepted");
       const mailResponse = await axios.post(backend_url + '/email', {
-        to: 'finalyearprojectide@gmail.com', 
-        from: 'souryadeeppodder@gmail.com', 
+        to: teacher__email, 
+        from: sending_mail, 
         subject: 'Joining Request Accepted!', 
         text: `Congratulations! Your request to join our university has been accepted. Welcome!`, 
-        html: ''
+        html: '<strong>Congratulations! Your request to join our university has been accepted. Welcome!</strong>'
       })
+      console.log(mailResponse);
       getPendingTeachers();
     } catch (error) {
       console.log(error);

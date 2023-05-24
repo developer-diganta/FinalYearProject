@@ -149,6 +149,20 @@ function PublicCourses() {
     setStudentDetail(response.data);
   }
 
+  function getRating(rating){
+    console.log(rating);
+    let length = rating.length;
+    let star = 0;
+    for(let i=0; i<length; i++){
+      star += parseInt(rating[i].rating);
+    }
+    if(length === 0){
+      return 0;
+    }
+    console.log(length, star);
+    return (star)/length;
+  }
+
   useEffect(() => {
     getStudentsDetail();
     getPublicAllCourses();
@@ -208,7 +222,7 @@ function PublicCourses() {
                   <div className='pl-4 mb-4 mt-2'>
                     <div className="star flex items-center gap-1 border-[1px] border-[#6b7780ff] w-14 justify-center rounded-sm">
                       <HiStar className='text-[#FFD93D] font-bold font-serif' />
-                      <p className='text-sm'>4.5</p>
+                      <p className='text-sm'>{getRating(course.rating)}</p>
                     </div>
                   </div>
                 </div>

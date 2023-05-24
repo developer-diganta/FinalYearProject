@@ -100,8 +100,9 @@ abbr[title] {
     transition: width 0.5s ease;
 }
 
-
-/* screen for medium screen */
-/* @media screen(min-width: "800px") {
-    
-} */
+.teacher__course__title__h {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+}

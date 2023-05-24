@@ -85,18 +85,10 @@ function UniversityLogin() {
               }
               </div>
             </div>
-              <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
-              <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/signup')}>create</span> </h1></div>
+            <p className="text-sm">Forgot password? <span className='text-[#8374ff] border-b-[1px] border-[#8374ff]' onClick={() => {navigate('/reset/password', {state: 'University'})}}>click here</span></p>
+            <button type='submit' className='sign_up_btn px-4 py-2 my-4'>continue</button>
+            <div><h1>Don't have an account ? <span className='text-base font-semibold cursor-pointer' style={{color: "#6c63ff"}} onClick={() => navigate('/university/signup')}>create</span> </h1></div>
           </form>
-          <div className='flex justify-center items-center gap-4 pt-6 pb-4'>
-            <div className="line md:hidden"></div>
-            <p>or</p>
-            <div className="line md:hidden"></div>
-          </div>
-          <div className="google flex items-center rounded-md bg-white" style={{border: "1px solid #0E2A47"}}>
-            <div className='bg-primary text-2xl font-bold rounded-md px-3 py-1' style={{color: "#FFF"}}>G</div>
-            <p className='pl-2 pr-2'>Continue with Google</p>
-          </div>
           </div>
         </div>
     </div>

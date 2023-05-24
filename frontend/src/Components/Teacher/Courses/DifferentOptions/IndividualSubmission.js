@@ -166,7 +166,7 @@ function IndividualSubmission() {
             
             <div className='code__review pb-4'>
                 <h4 className='text-lg font-semibold text-[#6b7780ff] px-4 mt-6'>Review</h4>
-                <form className='mx-4 mt-2' action="" onClick={(event) => submitReview(event)}>
+                <form className='mx-4 mt-2' action="" onSubmit={(event) => submitReview(event)}>
                     <textarea name="" id="" cols="30" rows="4" style={{width: "100%"}} onChange={(event) => setReview(event.target.value)}></textarea>
                     <button className='submit__review px-4 py-1 text-white rounded-sm mt-2' style={{letterSpacing: "1px"}}>Submit</button>
                 </form>

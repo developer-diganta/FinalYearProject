@@ -106,6 +106,7 @@ function StudentCourse() {
             :
             console.log("")
           }
+          course__title__h
         </div> */}
         <div className='st__map font-sans flex py-2 pl-4 bg-[#F6F7F7] items-center gap-2 text-sm'>
                 <p className='cursor-pointer hover:text-[#763dfe] hover:underline'>Home</p>
@@ -114,7 +115,7 @@ function StudentCourse() {
             </div>
             <div className='flex justify-between w-11/12 mx-auto items-center mt-4 mb-3'>
                 <h1 className='text-xl font-bold xxs:text-base'>All Courses</h1>
-                <div className="flex items-center gap-4">
+                {/* <div className="flex items-center gap-4">
                     <div className='relative'>
                         <div className='bg-[#6b7780] px-4 rounded-3xl py-2 cursor-pointer text-sm text-white flex items-center justify-center hover:border-2 hover:border-[#6b7780] hover:text-[#6b7780] hover:bg-white border-2 border-[#6b7780] duration-500 xxs:text-xs' style={{fontFamily: "sans-serif", letterSpacing: "2px"}} onClick={() => setDropDown(!dropDown)}>Sort By 
                             <IoIosArrowDown className='text-lg ml-2' /> 
@@ -124,7 +125,7 @@ function StudentCourse() {
                             <div className='py-2 px-2 text-sm w-48 border-2 border-[#6b7780ff] hover:text-[#6b7780ff] hover:bg-[#FFF] cursor-pointer duration-300 md:w-auto sm:text-xs' style={{fontFamily: "sans-serif", letterSpacing: "2px"}}>Completed Courses</div>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className='divider bg-divider min-h-[1px] min-w-[90%] max-w-[95%] mx-auto'></div>
             {
@@ -139,7 +140,7 @@ function StudentCourse() {
                                             borderBottom: "1px solid #9ea7ae",
                                         }}>
                                         <div className="course__title flex justify-between items-center text-lg font-semibold pb-2">
-                                            <h3 className='course__title__h capitalize xxs:text-sm'>{course.name}</h3>
+                                            <h3 className='student__course__title__h capitalize xxs:text-sm'>{course.name}</h3>
                                             <p className='text-xs sm:text-2xs xxs:text-3xs'>{new Date(course.courseStartDate).toLocaleDateString("en-US", options)}</p>
                                         </div>
                                         <div className="course__description text-sm flex justify-between gap-4 items-center">

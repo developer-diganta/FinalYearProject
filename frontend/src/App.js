@@ -62,6 +62,8 @@ import AdminTeacher from './Components/Admin/AdminTeacher';
 import Purchase from './Components/Purchase/Purchase';
 import PurchaseSuccess from './Components/Purchase/PurchaseSuccess';
 import PurchaseFail from './Components/Purchase/PurchaseFail';
+import PasswordReset from './Components/PasswordReset/PasswordReset';
+import AdminUptimeLogs from './Components/Admin/AdminUptimeLogs';
 
 function App() {
   return (
@@ -70,6 +72,9 @@ function App() {
             {/* ******************** Common routes ***************************************************************/}
             <Route path='/' element={<LandingPage />} />
             <Route path='/signupoptions' element={<SignupOption />} />
+
+            {/* ******************** Password Reset ***************************************************************/}
+            <Route path='/reset/password' element={<PasswordReset />} />
 
             {/* ******************** University routes ***************************************************************/}
             <Route path='/university' element={<UniversityLanding />} />
@@ -130,12 +135,13 @@ function App() {
             <Route path='/publiccourses/assignment' element={<PublicCourseAssignment />} />
             <Route path='/publiccourses/assignment/questions' element={<PublicCourseQuestions />} />
 
-            {/* ******************** Public courses routes ***************************************************************/}
+            {/* ******************** Admin routes ***************************************************************/}
             <Route path='/admin' element={<Admin />} />
             <Route path='/admin/signin' element={<AdminSignin />} />
             <Route path='/admin/university' element={<AdminUniversity />} />
             <Route path='/admin/teacher' element={<AdminTeacher />} />
             <Route path='/admin/student' element={<AdminStudent />} />
+            <Route path='/admin/uptimelogs' element={<AdminUptimeLogs />} />
 
             {/* ******************** Error routes ***************************************************************/}
             <Route path='*' element={<ErrorPage />} />
