@@ -2524,23 +2524,26 @@ const getStudentPerformance = async (req, res) => {
         studentSubmissions.forEach((submission) => {
 
             if (submission.status === '3') {
-                console.log(questionMap.get(JSON.stringify(submission.question)).difficulty)
-                switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
-                    case "easy":
-                        studentDataMap.set("easy", studentDataMap.get("easy") + 1);
-                        studentDataMap.set("easyAccepted", studentDataMap.get("easyAccepted") + 1);
-                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                        break;
-                    case "medium":
-                        studentDataMap.set("medium", studentDataMap.get("medium") + 1);
-                        studentDataMap.set("mediumAccepted", studentDataMap.get("mediumAccepted") + 1);
-                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                        break;
-                    case "hard":
-                        studentDataMap.set("hard", studentDataMap.get("hard") + 1);
-                        studentDataMap.set("hardAccepted", studentDataMap.get("hardAccepted") + 1);
-                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                        break;
+                if (questionMap.get(JSON.stringify(submission.question)) !== undefined) {
+                    console.log(questionMap.get(JSON.stringify(submission.question)).difficulty)
+                    switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
+                        case "easy":
+                            studentDataMap.set("easy", studentDataMap.get("easy") + 1);
+                            studentDataMap.set("easyAccepted", studentDataMap.get("easyAccepted") + 1);
+                            studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                            break;
+                        case "medium":
+                            studentDataMap.set("medium", studentDataMap.get("medium") + 1);
+                            studentDataMap.set("mediumAccepted", studentDataMap.get("mediumAccepted") + 1);
+                            studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                            break;
+                        case "hard":
+                            studentDataMap.set("hard", studentDataMap.get("hard") + 1);
+                            studentDataMap.set("hardAccepted", studentDataMap.get("hardAccepted") + 1);
+                            studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                            break;
+                    }
+
                 }
             } else {
                 if (questionMap.get(JSON.stringify(submission.question)) !== undefined) {
