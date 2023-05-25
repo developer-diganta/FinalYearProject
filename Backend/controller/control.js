@@ -1422,6 +1422,7 @@ const getMoocQuestionById = async (req, res) => {
 
 const submitCodeToMoocs = async (req, res) => {
     const { student_id, code, question_id, language_id } = req.body;
+    console.log(req.body)
     let plagarized = false;
     try {
 
@@ -2507,7 +2508,7 @@ const getStudentPerformance = async (req, res) => {
         question.forEach((question) => {
             questionMap.set(JSON.stringify(question._id), question);
         });
-
+        console.log(questionMap)
 
         studentDataMap.set("easy", 0);
         studentDataMap.set("easyAccepted", 0);
@@ -2522,8 +2523,8 @@ const getStudentPerformance = async (req, res) => {
         studentDataMap.set("rejected", [])
         studentSubmissions.forEach((submission) => {
 
-
             if (submission.status === '3') {
+                console.log(questionMap.get(JSON.stringify(submission.question)).difficulty)
                 switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
                     case "easy":
                         studentDataMap.set("easy", studentDataMap.get("easy") + 1);
@@ -2542,22 +2543,25 @@ const getStudentPerformance = async (req, res) => {
                         break;
                 }
             } else {
-                switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
-                    case "easy":
-                        studentDataMap.set("easy", studentDataMap.get("easy") + 1);
-                        studentDataMap.set("easyRejected", studentDataMap.get("easyRejected") + 1);
-                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                        break;
-                    case "medium":
-                        studentDataMap.set("medium", studentDataMap.get("medium") + 1);
-                        studentDataMap.set("mediumRejected", studentDataMap.get("mediumRejected") + 1);
-                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                        break;
-                    case "hard":
-                        studentDataMap.set("hard", studentDataMap.get("hard") + 1);
-                        studentDataMap.set("hardRejected", studentDataMap.get("hardRejected") + 1);
-                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                        break;
+                if (questionMap.get(JSON.stringify(submission.question)) !== undefined) {
+
+                    switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
+                        case "easy":
+                            studentDataMap.set("easy", studentDataMap.get("easy") + 1);
+                            studentDataMap.set("easyRejected", studentDataMap.get("easyRejected") + 1);
+                            studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                            break;
+                        case "medium":
+                            studentDataMap.set("medium", studentDataMap.get("medium") + 1);
+                            studentDataMap.set("mediumRejected", studentDataMap.get("mediumRejected") + 1);
+                            studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                            break;
+                        case "hard":
+                            studentDataMap.set("hard", studentDataMap.get("hard") + 1);
+                            studentDataMap.set("hardRejected", studentDataMap.get("hardRejected") + 1);
+                            studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                            break;
+                    }
                 }
             }
 
@@ -2567,6 +2571,7 @@ const getStudentPerformance = async (req, res) => {
 
         return;
     } catch (error) {
+        console.log(error)
         res.status(500).json(error);
     }
 }
