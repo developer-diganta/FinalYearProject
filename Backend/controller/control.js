@@ -1441,8 +1441,8 @@ const submitCodeToMoocs = async (req, res) => {
             data: {
                 "source_code": encoded,
                 "language_id": language_id,
-                "stdin": base64encode(question.input),
-                "expected_output": base64encode(question.output)
+                "stdin": question.input,
+                "expected_output": question.output
             }
         };
 
@@ -2797,8 +2797,8 @@ const createPayment = async (req, res) => {
         line_items: line_items,
         mode: 'payment',
         customer: customer.id,
-        success_url: 'http://localhost:3000/university/purchase/success',
-        cancel_url: 'http://localhost:3000/university//purchase/fail',
+        success_url: 'https://app-slate.netlify.app/university/purchase/success',
+        cancel_url: 'https://app-slate.netlify.app/university/purchase/fail',
     });
     res.json({ url: session.url })
 };
