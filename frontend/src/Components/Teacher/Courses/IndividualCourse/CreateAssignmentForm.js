@@ -124,7 +124,7 @@ function CreateAssignmentForm() {
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Assignment name</p>
                     <input className='course__name mb-8 shadow-sm' type="text" onChange={(event) => setName(event.target.value)} />
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Assignment description</p>
-                    <textarea className='course__description mb-8 h-28 shadow-sm' type="text" onChange={(event) => setDescription(event.target.value)} />
+                    <textarea className='course__description mb-8 h-28 shadow-sm' style={{whiteSpace: 'pre-line'}} type="text" onChange={(event) => setDescription(event.target.value)} />
                     <button type='submit' className='bg-[#2d3142] text-white py-2 px-8 mt-16 text-lg font-semibold w-32 mx-auto'>Submit</button>
                 </form>
             </div>

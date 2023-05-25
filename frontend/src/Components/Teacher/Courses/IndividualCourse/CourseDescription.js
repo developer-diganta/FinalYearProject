@@ -50,7 +50,7 @@ function CourseDescription({course}) {
         <div className="course__detail">
             <div className='py-4 px-4 text-base flex items-center gap-4'>
               <h4>Course Name: </h4>
-              <p className='text-base font-semibold' style={{letterSpacing: "1px"}}>{course?.description}</p>
+              <p className='text-base font-semibold' style={{letterSpacing: "1px", overflow: 'hidden'}}>{course?.name}</p>
             </div>
             <div className='py-4 px-4 text-base flex items-center gap-4'>
               <h4>Course Type: </h4>

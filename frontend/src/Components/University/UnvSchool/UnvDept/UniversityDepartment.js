@@ -41,7 +41,13 @@ function UniversityDepartment() {
             },
         });
         const schoolResults = await instance.post(backend_url + '/university/details', {universityId: unvId});
-        setDepartments(schoolResults.data.universityDetails.schools[0].departments);
+        console.log(location, schoolResults);
+        for(let i=0; i<schoolResults.data.universityDetails.schools.length; i++){
+            console.log(schoolResults.data.universityDetails.schools[i]);
+            if(schoolResults.data.universityDetails.schools[i] === location.state.id){
+                setDepartments(schoolResults.data.universityDetails.schools[0].departments);
+            }
+        }
     }
 
     useEffect(() => {
