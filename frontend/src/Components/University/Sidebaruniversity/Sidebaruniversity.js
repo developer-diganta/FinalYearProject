@@ -24,9 +24,6 @@ const Sidebaruniversity = () => {
       { name: "students", link: "/university/students", icon: FiUsers },
       { name: "schools", link: "/university/schools", icon: VscBook },
       { name: "public course", link: "/university/publiccourse", icon: VscBook },
-      // {name: ""}
-      { name: "edit", link: "/university/edit", icon: BiEditAlt, margin: true },
-      { name: "Analyse", link: "/", icon: BsGraphUp },
     ];
     const [open, setOpen] = useState(true);
     const[smallOpen, setSmallOpen] = useState(false);

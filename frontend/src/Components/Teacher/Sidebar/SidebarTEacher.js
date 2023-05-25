@@ -23,9 +23,9 @@ const SidebarTEacher = () => {
       { name: "dashboard", link: "/teacher/dashboard", icon: MdOutlineDashboardCustomize },
       { name: "courses", link: "/teacher/courses", icon: VscBook },
       { name: "public course", link: "/teacher/publiccourse", icon: VscBook },
-      { name: "edit", link: "/teacher/edit", icon: BiEditAlt, margin: true },
-      { name: "Analyse", link: "/", icon: BsGraphUp },
-      { name: "Setting", link: "/", icon: RiSettings4Line },
+      // { name: "edit", link: "/teacher/edit", icon: BiEditAlt, margin: true },
+      // { name: "Analyse", link: "/", icon: BsGraphUp },
+      // { name: "Setting", link: "/", icon: RiSettings4Line },
     ];
     const [open, setOpen] = useState(true);
     const[smallOpen, setSmallOpen] = useState(false);

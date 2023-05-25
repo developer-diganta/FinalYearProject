@@ -49,12 +49,13 @@ function Codeeditor() {
   }
 
     const submit = async () => {
-      // console.log(location.state.courseDetail.course.courseType, "*");
-        if(location.state.courseDetail.courseType === "public"){
+      console.log(location.state.courseDetail.course.courseType, "*");
+        if(location.state.courseDetail.course.courseType === "public"){
+          console.log("Public.");
           try{
             setOpScreen(true);
             setOutput('');
-            console.log(code);
+            // console.log(code);
             const sub_res = await axios.post(backend_url + '/moocs/question/code/submit', {code: code, student_id: student_id, question_id: location.state.question._id, language_id: language});
             console.log(sub_res.data);
             // setOutput(base64.decode(sub_res.data.stdout));
@@ -235,7 +236,7 @@ function Codeeditor() {
                 <div className={`br flex justify-center w-1/3 sol ${options === 'solutions' ? 'bg-[#f0f1f2]' : null} text-sm py-2 border-r-[1px] border-[#d1d5db]`} onClick={(event) => chooseOptions(event, 'solutions')}>
                   <h1 className='font-semibold'>Solution</h1>
                 </div>
-                <div className={`br flex justify-center w-1/3 subm ${options === 'submission' ? 'bg-[#f0f1f2]' : null} text-sm py-2`} onClick={(event) => chooseOptions(event, 'submission')}>
+                <div className={`br flex justify-center w-1/3 ${options === 'submission' ? 'bg-[#f0f1f2]' : null} text-sm py-2`} onClick={(event) => chooseOptions(event, 'submission')}>
                   <h1 className='font-semibold'>Submission</h1>
                 </div>
               </div>
