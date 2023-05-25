@@ -167,11 +167,11 @@ function CourseCreateForm() {
         </div>
         <div className={`pt-4 pl-6 ml-1/5 pb-4 flex justify-center sm:py-0 bg-[#f3f4f6] ${openClose ? 'w-4/5' : 'w-full'} pr-6 md:w-full min-h-screen sm:px-0 sm:w-full sm:mx-0`} style={{float: "right"}}>
             <form className="course__form flex flex-col bg-white w-4/5 px-6 rounded-md shadow-lg sm:w-full sm:rounded-[0px] sm:text-sm" onSubmit={setNewCourse}>
-                <h1 className='text-center py-4 text-lg font-bold'>Cerate new course</h1>
+                <h1 className='text-center py-4 text-lg font-bold'>Create new course</h1>
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course name</p>
                 <input className='course__name mb-8 shadow-sm' type="text" onChange={(event) => setName(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Course description</p>
-                <textarea className='course__description mb-8 h-28 shadow-sm' type="text" onChange={(event) => setDescription(event.target.value)} />
+                <textarea className='course__description mb-8 h-28 shadow-sm' style={{whiteSpace: 'pre-line'}} type="text" onChange={(event) => setDescription(event.target.value)} />
                 <p className='pb-2 capitalize text-[#444d5c] font-semibold'>course type</p>
                 {/* <input className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)} /> */}
                 <select className='course__type mb-8 shadow-sm' type="text" onChange={(event) => setCourseType(event.target.value)}>

@@ -77,7 +77,7 @@ function CreateQuestionForm() {
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold'>Question Title</p>
                     <input className='question__title' type="text" onChange={(event) => setQuestionTitle(event.target.value)} />
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Question Description</p>
-                    <textarea className='question__description' type="text" onChange={(event) => setQuestionDescription(event.target.value)} />
+                    <textarea className='question__description' style={{whiteSpace: 'pre-line'}} type="text" onChange={(event) => setQuestionDescription(event.target.value)} />
                     {/* create select for easy, medium and hard */}
                     <p className='pb-2 capitalize text-[#444d5c] font-semibold pt-8'>Question Difficulty</p>
                     <select name="" id="" onChange={(event) => setQuestionDifficulty(event.target.value)}>

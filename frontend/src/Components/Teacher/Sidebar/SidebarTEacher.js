@@ -47,7 +47,7 @@ const SidebarTEacher = () => {
           >
             <div className="py-3 flex justify-between mn md:bg-[#9900ff] z-50 md:px-2 items-center">
               <div className='text-4xl cursor-pointer' style={{display: open ? 'block' : 'none', fontFamily: "'Philosopher', sans-serif"}} onClick={() => navigate('/')}>Slate</div>
-              <div className='md:hidden'>
+              <div className='hidden'>
                 <HiMenuAlt3
                   size={26}
                   className="cursor-pointer"
