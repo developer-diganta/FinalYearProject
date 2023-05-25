@@ -22,9 +22,9 @@ function SidebarStudent() {
         { name: "dashboard", link: "/student/dashboard", icon: MdOutlineDashboardCustomize },
         { name: "university courses", link: "/student/courses", icon: VscBook },
         { name: "public courses", link: "/publiccourses", icon: SlGlobe },
-        { name: "edit", link: "/student/edit", icon: BiEditAlt, margin: true },
-        { name: "Analyse", link: "/", icon: BsGraphUp },
-        { name: "Setting", link: "/", icon: RiSettings4Line },
+        // { name: "edit", link: "/student/edit", icon: BiEditAlt, margin: true },
+        // { name: "Analyse", link: "/", icon: BsGraphUp },
+        // { name: "Setting", link: "/", icon: RiSettings4Line },
       ];
       const [open, setOpen] = useState(true);
       const[smallOpen, setSmallOpen] = useState(false);

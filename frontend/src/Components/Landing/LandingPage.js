@@ -397,6 +397,9 @@ function LandingPage() {
             <div className="container px-5">
                 <div className="text-white-50 small">
                     <div className="mb-2">&copy; slate@2023</div>
+                    <div onClick={() => {
+                        navigate('/admin/signin')
+                    }} className="mb-2 hover:underline text-white hover:cursor-pointer">Admin SignIn</div>
                 </div>
             </div>
         </footer>
