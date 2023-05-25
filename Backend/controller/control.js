@@ -2764,12 +2764,24 @@ const restoreStudent = async (req, res) => {
 // Payment
 
 const createPayment = async (req, res) => {
+    const { year } = req.body;
     const line_items = [
         {
-            price: 'price_1N457vSIgS8Gcj6RTz8JFYwR',
+            price: 'price_1NBY9kSIgS8Gcj6RZtKTSBmp',
             quantity: 1
         }
     ];
+    console.log(year)
+    if (year == 1) {
+        line_items[0].price = "price_1NBY9kSIgS8Gcj6RZtKTSBmp"
+    }
+    if (year == 2) {
+        line_items[0].price = "price_1NBYCnSIgS8Gcj6R8NW6tuKt";
+        console.log("here", line_items)
+    }
+    if (year == 3) {
+        line_items[0].price = "price_1NBYDWSIgS8Gcj6RV0ngF9hG"
+    }
     const customer = await stripe.customers.create({
         name: req.body.name,
         phone: req.body.phone,
@@ -2780,8 +2792,8 @@ const createPayment = async (req, res) => {
         line_items: line_items,
         mode: 'payment',
         customer: customer.id,
-        success_url: 'https://gracious-keller-08b8f9.netlify.app/success',
-        cancel_url: 'https://gracious-keller-08b8f9.netlify.app/fail',
+        success_url: 'http://localhost:3000/university/university/purchase/success',
+        cancel_url: 'http://localhost:3000/university/university/purchase/fail',
     });
     res.json({ url: session.url })
 };
