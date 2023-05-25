@@ -49,9 +49,9 @@ function Purchase() {
                     setPlan(ele.target.value)
                   }}>
                     <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Choose Your Plan</option>
-                    <option value="1">1 year</option>
-                    <option value="2">2 year</option>
-                    <option value="3">3 year</option>
+                    <option value={1}>1 year</option>
+                    <option value={2}>2 year</option>
+                    <option value={3}>3 year</option>
                   </select>
                 </div>
                 <button type='submit' className='sign_up_btn px-4 py-2 my-4'>Purchase</button>

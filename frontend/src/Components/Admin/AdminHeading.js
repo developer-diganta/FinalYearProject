@@ -25,7 +25,7 @@ function AdminHeading() {
     }, []);
 
   return (
-    <div className={`bg-white relative ${sticky ? 'shadow-lg' : ''} ${sticky ? 'w-full' : ''} py-4`} style={{position: sticky ? "fixed" : "static", transition: "top 0.8s ease", zIndex: "200"}}>
+    <div className={`bg-white relative top-0 ${sticky ? 'shadow-lg' : ''} ${sticky ? 'w-full' : ''} py-4`} style={{position: sticky ? "fixed" : "static", transition: "top 0.8s ease", zIndex: "200"}}>
         <div className="landing_header flex justify-between">
             <div className="landing_header_left pl-8 cursor-pointer" onClick={() => navigate('/')}>
                 <img className='bg w-28' src="/SLATE.png" alt="" />

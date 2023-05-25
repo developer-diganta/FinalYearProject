@@ -8,6 +8,37 @@ import './LandingPage.css'
 function SignupOption() {
     const navigate = useNavigate();
 
+    async function checkForUniversitySignup() {
+        const unv__id = localStorage.getItem('university__id');
+        const token = localStorage.getItem('signup_token');
+        const email = localStorage.getItem('university__email');
+        if (token) {
+            try {
+                const instance = axios.create({
+                    headers: {
+                        'x-auth-token': token
+                    }
+                })
+                const universityDetails = await instance.post(backend_url + '/university/details', {universityId: unv__id, email: email});
+                console.log(universityDetails);
+                if (universityDetails.data.universityDetails.isdeleted === false) {
+                    navigate('/university/dashboard');
+                }
+                else {
+                    alert("Something went wrong. Please try again");
+                }
+            } catch (err) {
+                console.log(err);
+                alert("Something went wrong");
+                localStorage.removeItem('signup_token');
+                navigate('/university/signup');
+            }
+        }
+        else {
+            navigate('/university/signup');
+        }
+    }
+
     async function checkForSignup() {
         const token = localStorage.getItem('teacher__token');
         const teacher__id = localStorage.getItem('teacher__id');
@@ -80,7 +111,9 @@ function SignupOption() {
                 <img className='absolute bottom-0 rotate-360 z-0 opacity-80 md:hidden' src="wave_2.svg" alt="" />
                 <h1 className='flex justify-center text-2xl font-semibold py-4'>Sign up as a - </h1>
                 <div className="signup_options flex justify-center gap-28 pt-10 z-50 md:flex-col md:items-center ">
-                    <div className="as_teacher relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => navigate('/university')}>
+                    <div className="as_teacher relative shadow-xl rounded-full w-64 h-64 bg-white z-20 hover:shadow-2xl cursor-pointer" onClick={() => {
+                        checkForUniversitySignup();
+                    }}>
                         <img className='w-full h-full' src="unv.svg" alt="" />
                         <p className='flex justify-center pt-4 text-2xl font-semibold'>University</p>
                     </div>
