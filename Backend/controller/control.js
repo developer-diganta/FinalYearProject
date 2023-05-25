@@ -2523,7 +2523,7 @@ const getStudentPerformance = async (req, res) => {
         studentSubmissions.forEach((submission) => {
 
 
-            if (submission.status.id === 3) {
+            if (submission.status === '3') {
                 switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
                     case "easy":
                         studentDataMap.set("easy", studentDataMap.get("easy") + 1);
