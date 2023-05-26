@@ -39,7 +39,7 @@ function Codeeditor() {
 
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(location, student_id);
+    console.log(location, location.state.courseDetail.course.courseType, "*");
 
 // atob
 
@@ -49,7 +49,7 @@ function Codeeditor() {
   }
 
     const submit = async () => {
-      console.log(location.state.courseDetail.course.courseType, "*");
+      // console.log(location.state.courseDetail.course.courseType, "*");
         if(location.state.courseDetail.course.courseType === "public"){
           console.log("Public.");
           try{

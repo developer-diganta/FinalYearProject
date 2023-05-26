@@ -179,7 +179,7 @@ async function getUniversityDepartment(unId){
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your department</option>
                 {
                     departments ? departments.map((dept, index) => {
-                        return <option key={index} value={dept.id}>{dept.name}</option>
+                        return <option  id={'dept'+index} key={index} value={dept.id}>{dept.name}</option>
                     }) : null
                 }
               </select>

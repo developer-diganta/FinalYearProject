@@ -188,7 +188,7 @@ function StudentSignup() {
                 <option className='text-[rgba(77, 85, 89, 0.8)]' value="default">Select your Department</option>
                 {
                     allDepartments ? allDepartments.map((uni, index) => {
-                        return <option key={index} value={uni.id}>{uni.name}</option>
+                        return <option id={'dept'+index} key={index} value={uni.id}>{uni.name}</option>
                     }) : null
                 }
               </select>
