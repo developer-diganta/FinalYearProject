@@ -2098,6 +2098,7 @@ const submitStudent = async (req, res) => {
         res.status(200).json(submissionResponse.data);
     }
     catch (error) {
+        console.log(error)
         res.status(500).json(error);
     }
 
