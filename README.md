@@ -19,5 +19,5 @@ Slate is secure. Slate uses industry-standard security measures to protect stude
 If you are looking for a powerful and easy-to-use web application for online learning, Slate is a great option.
 You can also create public courses for others to use.
 
-RELEASE V1.0.0
+CURRENT RELEASE V1.0.0
 DATE: 26/05/2025
