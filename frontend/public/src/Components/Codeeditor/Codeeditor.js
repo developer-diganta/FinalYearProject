@@ -12,6 +12,7 @@ import axios from 'axios';
 import QDescription from './Options/QDescription';
 import Solutions from './Options/Solutions';
 import Submission from './Options/Submission';
+import { backend_url } from '../../../../src/BackendRoutes';
 // import { ResizableBox } from 'react-resizable';
 var base64 = require('base-64');
 
@@ -38,7 +39,7 @@ function Codeeditor() {
         setOpScreen(true);
         setOutput('');
         console.log(code);
-        const sub_res = await axios.post('http://localhost:5000/submit', {sourceCode: code});
+        const sub_res = await axios.post(backend_url + '/submit', {sourceCode: code});
         console.log(sub_res.data.stdout);
         setOutput(base64.decode(sub_res.data.stdout));
     }

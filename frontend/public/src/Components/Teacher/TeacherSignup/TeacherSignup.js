@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../AppHeader/Header';
 import './TeacherSignup.css';
+import { backend_url } from '../../../../../src/BackendRoutes';
 
 function TeacherSignup() {
 const[name, setName] = useState();
@@ -16,7 +17,7 @@ const navigate = useNavigate();
 async function getFormValue(event){
   event.preventDefault();
   console.log(name, username, email, password);
-  const res = await axios.post('http://localhost:5000/signup/teacher', {name: name, username: username, email: email, password: password});
+  const res = await axios.post(backend_url + '/signup/teacher', {name: name, username: username, email: email, password: password});
   console.log(res);
   // if res.data.message === 'pending' then redirect to login page
   // else show error message
