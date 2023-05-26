@@ -98,6 +98,7 @@ const submit = async (req, res) => {
 
 const universitySignUp = async (req, res) => {
     const { name, email, password, phone } = req.body;
+
     try {
         // const validate = await signUpSchema.validateAsync({ username, password, email });
         bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -1422,7 +1423,6 @@ const getMoocQuestionById = async (req, res) => {
 
 const submitCodeToMoocs = async (req, res) => {
     const { student_id, code, question_id, language_id } = req.body;
-    console.log(req.body)
     let plagarized = false;
     try {
 
@@ -1441,8 +1441,8 @@ const submitCodeToMoocs = async (req, res) => {
             data: {
                 "source_code": encoded,
                 "language_id": language_id,
-                "stdin": question.input,
-                "expected_output": question.output
+                "stdin": base64encode(question.input),
+                "expected_output": base64encode(question.output)
             }
         };
 
@@ -1491,6 +1491,7 @@ const submitCodeToMoocs = async (req, res) => {
         res.status(200).json(submissionResponse.data);
     }
     catch (error) {
+        console.log(error)
         res.status(500).json(error);
     }
 
@@ -2508,7 +2509,7 @@ const getStudentPerformance = async (req, res) => {
         question.forEach((question) => {
             questionMap.set(JSON.stringify(question._id), question);
         });
-        console.log(questionMap)
+
 
         studentDataMap.set("easy", 0);
         studentDataMap.set("easyAccepted", 0);
@@ -2523,48 +2524,42 @@ const getStudentPerformance = async (req, res) => {
         studentDataMap.set("rejected", [])
         studentSubmissions.forEach((submission) => {
 
-            if (submission.status === '3') {
-                if (questionMap.get(JSON.stringify(submission.question)) !== undefined) {
-                    console.log(questionMap.get(JSON.stringify(submission.question)).difficulty)
-                    switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
-                        case "easy":
-                            studentDataMap.set("easy", studentDataMap.get("easy") + 1);
-                            studentDataMap.set("easyAccepted", studentDataMap.get("easyAccepted") + 1);
-                            studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                            break;
-                        case "medium":
-                            studentDataMap.set("medium", studentDataMap.get("medium") + 1);
-                            studentDataMap.set("mediumAccepted", studentDataMap.get("mediumAccepted") + 1);
-                            studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                            break;
-                        case "hard":
-                            studentDataMap.set("hard", studentDataMap.get("hard") + 1);
-                            studentDataMap.set("hardAccepted", studentDataMap.get("hardAccepted") + 1);
-                            studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                            break;
-                    }
 
+            if (submission.status.id === 3) {
+                switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
+                    case "easy":
+                        studentDataMap.set("easy", studentDataMap.get("easy") + 1);
+                        studentDataMap.set("easyAccepted", studentDataMap.get("easyAccepted") + 1);
+                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "medium":
+                        studentDataMap.set("medium", studentDataMap.get("medium") + 1);
+                        studentDataMap.set("mediumAccepted", studentDataMap.get("mediumAccepted") + 1);
+                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "hard":
+                        studentDataMap.set("hard", studentDataMap.get("hard") + 1);
+                        studentDataMap.set("hardAccepted", studentDataMap.get("hardAccepted") + 1);
+                        studentDataMap.get("accepted").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
                 }
             } else {
-                if (questionMap.get(JSON.stringify(submission.question)) !== undefined) {
-
-                    switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
-                        case "easy":
-                            studentDataMap.set("easy", studentDataMap.get("easy") + 1);
-                            studentDataMap.set("easyRejected", studentDataMap.get("easyRejected") + 1);
-                            studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                            break;
-                        case "medium":
-                            studentDataMap.set("medium", studentDataMap.get("medium") + 1);
-                            studentDataMap.set("mediumRejected", studentDataMap.get("mediumRejected") + 1);
-                            studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                            break;
-                        case "hard":
-                            studentDataMap.set("hard", studentDataMap.get("hard") + 1);
-                            studentDataMap.set("hardRejected", studentDataMap.get("hardRejected") + 1);
-                            studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
-                            break;
-                    }
+                switch (questionMap.get(JSON.stringify(submission.question)).difficulty) {
+                    case "easy":
+                        studentDataMap.set("easy", studentDataMap.get("easy") + 1);
+                        studentDataMap.set("easyRejected", studentDataMap.get("easyRejected") + 1);
+                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "medium":
+                        studentDataMap.set("medium", studentDataMap.get("medium") + 1);
+                        studentDataMap.set("mediumRejected", studentDataMap.get("mediumRejected") + 1);
+                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
+                    case "hard":
+                        studentDataMap.set("hard", studentDataMap.get("hard") + 1);
+                        studentDataMap.set("hardRejected", studentDataMap.get("hardRejected") + 1);
+                        studentDataMap.get("rejected").push({ title: questionMap.get(JSON.stringify(submission.question)).title, _id: submission.question });
+                        break;
                 }
             }
 
@@ -2574,7 +2569,6 @@ const getStudentPerformance = async (req, res) => {
 
         return;
     } catch (error) {
-        console.log(error)
         res.status(500).json(error);
     }
 }
@@ -2772,24 +2766,12 @@ const restoreStudent = async (req, res) => {
 // Payment
 
 const createPayment = async (req, res) => {
-    const { year } = req.body;
     const line_items = [
         {
-            price: 'price_1NBY9kSIgS8Gcj6RZtKTSBmp',
+            price: 'price_1N457vSIgS8Gcj6RTz8JFYwR',
             quantity: 1
         }
     ];
-    console.log(year)
-    if (year == 1) {
-        line_items[0].price = "price_1NBY9kSIgS8Gcj6RZtKTSBmp"
-    }
-    if (year == 2) {
-        line_items[0].price = "price_1NBYCnSIgS8Gcj6R8NW6tuKt";
-        console.log("here", line_items)
-    }
-    if (year == 3) {
-        line_items[0].price = "price_1NBYDWSIgS8Gcj6RV0ngF9hG"
-    }
     const customer = await stripe.customers.create({
         name: req.body.name,
         phone: req.body.phone,
@@ -2800,8 +2782,8 @@ const createPayment = async (req, res) => {
         line_items: line_items,
         mode: 'payment',
         customer: customer.id,
-        success_url: 'https://app-slate.netlify.app/university/purchase/success',
-        cancel_url: 'https://app-slate.netlify.app/university/purchase/fail',
+        success_url: 'https://gracious-keller-08b8f9.netlify.app/success',
+        cancel_url: 'https://gracious-keller-08b8f9.netlify.app/fail',
     });
     res.json({ url: session.url })
 };
