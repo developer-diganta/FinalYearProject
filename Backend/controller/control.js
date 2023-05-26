@@ -1441,8 +1441,8 @@ const submitCodeToMoocs = async (req, res) => {
             data: {
                 "source_code": encoded,
                 "language_id": language_id,
-                "stdin": base64encode(question.input),
-                "expected_output": base64encode(question.output)
+                "stdin": uestion.input,
+                "expected_output": question.output
             }
         };
 
